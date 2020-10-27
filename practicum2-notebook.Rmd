@@ -5,16 +5,35 @@ output:
   pdf_document: default
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+## Overview
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/ 
+
+Download all the compressed tsv files and extract them into a folder called `data/`. The extracted files will all be called `data.tsv` so you will have to rename each. Rename them based on the compressed file name as follows in order to ensure they work with the R-notebook:
+
+`<first_part>-<second_part>-data.tsv`
+
+for example, `name-basics-tsv` and `title-ratings-data.tsv`
+
+## Setup
+
+Before working with the data we need to create a place to store it. This section will set up any constants needed later and connect to a SQLite database.
 
 ```{r}
-plot(cars)
+# TSV file path constants
+tsv.prefix <- "data/"
+tsv.postfix <- "-data.tsv"
+NAME_BASICS <- paste(tsv.prefix, "name-basics", tsv.postfix, sep="")
+TITLE_BASICS <- paste(tsv.prefix, "title-basics", tsv.postfix, sep="")
+TITLE_EPISODE <- paste(tsv.prefix, "title-episode", tsv.postfix, sep="")
+TITLE_RATINGS <- paste(tsv.prefix, "title-ratings", tsv.postfix, sep="")
+TITLE_AKAS <- paste(tsv.prefix, "title-akas", tsv.postfix, sep="")
+TITLE_CREW_DATA <- paste(tsv.prefix, "title-crew-data", tsv.postfix, sep="")
+TITLE_PRINCIPLES <- paste(tsv.prefix, "title-principals", tsv.postfix, sep="")
+
+# Setup SQLite database
+library(RSQLite)
+DB_NAME <- "imdb-data.db"
+conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
