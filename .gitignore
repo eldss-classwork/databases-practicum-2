@@ -2,6 +2,7 @@
 data/
 *.db
 *.sqlite
+*.html
 
 # Default
 # History files
