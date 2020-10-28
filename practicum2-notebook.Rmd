@@ -37,3 +37,17 @@ DB_NAME <- "imdb-data.db"
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 ```
 
+!!!Need to download the files from the web before completing the next chunk!!!
+Files were manually downloaded and saved to the data folder for testing
+
+```{r}
+# Create dataframes for the IMDB files
+df.akas <- read.table("data/title.akas.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.nBasics <- read.table("data/name.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.tBasics <- read.table("data/title.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.crew <- read.table("data/title.crew.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.ep <- read.table("data/title.episode.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.prin <- read.table("data/title.principals.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.ratings <- read.table("data/title.ratings.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+```
+
