@@ -42,9 +42,9 @@ Files were manually downloaded and saved to the data folder for testing
 
 ```{r}
 # Create dataframes for the IMDB files
-df.akas <- read.table("data/title.akas.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
-df.nBasics <- read.table("data/name.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
-df.tBasics <- read.table("data/title.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+df.akas <- read.table("data/title.akas.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+df.nBasics <- read.table("data/name.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+df.tBasics <- read.table("data/title.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 df.crew <- read.table("data/title.crew.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 df.ep <- read.table("data/title.episode.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 df.prin <- read.table("data/title.principals.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
