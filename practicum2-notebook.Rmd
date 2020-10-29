@@ -7,47 +7,164 @@ output:
 
 ## Overview
 
-We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/ 
+We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/
 
-Download all the compressed tsv files and extract them into a folder called `data/`. The extracted files will all be called `data.tsv` so you will have to rename each. Rename them based on the compressed file name as follows in order to ensure they work with the R-notebook:
-
-`<first_part>-<second_part>-data.tsv`
-
-for example, `name-basics-tsv` and `title-ratings-data.tsv`
+Download all the compressed tsv files into a folder called `data/`. You can leave them in their compressed format, as that is how we will read them in to this notebook.
 
 ## Setup
 
 Before working with the data we need to create a place to store it. This section will set up any constants needed later and connect to a SQLite database.
 
 ```{r}
-# TSV file path constants
-tsv.prefix <- "data/"
-tsv.postfix <- "-data.tsv"
-NAME_BASICS <- paste(tsv.prefix, "name-basics", tsv.postfix, sep="")
-TITLE_BASICS <- paste(tsv.prefix, "title-basics", tsv.postfix, sep="")
-TITLE_EPISODE <- paste(tsv.prefix, "title-episode", tsv.postfix, sep="")
-TITLE_RATINGS <- paste(tsv.prefix, "title-ratings", tsv.postfix, sep="")
-TITLE_AKAS <- paste(tsv.prefix, "title-akas", tsv.postfix, sep="")
-TITLE_CREW_DATA <- paste(tsv.prefix, "title-crew-data", tsv.postfix, sep="")
-TITLE_PRINCIPLES <- paste(tsv.prefix, "title-principals", tsv.postfix, sep="")
-
 # Setup SQLite database
 library(RSQLite)
 DB_NAME <- "imdb-data.db"
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 ```
 
+
+<!-- 
+    Reading everything at once is too much data. Basically crashed my computer.
+    We'll have to come up with a more efficient way to read data when we need it
+    and remove it from memory when we don't.
+-->
 !!!Need to download the files from the web before completing the next chunk!!!
 Files were manually downloaded and saved to the data folder for testing
 
 ```{r}
-# Create dataframes for the IMDB files
-df.akas <- read.table("data/title.akas.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
-df.nBasics <- read.table("data/name.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
-df.tBasics <- read.table("data/title.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
-df.crew <- read.table("data/title.crew.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
-df.ep <- read.table("data/title.episode.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
-df.prin <- read.table("data/title.principals.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
-df.ratings <- read.table("data/title.ratings.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+# Simplify data extraction for later
+getAkasData <- function() {
+  read.table("data/title.akas.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getNameBasicsData <- function() {
+  read.table("data/name.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getTitleBasicsData <- function() {
+  read.table("data/title.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getCrewData <- function() {
+  read.table("data/title.crew.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getEpisodeData <- function() {
+ read.table("data/title.episode.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getPrincipalsData <- function() {
+  read.table("data/title.principals.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+
+getRatingsData <- function() {
+  read.table("data/title.ratings.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+}
+```
+
+The following chunk creates the database schema using CREATE TABLE statements. This schema was designed for the relational model based on the above datasets.
+
+```{r}
+# First we need to remove any existing data,
+# for example, if this has been run before.
+drop_sql <- function(table_name) {
+  paste("DROP TABLE IF EXISTS ", table_name, ";", sep="")
+}
+
+dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK check constraints
+curr_tables <- dbListTables(conn)
+for (table in curr_tables) {
+  dbExecute(conn, drop_sql(table))
+}
+dbExecute(conn, "PRAGMA foreign_keys = ON;")
+
+# Now we can create the tables
+build_table <- function(table_def) {
+  CREATE <- "CREATE TABLE IF NOT EXISTS"
+  paste(CREATE, table_def)
+}
+
+# Build table definition list
+tables <- c(
+  build_table(
+    "Title_Type (
+      format_id INTEGER PRIMARY KEY,
+      format TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Media (
+      tconst TEXT PRIMARY KEY,
+      format_id INTEGER NOT NULL,
+      primaryTitle TEXT,
+      originalTitle TEXT,
+      isAdult INTEGER, -- 0=false, else true
+      startYear INTEGER,
+      endYear INTEGER,
+      runtimeMins INTEGER,
+      FOREIGN KEY (format_id) REFERENCES Title_Type(format_id)
+    );"
+  ),
+  build_table(
+    "Ratings (
+      tconst TEXT PRIMARY KEY,
+      averageRating REAL
+      numVotes INTEGER,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst)
+    );"
+  ),
+  build_table(
+    "Episode (
+      tconst TEXT PRIMARY KEY,
+      parentTconst TEXT NOT NULL,
+      seasonNumer INTEGER,
+      episodeNumber INTEGER,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (parentTconst) REFERENCES Media(tconst)
+    );"
+  ),
+  build_table(
+    "Genres (
+      genre_id INTEGER PRIMARY KEY,
+      genre TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Media_Genres (
+      mg_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      genre_id INTEGER NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
+    );"
+  ),
+  build_table(
+    "People (
+      nconst TEXT PRIMARY KEY,
+      primaryName TEXT,
+      birthYear INTEGER,
+      deathYear INTEGER,
+      age INTEGER,
+      numMovies INTEGER
+    );"
+  ),
+  build_table(
+    "Known_For_Titles (
+      kt_id INTEGER PRIMARY KEY,
+      nconst TEXT NOT NULL,
+      tconst TEXT NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (nconst) REFERENCES People(nconst)
+    );"
+  ),
+  build_table(
+    "Professions"
+  )
+)
+
+# Actually create the tables
+for (table in tables) {
+  dbExecute(conn, table)
+}
 ```
 
