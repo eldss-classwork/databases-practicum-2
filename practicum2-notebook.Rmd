@@ -28,37 +28,45 @@ conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
     We'll have to come up with a more efficient way to read data when we need it
     and remove it from memory when we don't.
 -->
-!!!Need to download the files from the web before completing the next chunk!!!
+**!!!Need to download the files from the web before completing the next chunk!!!**
+
 Files were manually downloaded and saved to the data folder for testing
 
 ```{r}
 # Simplify data extraction for later
 getAkasData <- function() {
-  read.table("data/title.akas.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.akas.tsv.gz", 
+             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getNameBasicsData <- function() {
-  read.table("data/name.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/name.basics.tsv.gz", 
+             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getTitleBasicsData <- function() {
-  read.table("data/title.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.basics.tsv.gz", 
+             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getCrewData <- function() {
-  read.table("data/title.crew.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.crew.tsv.gz", 
+             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getEpisodeData <- function() {
- read.table("data/title.episode.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+ read.table("data/title.episode.tsv.gz", 
+            sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getPrincipalsData <- function() {
-  read.table("data/title.principals.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.principals.tsv.gz", 
+             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getRatingsData <- function() {
-  read.table("data/title.ratings.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.ratings.tsv.gz", 
+             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 ```
 
@@ -72,7 +80,7 @@ drop_sql <- function(table_name) {
 }
 
 # Saving rows affected to a var prevents output below
-rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK check constraints
+rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
 curr_tables <- dbListTables(conn)
 for (table in curr_tables) {
   dbExecute(conn, drop_sql(table))
