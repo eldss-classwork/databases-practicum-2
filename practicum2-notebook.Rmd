@@ -158,7 +158,38 @@ tables <- c(
     );"
   ),
   build_table(
-    "Professions"
+    "Professions (
+      prof_id INTEGER PRIMARY KEY,
+      prof_title TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Primary_Profession (
+      pp_id INTEGER PRIMARY KEY,
+      nconst TEXT NOT NULL,
+      prof_id INTEGER NOT NULL,
+      FOREIGN KEY (nconst) REFERENCES People(nconst),
+      FOREIGN KEY (prof_id) REFERENCES Professions(prof_id)
+    );"
+  ),
+  build_table(
+    "Crew (
+      tconst TEXT NOT NULL,
+      ordering INTEGER NOT NULL,
+      nconst TEXT NOT NULL,
+      category TEXT,
+      job TEXT,
+      characters TEXT,
+      PRIMARY KEY (tconst, ordering),
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (nconst) REFERENCES People(nconst)
+    );"
+  ),
+  build_table(
+    "Media_Directors (
+      md_id INTEGER PRIMARY KEY,
+      tconst TEXT 
+    );"
   )
 )
 
