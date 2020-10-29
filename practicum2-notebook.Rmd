@@ -71,12 +71,13 @@ drop_sql <- function(table_name) {
   paste("DROP TABLE IF EXISTS ", table_name, ";", sep="")
 }
 
-dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK check constraints
+# Saving rows affected to a var prevents output below
+rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK check constraints
 curr_tables <- dbListTables(conn)
 for (table in curr_tables) {
   dbExecute(conn, drop_sql(table))
 }
-dbExecute(conn, "PRAGMA foreign_keys = ON;")
+rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = ON;")
 
 # Now we can create the tables
 build_table <- function(table_def) {
@@ -188,14 +189,75 @@ tables <- c(
   build_table(
     "Media_Directors (
       md_id INTEGER PRIMARY KEY,
-      tconst TEXT 
+      tconst TEXT NOT NULL,
+      nconst TEXT NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (nconst) REFERENCES People(nconst)
+    );"
+  ),
+  build_table(
+    "Media_Writers (
+      mw_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      nconst TEXT NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (nconst) REFERENCES People(nconst)
+    );"
+  ),
+  build_table(
+    "Also_Known_As (
+      tconst TEXT NOT NULL,
+      ordering INTEGER NOT NULL,
+      title TEXT,
+      region TEXT,
+      language TEXT,
+      isOriginalTitle INTEGER, -- 0=false, else true
+      PRIMARY KEY (tconst, ordering),
+      FOREIGN KEY (tconst) REFERENCES Media(tconst)
+    );"
+  ),
+  build_table(
+    "Title_Types (
+      type_id INTEGER PRIMARY KEY,
+      type TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Aka_Types (
+      akt_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      ordering INTEGER NOT NULL,
+      type_id INTEGER NOT NULL,
+      -- Media table PK tconst has ref. integrity through AKA Table
+      FOREIGN KEY (tconst, ordering) REFERENCES Also_Known_As(tconst, ordering),
+      FOREIGN KEY (type_id) REFERENCES Title_Types(type_id)
+    );"
+  ),
+  build_table(
+    "Attributes (
+      att_id INTEGER PRIMARY KEY,
+      att_name TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Aka_Attributes (
+      aka_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      ordering INTEGER NOT NULL,
+      att_id INTEGER NOT NULL,
+      -- Media table PK tconst has ref. integrity through AKA Table
+      FOREIGN KEY (tconst, ordering) REFERENCES Also_Known_As(tconst, ordering),
+      FOREIGN KEY (att_id) REFERENCES Attributes(att_id)
     );"
   )
 )
 
 # Actually create the tables
-for (table in tables) {
-  dbExecute(conn, table)
+for (table_stmt in tables) {
+  dbExecute(conn, table_stmt)
 }
+
+# Remove later - for testing
+dbListTables(conn)
 ```
 
