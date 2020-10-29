@@ -34,15 +34,15 @@ Files were manually downloaded and saved to the data folder for testing
 ```{r}
 # Simplify data extraction for later
 getAkasData <- function() {
-  read.table("data/title.akas.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.akas.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getNameBasicsData <- function() {
-  read.table("data/name.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/name.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getTitleBasicsData <- function() {
-  read.table("data/title.basics.tsv.gz", sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  read.table("data/title.basics.tsv.gz", sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
 }
 
 getCrewData <- function() {
