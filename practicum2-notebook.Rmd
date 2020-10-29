@@ -79,7 +79,7 @@ drop_sql <- function(table_name) {
   paste("DROP TABLE IF EXISTS ", table_name, ";", sep="")
 }
 
-# Saving rows affected to a var prevents output below
+# Saving rows affected to a var prevents output
 rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
 curr_tables <- dbListTables(conn)
 for (table in curr_tables) {
@@ -144,7 +144,8 @@ tables <- c(
       tconst TEXT NOT NULL,
       genre_id INTEGER NOT NULL,
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
-      FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
+      FOREIGN KEY (genre_id) REFERENCES Genres(genre_id),
+      CONSTRAINT unique_mg_tc_gid UNIQUE (tconst, genre_id)
     );"
   ),
   build_table(
@@ -163,7 +164,8 @@ tables <- c(
       nconst TEXT NOT NULL,
       tconst TEXT NOT NULL,
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
-      FOREIGN KEY (nconst) REFERENCES People(nconst)
+      FOREIGN KEY (nconst) REFERENCES People(nconst),
+      CONSTRAINT unique_kft_nc_tc UNIQUE (nconst, tconst)
     );"
   ),
   build_table(
@@ -178,7 +180,8 @@ tables <- c(
       nconst TEXT NOT NULL,
       prof_id INTEGER NOT NULL,
       FOREIGN KEY (nconst) REFERENCES People(nconst),
-      FOREIGN KEY (prof_id) REFERENCES Professions(prof_id)
+      FOREIGN KEY (prof_id) REFERENCES Professions(prof_id),
+      CONSTRAINT unique_pp_nc_pid UNIQUE (nconst, prof_id)
     );"
   ),
   build_table(
@@ -200,7 +203,8 @@ tables <- c(
       tconst TEXT NOT NULL,
       nconst TEXT NOT NULL,
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
-      FOREIGN KEY (nconst) REFERENCES People(nconst)
+      FOREIGN KEY (nconst) REFERENCES People(nconst),
+      CONSTRAINT unique_md_nc_tc UNIQUE (nconst, tconst)
     );"
   ),
   build_table(
@@ -209,7 +213,8 @@ tables <- c(
       tconst TEXT NOT NULL,
       nconst TEXT NOT NULL,
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
-      FOREIGN KEY (nconst) REFERENCES People(nconst)
+      FOREIGN KEY (nconst) REFERENCES People(nconst),
+      CONSTRAINT unique_mw_nc_tc UNIQUE (nconst, tconst)
     );"
   ),
   build_table(
@@ -238,7 +243,8 @@ tables <- c(
       type_id INTEGER NOT NULL,
       -- Media table PK tconst has ref. integrity through AKA Table
       FOREIGN KEY (tconst, ordering) REFERENCES Also_Known_As(tconst, ordering),
-      FOREIGN KEY (type_id) REFERENCES Title_Types(type_id)
+      FOREIGN KEY (type_id) REFERENCES Title_Types(type_id),
+      CONSTRAINT unique_akat_tc_ord_tid UNIQUE (tconst, ordering, type_id)
     );"
   ),
   build_table(
@@ -255,7 +261,8 @@ tables <- c(
       att_id INTEGER NOT NULL,
       -- Media table PK tconst has ref. integrity through AKA Table
       FOREIGN KEY (tconst, ordering) REFERENCES Also_Known_As(tconst, ordering),
-      FOREIGN KEY (att_id) REFERENCES Attributes(att_id)
+      FOREIGN KEY (att_id) REFERENCES Attributes(att_id),
+      CONSTRAINT unique_akaatt_tc_ord_aid UNIQUE (tconst, ordering, att_id)
     );"
   )
 )
