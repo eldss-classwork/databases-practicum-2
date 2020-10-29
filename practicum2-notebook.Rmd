@@ -78,25 +78,93 @@ for (table in curr_tables) {
 }
 dbExecute(conn, "PRAGMA foreign_keys = ON;")
 
-# Then we can create the tables
-CREATE <- "CREATE TABLE IF NOT EXISTS"
+# Now we can create the tables
+build_table <- function(table_def) {
+  CREATE <- "CREATE TABLE IF NOT EXISTS"
+  paste(CREATE, table_def)
+}
+
+# Build table definition list
 tables <- c(
-  paste(
-    CREATE, "Title_Type (
+  build_table(
+    "Title_Type (
       format_id INTEGER PRIMARY KEY,
       format TEXT NOT NULL
     );"
   ),
-  paste(
-    CREATE, "Media (
+  build_table(
+    "Media (
       tconst TEXT PRIMARY KEY,
       format_id INTEGER NOT NULL,
       primaryTitle TEXT,
       originalTitle TEXT,
-      isAdult 
+      isAdult INTEGER, -- 0=false, else true
+      startYear INTEGER,
+      endYear INTEGER,
+      runtimeMins INTEGER,
+      FOREIGN KEY (format_id) REFERENCES Title_Type(format_id)
     );"
   ),
+  build_table(
+    "Ratings (
+      tconst TEXT PRIMARY KEY,
+      averageRating REAL
+      numVotes INTEGER,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst)
+    );"
+  ),
+  build_table(
+    "Episode (
+      tconst TEXT PRIMARY KEY,
+      parentTconst TEXT NOT NULL,
+      seasonNumer INTEGER,
+      episodeNumber INTEGER,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (parentTconst) REFERENCES Media(tconst)
+    );"
+  ),
+  build_table(
+    "Genres (
+      genre_id INTEGER PRIMARY KEY,
+      genre TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Media_Genres (
+      mg_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      genre_id INTEGER NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
+    );"
+  ),
+  build_table(
+    "People (
+      nconst TEXT PRIMARY KEY,
+      primaryName TEXT,
+      birthYear INTEGER,
+      deathYear INTEGER,
+      age INTEGER,
+      numMovies INTEGER
+    );"
+  ),
+  build_table(
+    "Known_For_Titles (
+      kt_id INTEGER PRIMARY KEY,
+      nconst TEXT NOT NULL,
+      tconst TEXT NOT NULL,
+      FOREIGN KEY (tconst) REFERENCES Media(tconst),
+      FOREIGN KEY (nconst) REFERENCES People(nconst)
+    );"
+  ),
+  build_table(
+    "Professions"
+  )
 )
-dbExecute(conn, test1)
+
+# Actually create the tables
+for (table in tables) {
+  dbExecute(conn, table)
+}
 ```
 
