@@ -20,6 +20,19 @@ Before working with the data we need to create a place to store it. This section
 library(RSQLite)
 DB_NAME <- "imdb-data.db"
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
+
+# Set up data folder and variables needed for download of datasets
+dir.create("data", showWarnings=FALSE)
+
+URL <- "https://datasets.imdbws.com/"
+directory <- "./data/"
+nameBasics <- "name.basics.tsv.gz"
+titleBasics <- "title.basics.tsv.gz"
+titleAkas <- "title.akas.tsv.gz"
+titleCrew <- "title.crew.tsv.gz"
+titleEpisode <- "title.episode.tsv.gz"
+titlePrincipals <- "title.principals.tsv.gz"
+titleRatings <- "title.ratings.tsv.gz"
 ```
 
 
@@ -31,42 +44,55 @@ conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 **!!!Need to download the files from the web before completing the next chunk!!!**
 
 Files were manually downloaded and saved to the data folder for testing
+```{r}
+downloadData <- function(file) {
+  website <- paste(URL,file)
+  destination <- paste(directory,file)
+  download.file(website,destination)
+  return (destination)
+}
+
+createDataframe <- function(file) {
+  read.table(file, fill=TRUE, header=TRUE, 
+             sep='\t', quote = "\"", encoding="UTF-8")
+}
+```
 
 ```{r}
 # Simplify data extraction for later
 getAkasData <- function() {
-  read.table("data/title.akas.tsv.gz", 
-             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titleAkas)
+  createDataframe(location)
 }
 
 getNameBasicsData <- function() {
-  read.table("data/name.basics.tsv.gz", 
-             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(nameBasics)
+  createDataframe(location)
 }
 
 getTitleBasicsData <- function() {
-  read.table("data/title.basics.tsv.gz", 
-             sep='\t', quote = "\"", fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titleBasics)
+  createDataframe(location)
 }
 
 getCrewData <- function() {
-  read.table("data/title.crew.tsv.gz", 
-             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titleCrew)
+  createDataframe(location)
 }
 
 getEpisodeData <- function() {
- read.table("data/title.episode.tsv.gz", 
-            sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titleEpisode)
+  createDataframe(location)
 }
 
 getPrincipalsData <- function() {
-  read.table("data/title.principals.tsv.gz", 
-             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titlePrincipals)
+  createDataframe(location)
 }
 
 getRatingsData <- function() {
-  read.table("data/title.ratings.tsv.gz", 
-             sep='\t', fill=TRUE, header=TRUE, encoding="UTF-8")
+  location <- downloadData(titleRatings)
+  createDataframe(location)
 }
 ```
 
