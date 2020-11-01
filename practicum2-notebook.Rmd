@@ -25,6 +25,7 @@ conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 dir.create("data", showWarnings=FALSE)
 
 URL <- "https://datasets.imdbws.com/"
+updateData <- FALSE
 directory <- "./data/"
 nameBasics <- "name.basics.tsv.gz"
 titleBasics <- "title.basics.tsv.gz"
@@ -36,64 +37,44 @@ titleRatings <- "title.ratings.tsv.gz"
 ```
 
 
+```{r}
+downloadData <- function(file) {
+  destination <- paste(directory,file,sep="")
+  if(!file.exists(destination) || updateData){
+    website <- paste(URL,file,sep="")
+    download.file(website,destination)
+  }
+  return (destination)
+}
+
+createDataframe <- function(file) {
+  return (read.table(file, fill=TRUE, header=TRUE, 
+             sep='\t', quote = "\"", encoding="UTF-8"))
+}
+
+getData <- function(filename) {
+  location <- downloadData(filename)
+  return (createDataframe(location))
+}
+```
+
 <!-- 
     Reading everything at once is too much data. Basically crashed my computer.
     We'll have to come up with a more efficient way to read data when we need it
     and remove it from memory when we don't.
 -->
-**!!!Need to download the files from the web before completing the next chunk!!!**
 
-Files were manually downloaded and saved to the data folder for testing
-```{r}
-downloadData <- function(file) {
-  website <- paste(URL,file)
-  destination <- paste(directory,file)
-  download.file(website,destination)
-  return (destination)
-}
-
-createDataframe <- function(file) {
-  read.table(file, fill=TRUE, header=TRUE, 
-             sep='\t', quote = "\"", encoding="UTF-8")
-}
-```
 
 ```{r}
-# Simplify data extraction for later
-getAkasData <- function() {
-  location <- downloadData(titleAkas)
-  createDataframe(location)
-}
+# Download data and create dataframes
 
-getNameBasicsData <- function() {
-  location <- downloadData(nameBasics)
-  createDataframe(location)
-}
-
-getTitleBasicsData <- function() {
-  location <- downloadData(titleBasics)
-  createDataframe(location)
-}
-
-getCrewData <- function() {
-  location <- downloadData(titleCrew)
-  createDataframe(location)
-}
-
-getEpisodeData <- function() {
-  location <- downloadData(titleEpisode)
-  createDataframe(location)
-}
-
-getPrincipalsData <- function() {
-  location <- downloadData(titlePrincipals)
-  createDataframe(location)
-}
-
-getRatingsData <- function() {
-  location <- downloadData(titleRatings)
-  createDataframe(location)
-}
+df.akas <- getData(titleAkas)
+# df.crew <- getData(titleCrew)
+# df.ep <- getData(titleEpisode)
+# df.nb <- getData(nameBasics)
+# df.prin <- getData(titlePrincipals)
+# df.rate <- getData(titleRatings)
+# df.tb <- getData(titleBasics)
 ```
 
 The following chunk creates the database schema using CREATE TABLE statements. This schema was designed for the relational model based on the above datasets.
