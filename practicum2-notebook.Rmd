@@ -9,11 +9,11 @@ output:
 
 We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/
 
-Download all the compressed tsv files into a folder called `data/`. You can leave them in their compressed format, as that is how we will read them in to this notebook.
+The code below will download all the compressed tsv files required by this notebook into a folder called `data/`. You can leave them in their compressed format, as that is how we will read them in to this notebook. The downloads can take some time, so if you already have the files in a `data/` folder, we will avoid downloading them again. If you would like to replace the files, for example if new ones were published, you can change the `updateData` variable in the next code block to `TRUE`.
 
 ## Setup
 
-Before working with the data we need to create a place to store it. This section will set up any constants needed later and connect to a SQLite database.
+Before working with the data we need to create a place to store it. This section will set up a SQLite database and any constants needed later.
 
 ```{r}
 # Setup SQLite database
@@ -25,7 +25,7 @@ conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 dir.create("data", showWarnings=FALSE)
 
 URL <- "https://datasets.imdbws.com/"
-updateData <- FALSE
+updateData <- FALSE  # Change to TRUE if you want to update these files
 directory <- "./data/"
 nameBasics <- "name.basics.tsv.gz"
 titleBasics <- "title.basics.tsv.gz"
@@ -52,23 +52,30 @@ createDataframe <- function(file) {
              sep='\t', quote = "\"", encoding="UTF-8"))
 }
 
-getData <- function(filename) {
-  location <- downloadData(filename)
-  return (createDataframe(location))
+getData <- function(filepath) {
+  return (createDataframe(filepath))
 }
 ```
 
-<!-- 
-    Reading everything at once is too much data. Basically crashed my computer.
-    We'll have to come up with a more efficient way to read data when we need it
-    and remove it from memory when we don't.
--->
-
+The next section downloads all the data files needed, if they don't exist already. This may take a while if you do not already have the files.
 
 ```{r}
-# Download data and create dataframes
+# Download data
+# NOTE: only run this chunk once per execution of notebook, otherwise 
+# filepaths will get messed up.
+titleAkas <- downloadData(titleAkas)
+titleCrew <- downloadData(titleCrew)
+titleEpisode <- downloadData(titleEpisode)
+nameBasics <- downloadData(nameBasics)
+titlePrincipals <- downloadData(titlePrincipals)
+titleRatings <- downloadData(titleRatings)
+titleBasics <- downloadData(titleBasics)
 
-df.akas <- getData(titleAkas)
+# TEMP NOTE: If we use the same name for each dataframe and use only when needed
+# it may help the garbage collector free up some RAM once the data is in the
+# database.
+# Create dataframes
+# df.akas <- getData(titleAkas)
 # df.crew <- getData(titleCrew)
 # df.ep <- getData(titleEpisode)
 # df.nb <- getData(nameBasics)
@@ -82,7 +89,7 @@ The following chunk creates the database schema using CREATE TABLE statements. T
 ```{r}
 # First we need to remove any existing data,
 # for example, if this has been run before.
-drop_sql <- function(table_name) {
+drop_table <- function(table_name) {
   paste("DROP TABLE IF EXISTS ", table_name, ";", sep="")
 }
 
@@ -90,7 +97,7 @@ drop_sql <- function(table_name) {
 rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
 curr_tables <- dbListTables(conn)
 for (table in curr_tables) {
-  dbExecute(conn, drop_sql(table))
+  dbExecute(conn, drop_table(table))
 }
 rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = ON;")
 
