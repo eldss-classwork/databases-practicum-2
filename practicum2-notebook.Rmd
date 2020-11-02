@@ -16,8 +16,10 @@ The code below will download all the compressed tsv files required by this noteb
 Before working with the data we need to create a place to store it. This section will set up a SQLite database and any constants needed later.
 
 ```{r}
-# Setup SQLite database
 library(RSQLite)
+library(readr)
+
+# Setup SQLite database
 DB_NAME <- "imdb-data.db"
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 
@@ -65,6 +67,7 @@ titleBasics <- downloadData(titleBasics)
 We will also need the following functions to read in data from files and convert them to dataframes.
 
 ```{r}
+# TODO: Look into using the readr read_delim function instead: Docs say 10x faster
 createDataframe <- function(file, rows=-1) {
   #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
   #' with rows, but defaults to the whole file.
@@ -72,7 +75,7 @@ createDataframe <- function(file, rows=-1) {
              sep='\t', quote = "\"", encoding="UTF-8", nrows=rows)
 }
 
-findMaxRow <- function(file, stopKeyValue) {
+findMaxRowExactKey <- function(file, stopKeyValue) {
   #' Finds the row value in the gzipped tsv immediately before the given key
   #' value. stopKeyValue is assumed to be the first entry in a line of the tsv.
   #' It should also be the key above the last one you want to include, as there
@@ -81,11 +84,46 @@ findMaxRow <- function(file, stopKeyValue) {
   rowNum <- -1
   while (TRUE) {
     # Read one line
-    line = readLines(fconn, n=1)
+    line <- readLines(fconn, n=1)
+    if (length(line) == 0) {
+      break
+    }
     
     # Stop if the key is found, or on EOF
     foundLine <- startsWith(line, stopKeyValue)
-    if (foundLine || length(line) == 0) {
+    if (foundLine) {
+      break
+    }
+    rowNum <- rowNum + 1
+  }
+  close(fconn)
+  rowNum
+}
+
+findMaxRowLessThanKey <- function(file, stopKeyValue) {
+  #' Similar to findMaxRowExactKey except it can be used in files where the 
+  #' exact key may not be present. Will return the row value directly below
+  #' the first row with a key greater than or equal to the given key. This
+  #' function is less efficient than the exact key version because it requires
+  #' parsing the number part of a key.
+  fconn <- gzfile(file, 'r')
+  rowNum <- 0
+  stopKeyNum <- parse_number(stopKeyValue)
+  while (TRUE) {
+    # Read one line
+    line <- readLines(fconn, n=1)
+    
+    # Ignore header line
+    if (startsWith(line, "tconst")) {
+      next
+    }
+    
+    # Split line and parse number part of key
+    parts <- strsplit(line, "\t")[[1]]
+    keyNum <- parse_number(parts[1])
+    
+    # Stop if the key is found, or on EOF
+    if (length(line) == 0 || keyNum >= stopKeyNum) {
       break
     }
     rowNum <- rowNum + 1
@@ -310,7 +348,7 @@ The number of titles we choose to include will determine the amount of data read
 ```{r}
 # We've decided arbitrarily to load 2000(?) titles/media
 stopTconst <- "tt0002001"
-rows <- findMaxRow(titleBasics, stopTconst)
+rows <- findMaxRowExactKey(titleBasics, stopTconst)
 df.tb <- createDataframe(titleBasics, rows)
 tail(df.tb)
 ```
@@ -318,7 +356,7 @@ tail(df.tb)
 ### AKAs
 
 ```{r}
-rows <- findMaxRow(titleAkas, stopTconst)
+rows <- findMaxRowExactKey(titleAkas, stopTconst)
 df.akas <- createDataframe(titleAkas, rows)
 tail(df.akas)
 ```
@@ -330,11 +368,9 @@ There are no episodes below tt0002000. Is this OK? How should we deal with this?
 ### Ratings
 
 ```{r}
-# rows <- findMaxRow(titleRatings, stopTconst)
-# df.ratings <- createDataframe(titleRatings, rows)
-# tail(df.ratings)
-titleRatings
-stopTconst
+rows <- findMaxRowLessThanKey(titleRatings, stopTconst)
+df.ratings <- createDataframe(titleRatings, rows)
+tail(df.ratings)
 ```
 
 ### Principles
