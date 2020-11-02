@@ -36,30 +36,20 @@ titlePrincipals <- "title.principals.tsv.gz"
 titleRatings <- "title.ratings.tsv.gz"
 ```
 
+The next section downloads all the data files needed, if they don't exist already. This may take a while if you do not already have the files.
 
 ```{r}
+# 
 downloadData <- function(file) {
+  #' Downloads a gziped file from imdb
   destination <- paste(directory,file,sep="")
   if(!file.exists(destination) || updateData){
     website <- paste(URL,file,sep="")
     download.file(website,destination)
   }
-  return (destination)
+  destination # final statement in function returned
 }
 
-createDataframe <- function(file) {
-  return (read.table(file, fill=TRUE, header=TRUE, 
-             sep='\t', quote = "\"", encoding="UTF-8"))
-}
-
-getData <- function(filepath) {
-  return (createDataframe(filepath))
-}
-```
-
-The next section downloads all the data files needed, if they don't exist already. This may take a while if you do not already have the files.
-
-```{r}
 # Download data
 # NOTE: only run this chunk once per execution of notebook, otherwise 
 # filepaths will get messed up.
@@ -70,21 +60,43 @@ nameBasics <- downloadData(nameBasics)
 titlePrincipals <- downloadData(titlePrincipals)
 titleRatings <- downloadData(titleRatings)
 titleBasics <- downloadData(titleBasics)
-
-# TEMP NOTE: If we use the same name for each dataframe and use only when needed
-# it may help the garbage collector free up some RAM once the data is in the
-# database.
-# Create dataframes
-# df.akas <- getData(titleAkas)
-# df.crew <- getData(titleCrew)
-# df.ep <- getData(titleEpisode)
-# df.nb <- getData(nameBasics)
-# df.prin <- getData(titlePrincipals)
-# df.rate <- getData(titleRatings)
-# df.tb <- getData(titleBasics)
 ```
 
-The following chunk creates the database schema using CREATE TABLE statements. This schema was designed for the relational model based on the above datasets.
+We will also need the following functions to read in data from files and convert them to dataframes.
+
+```{r}
+createDataframe <- function(file, rows=-1) {
+  #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
+  #' with rows, but defaults to the whole file.
+  read.table(file, fill=TRUE, header=TRUE, na.strings=c("\\N"),
+             sep='\t', quote = "\"", encoding="UTF-8", nrows=rows)
+}
+
+findMaxRow <- function(file, stopKeyValue) {
+  #' Finds the row value in the gzipped tsv immediately before the given key
+  #' value. stopKeyValue is assumed to be the first entry in a line of the tsv.
+  #' It should also be the key above the last one you want to include, as there
+  #' are some files with multiple of the same key in a row.
+  fconn <- gzfile(file, 'r')
+  rowNum <- -1
+  while (TRUE) {
+    # Read one line
+    line = readLines(fconn, n=1)
+    
+    # Stop if the key is found, or on EOF
+    foundLine <- startsWith(line, stopKeyValue)
+    if (foundLine || length(line) == 0) {
+      break
+    }
+    rowNum <- rowNum + 1
+  }
+  close(fconn)
+  rowNum
+}
+```
+## Database Schema
+
+The following chunk creates all the necessary tables in our database based on the schema presented earlier.
 
 ```{r}
 # First we need to remove any existing data,
@@ -285,8 +297,55 @@ tables <- c(
 for (table_stmt in tables) {
   dbExecute(conn, table_stmt)
 }
-
-# Remove later - for testing
-dbListTables(conn)
 ```
 
+## Reading Data Locally
+
+Next we need to load data into the database. Because of the size of the data set, we will take a small sample of it for the purposes of this practicum.
+
+### Titles
+
+The number of titles we choose to include will determine the amount of data read in from other files. Therefore we will get this data first.
+
+```{r}
+# We've decided arbitrarily to load 2000(?) titles/media
+stopTconst <- "tt0002001"
+rows <- findMaxRow(titleBasics, stopTconst)
+df.tb <- createDataframe(titleBasics, rows)
+tail(df.tb)
+```
+
+### AKAs
+
+```{r}
+rows <- findMaxRow(titleAkas, stopTconst)
+df.akas <- createDataframe(titleAkas, rows)
+tail(df.akas)
+```
+
+### Episodes
+
+There are no episodes below tt0002000. Is this OK? How should we deal with this?
+
+### Ratings
+
+```{r}
+# rows <- findMaxRow(titleRatings, stopTconst)
+# df.ratings <- createDataframe(titleRatings, rows)
+# tail(df.ratings)
+titleRatings
+stopTconst
+```
+
+### Principles
+
+Principles will help us determine which people to include
+
+```{r}
+rows <- findMaxRow(titlePrincipals, stopTconst)
+df.princ <- createDataframe(titlePrincipals, rows)
+tail(df.princ)
+unique(df.princ$nconst)
+```
+
+## Loading Data to Database
