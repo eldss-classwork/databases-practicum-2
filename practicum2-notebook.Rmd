@@ -20,6 +20,8 @@ library(RSQLite)
 library(readr)
 library(tidyr)
 library(dplyr)
+library(data.table)
+library(hash)
 
 # Setup SQLite database
 DB_NAME <- "imdb-data.db"
@@ -43,7 +45,6 @@ titleRatings <- "title.ratings.tsv.gz"
 The next section downloads all the data files needed, if they don't exist already. This may take a while if you do not already have the files.
 
 ```{r}
-# 
 downloadData <- function(file) {
   #' Downloads a gziped file from imdb
   destination <- paste(directory,file,sep="")
@@ -69,13 +70,11 @@ titleBasics <- downloadData(titleBasics)
 We will also need the following functions to read in data from files and convert them to dataframes.
 
 ```{r}
-# TODO: Look into using the readr read_delim function instead: Docs say 10x faster.
-#       May not work, doesn't look like there is an encoding parameter.
 createDataframe <- function(file, rows=-1) {
   #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
   #' with rows, but defaults to the whole file.
-  read.table(file, fill=TRUE, header=TRUE, na.strings=c("\\N"),
-             sep='\t', quote = "\"", encoding="UTF-8", nrows=rows)
+  fread(file, na.strings = "\\N", encoding = "UTF-8", data.table = FALSE, 
+        showProgress = FALSE, nrows = rows)  # fread is a faster alternative to read.tsv
 }
 
 findMaxRowExactKey <- function(file, stopKeyValue) {
@@ -429,17 +428,34 @@ head(df.writers, 10)
 
 ### Names/People
 
-Getting data from the name basics data is more complicated. Unlike the other files, there is no natural ordering on the media IDs.
+Getting data from the name basics data is more complicated. Unlike the other files, there is no natural ordering on the media IDs. However, we do have name IDs for every crew member on the media that we are including. By creating a set of these name IDs we can use it to filter out people we don't want.
+
+Unfortunately we will have to read in the whole file, so this will take some time if running it yourself. We could filter the original file and write out a new one with the filtered rows, but this requires parsing the whole file anyways, so it makes more sense to simply read in the whole file to a dataframe and then filter that.
 
 ```{r}
-df <- read_tsv(nameBasics)
-head(df)
+# This may take a while...
+df.names <- createDataframe(nameBasics)
+tail(df.names)
+
 ```
 
 ```{r}
-df.1 <- read_tsv(titleAkas, na=c("\\N"))
-head(df.1)
-```
+# Gather all unique name IDs into single series
+allNames <- unique(
+  union_all(
+    as.character(df.princ$nconst),
+    df.directors$directors,
+    df.writers$writers
+  )
+)
 
+# Add them to a hash
+nameSet = hash(allNames, 1:length(allNames))  # values don't matter for the set
+
+# Filter for used names
+# This may take several minutes. May be longer than the reading...
+df.names <- filter(df.names, has.key(nconst, nameSet))
+tail(df.names)
+```
 
 ## Loading Data to Database
