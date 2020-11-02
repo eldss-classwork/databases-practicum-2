@@ -18,6 +18,8 @@ Before working with the data we need to create a place to store it. This section
 ```{r}
 library(RSQLite)
 library(readr)
+library(tidyr)
+library(dplyr)
 
 # Setup SQLite database
 DB_NAME <- "imdb-data.db"
@@ -67,7 +69,8 @@ titleBasics <- downloadData(titleBasics)
 We will also need the following functions to read in data from files and convert them to dataframes.
 
 ```{r}
-# TODO: Look into using the readr read_delim function instead: Docs say 10x faster
+# TODO: Look into using the readr read_delim function instead: Docs say 10x faster.
+#       May not work, doesn't look like there is an encoding parameter.
 createDataframe <- function(file, rows=-1) {
   #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
   #' with rows, but defaults to the whole file.
@@ -378,10 +381,65 @@ tail(df.ratings)
 Principles will help us determine which people to include
 
 ```{r}
-rows <- findMaxRow(titlePrincipals, stopTconst)
+rows <- findMaxRowExactKey(titlePrincipals, stopTconst)
 df.princ <- createDataframe(titlePrincipals, rows)
 tail(df.princ)
-unique(df.princ$nconst)
 ```
+
+### Crew
+
+Crew data also contains data about people who worked on titles/media.
+
+```{r}
+rows <- findMaxRowExactKey(titleCrew, stopTconst)
+df.crew <- createDataframe(titleCrew, rows)
+tail(df.crew)
+```
+
+The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be delt with in order to figure out which people we need to include in the database.
+
+```{r}
+head(df.crew, 10)
+```
+
+We use tidyverse packages to split out the writers and directors into separate dataframes, with each name id on it's own line.
+
+```{r}
+# Separate directors
+df.directors <- df.crew[c("tconst", "directors")] %>%
+  mutate(directors = strsplit(as.character(directors), ",")) %>%
+  unnest(directors)
+
+# Remove titles with no director listed
+df.directors <- drop_na(df.directors)
+
+head(df.directors, 10)
+```
+```{r}
+# Separate writers
+df.writers <- df.crew[c("tconst", "writers")] %>%
+  mutate(writers = strsplit(as.character(writers), ",")) %>%
+  unnest(writers)
+
+# Remove rows with no writers listed
+df.writers <- drop_na(df.writers)
+
+head(df.writers, 10)
+```
+
+### Names/People
+
+Getting data from the name basics data is more complicated. Unlike the other files, there is no natural ordering on the media IDs.
+
+```{r}
+df <- read_tsv(nameBasics)
+head(df)
+```
+
+```{r}
+df.1 <- read_tsv(titleAkas, na=c("\\N"))
+head(df.1)
+```
+
 
 ## Loading Data to Database
