@@ -17,40 +17,41 @@ The first thing we need to do is download and process the data files we need for
 
 ```{r, include=FALSE}
 # include option means no output
+library(hash)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
 # Caution: This will take a long time!
-download <- True
-process <- False
+download <- FALSE
+process <- FALSE
 
-directory <- "./data/"
-nameBasics <- "name.basics"
-titleBasics <- "title.basics"
-titleAkas <- "title.akas"
-titleCrew <- "title.crew"
-titleEpisode <- "title.episode"
-titlePrincipals <- "title.principals"
-titleRatings <- "title.ratings"
-gz <- ".tsv.gz"
-sample_tsv <- ".sample.tsv"
+# directory <- "./data/"
+# nameBasics <- "name.basics"
+# titleBasics <- "title.basics"
+# titleAkas <- "title.akas"
+# titleCrew <- "title.crew"
+# titleEpisode <- "title.episode"
+# titlePrincipals <- "title.principals"
+# titleRatings <- "title.ratings"
+# gz <- ".tsv.gz"
+# sample_tsv <- ".sample.tsv"
 
-download_files <- function():
-  #' Downloads all needed files from IMDB. Will overwrite existing files.
-  url <- "https://datasets.imdbws.com/"
-  files <- c(nameBasics, titleBasics, titleAkas, titleCrew, titleEpisode, 
-           titlePrincipals, titleRatings)
-  
-  for file in files:
-    urllib.request.urlretrieve(url, directory + file + gz)
-
-def process_episodes(num_rows):
-  '''
-  To ensure titles will include episodes, we process the episodes file differently
-  than the others. A set of episodes from the start of the file will define
-  most of the titles included in the final sample dataset.
-  '''
-  print('hello')
+# download_files <- function():
+#   #' Downloads all needed files from IMDB. Will overwrite existing files.
+#   url <- "https://datasets.imdbws.com/"
+#   files <- c(nameBasics, titleBasics, titleAkas, titleCrew, titleEpisode, 
+#            titlePrincipals, titleRatings)
+#   
+#   for file in files:
+#     urllib.request.urlretrieve(url, directory + file + gz)
+# 
+# def process_episodes(num_rows):
+#   '''
+#   To ensure titles will include episodes, we process the episodes file differently
+#   than the others. A set of episodes from the start of the file will define
+#   most of the titles included in the final sample dataset.
+#   '''
+#   print('hello')
 #   original_path = directory + titleEpisode + gz
 #   new_path = directory + titleEpisode + sample_tsv
 #   with original as gzip.open(original_path, 'rt', encoding="utf-8"):
@@ -64,11 +65,12 @@ def process_episodes(num_rows):
 #         line = original.readline()
 #         new.write(line)
 
-if download:
+if (download) {
   # Get the files
   download_files()
+}
   
-if process:
+if (process) {
   title_ids = set()
   name_ids = set()
   num_rows_episodes = 500
@@ -76,6 +78,7 @@ if process:
   
   # Process episodes so we can get title id set
   process_episodes(num_rows_episodes)
+}
 ```
 
 
@@ -88,7 +91,7 @@ library(readr)
 library(tidyr)
 library(dplyr)
 library(data.table)
-library(hash)
+
 
 # Setup SQLite database
 DB_NAME <- "imdb-data.db"
