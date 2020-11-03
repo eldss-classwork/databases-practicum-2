@@ -546,19 +546,43 @@ df.tt <- tibble::rowid_to_column(df.tt, "format_id")
 dbWriteTable(conn,"Title_Type",df.tt, overwrite=TRUE)
 ```
 
-"Genres" table
-```{r}
-
-```
-
 "Media" table
 ```{r}
-
+df.media <- df.tb[,-c(0,9)]
+head(df.media)
 ```
 
-"Media_Genres" table
+"Genres" and "Media_Genres" tables
 ```{r}
+# Grab the needed columns from the current dataframe
+df.mgl <- df.tb[,c(1,9)]
 
+# Separate multi-valued attributes
+df.mg <- df.mgl %>% 
+  mutate(genres = strsplit(genres, ",")) %>%
+  unnest(genres)
+# Assign unique ids to the unique values - only works on initial loading of data
+df.mg <- tibble::rowid_to_column(df.mg, "mg_id")
+head(df.mg)
+
+# Since genres is a categorical table, grab unique values
+df.genres <- unique(df.mg["genres"])
+# Assign unique ids to the unique values - only works on initial loading of data
+df.genres <- tibble::rowid_to_column(df.genres, "genre_id")
+# Rename column names to match table
+colnames(df.genres) <- c("genre_id", "genre")
+head(df.genres)
+
+# Convert the genre into the appropriate FK id
+
+# Rename column names to match table
+colnames(df.mg) <- c("mg_id", "tconst", "genre_id")
+head(df.mg)
+
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Genres",df.genres, overwrite=TRUE)
+#dbWriteTable(conn,"Media_Genres",df.mg, overwrite=TRUE)
 ```
 
 "Episode" table
