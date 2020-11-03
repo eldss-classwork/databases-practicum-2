@@ -15,82 +15,139 @@ The code below will download all the compressed tsv files required by this noteb
 
 The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. We have used Python for this task because it has more built in language constructs for file and string processing without loading everything into memory as a dataframe. The remainder of the notebook will be R based.
 
-```{r, include=FALSE}
-# include option means no output
+```{r}
+library(data.table)
 library(hash)
+library(readr)
+library(tidyr)
+library(dplyr)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
 # Caution: This will take a long time!
 download <- FALSE
-process <- FALSE
+process <- TRUE
 
-# directory <- "./data/"
-# nameBasics <- "name.basics"
-# titleBasics <- "title.basics"
-# titleAkas <- "title.akas"
-# titleCrew <- "title.crew"
-# titleEpisode <- "title.episode"
-# titlePrincipals <- "title.principals"
-# titleRatings <- "title.ratings"
-# gz <- ".tsv.gz"
-# sample_tsv <- ".sample.tsv"
+# File constants
+dataDir <- "./data/"
+sampleDataDir <- "./sample-data/"
+url <- "https://datasets.imdbws.com/"
+nameBasics <- "name.basics"
+titleBasics <- "title.basics"
+titleAkas <- "title.akas"
+titleCrew <- "title.crew"
+titleEpisode <- "title.episode"
+titlePrincipals <- "title.principals"
+titleRatings <- "title.ratings"
+gz <- ".tsv.gz"
+sampleTsv <- ".sample.tsv"
 
-# download_files <- function():
-#   #' Downloads all needed files from IMDB. Will overwrite existing files.
-#   url <- "https://datasets.imdbws.com/"
-#   files <- c(nameBasics, titleBasics, titleAkas, titleCrew, titleEpisode, 
-#            titlePrincipals, titleRatings)
-#   
-#   for file in files:
-#     urllib.request.urlretrieve(url, directory + file + gz)
-# 
-# def process_episodes(num_rows):
-#   '''
-#   To ensure titles will include episodes, we process the episodes file differently
-#   than the others. A set of episodes from the start of the file will define
-#   most of the titles included in the final sample dataset.
-#   '''
-#   print('hello')
-#   original_path = directory + titleEpisode + gz
-#   new_path = directory + titleEpisode + sample_tsv
-#   with original as gzip.open(original_path, 'rt', encoding="utf-8"):
-#     with new as open(new_path, 'w', encoding="utf-8"):
-#       # Transfer headerline
-#       line = original.readline()
-#       new.write(line)
-#       
-#       # Transfer set number of lines
-#       for _ in range(num_rows):
-#         line = original.readline()
-#         new.write(line)
+# Constants for selecting titles to include
+numEpRows <- 500
+numNameRows <- 50
+
+downloadData <- function() {
+  #' Downloads all needed data files from IMDB.
+  filenames <- c(nameBasics, titleBasics, titleAkas, titleCrew,
+                 titleEpisode, titlePrincipals, titleRatings)
+  for (name in filenames) {
+    website <- paste(url, name, gz, sep="")
+    destination <- paste(dataDir, name, gz, sep="")
+    download.file(website, destination)
+  }
+}
+
+createDataframe <- function(file, rows=-1) {
+  #' Creates a dataframe out of a tsv file from IMDB. Can specify a row limit
+  #' with rows, but defaults to the whole file.
+  fread(file, na.strings = "\\N", encoding = "UTF-8", data.table = FALSE, 
+        showProgress = FALSE, nrows = rows)  # fread is a faster alternative to read.tsv
+}
+
+createTitleIdSet <- function(episodeRows, nameRows) {
+  #' Creates a set of title ids from the tconst values in the episode and 
+  #' name tsv files. These are used due to create a representative dataset
+  #' that has both episodes and actors that appear in more than one included
+  #' movie (that is not a show).
+  epPaths <- getFullAndSamplePaths(titleEpisode)
+  namePaths <- getFullAndSamplePaths(nameBasics)
+  df.eps <- createDataframe(epPaths$full, episodeRows)
+  df.names <- createDataframe(namePaths$full, nameRows)
+  
+  # Separate knownForTitles
+  kfTitles <- drop_na(df.names["knownForTitles"]) %>%
+    mutate(knownForTitles = strsplit(as.character(knownForTitles), ",")) %>%
+    unnest(knownForTitles)
+  
+  # Combine all titles into a set
+  allTitles <- unique(
+    union_all(
+      as.character(df.eps$tconst),
+      as.character(df.eps$parentTconst),
+      kfTitles$knownForTitles
+    )
+  )
+  titleSet = hash(allTitles, 1:length(allTitles))  # values don't matter for the set
+  
+  titleSet
+}
+
+writeEpisodeSample <- function(numRows) {
+  #' Writes sample data from the episodes tsv. This can be processed faster
+  #' than others because we simply select a number of rows to included from
+  #' the top.
+  paths <- getOldAndNewPaths(titleEpisode)
+  df <- createDataframe(paths$full, numRows)
+  write_tsv(df, paths$sample)
+}
+
+writeTsvFilterByTitle <- function(dataframe, filterSet, filename) {
+  #' Writes an existing dataframe after filtering it on tconst
+  
+  # This may take several minutes...
+  filter(dataframe, has.key(tconst, filterSet))
+  
+  # Write out the data
+  paths <- getFullAndSamplePaths(outPath)
+  write_tst(dataframe, paths$sample)
+}
+
+getFullAndSamplePaths <- function(filename) {
+  #' Returns the path to the original data file and the sample data file in
+  #' a list.
+  full <- paste(dataDir, filename, gz, sep="")
+  sample <- paste(sampleDataDir, filename, sampleTsv, sep="")
+  list("full" = full, "sample" = sample)
+}
 
 if (download) {
-  # Get the files
-  download_files()
+  downloadData()
 }
-  
-if (process) {
-  title_ids = set()
-  name_ids = set()
-  num_rows_episodes = 500
-  num_rows_names = 50
-  
-  # Process episodes so we can get title id set
-  process_episodes(num_rows_episodes)
-}
-```
 
+if (process) {
+  if (!dir.exists(sampleDataDir)) {
+    dir.create(sampleDataDir)  
+  }
+  # Get titles to include
+  titleIdSet <- createTitleIdSet(numEpRows, numNameRows)
+  
+  writeEpisodeSample(numEpRows)
+}
+
+# paths <- getOldAndNewPaths(nameBasics)
+# df <- createDataframe(paths$full, 50)
+# kfTitles <- drop_na(df["knownForTitles"]) %>%
+#     mutate(knownForTitles = strsplit(as.character(knownForTitles), ",")) %>%
+#     unnest(knownForTitles)
+# head(kfTitles)
+```
 
 Before working with the data we need to create a place to store it. This section will set up a SQLite database and any constants needed later.
 
-```{r, include=FALSE}
-
+```{r}
+# include option means no output
 library(RSQLite)
-library(readr)
-library(tidyr)
-library(dplyr)
-library(data.table)
+
 
 
 # Setup SQLite database
@@ -112,34 +169,10 @@ titlePrincipals <- "title.principals.tsv.gz"
 titleRatings <- "title.ratings.tsv.gz"
 ```
 
-The next section downloads all the data files needed, if they don't exist already. This may take a while if you do not already have the files.
-
-```{r}
-downloadData <- function(file) {
-  #' Downloads a gziped file from imdb
-  destination <- paste(directory,file,sep="")
-  if(!file.exists(destination) || updateData){
-    website <- paste(URL,file,sep="")
-    download.file(website,destination)
-  }
-  destination # final statement in function returned
-}
-
-# Download data
-# NOTE: only run this chunk once per execution of notebook, otherwise 
-# filepaths will get messed up.
-titleAkas <- downloadData(titleAkas)
-titleCrew <- downloadData(titleCrew)
-titleEpisode <- downloadData(titleEpisode)
-nameBasics <- downloadData(nameBasics)
-titlePrincipals <- downloadData(titlePrincipals)
-titleRatings <- downloadData(titleRatings)
-titleBasics <- downloadData(titleBasics)
-```
-
 We will also need the following functions to read in data from files and convert them to dataframes.
 
 ```{r}
+# Can use read_csv for everything now
 createDataframe <- function(file, rows=-1) {
   #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
   #' with rows, but defaults to the whole file.
@@ -466,7 +499,7 @@ df.crew <- createDataframe(titleCrew, rows)
 tail(df.crew)
 ```
 
-The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be dealt with in order to figure out which people we need to include in the database.
+The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be delt with in order to figure out which people we need to include in the database.
 
 ```{r}
 head(df.crew, 10)
@@ -530,104 +563,4 @@ tail(df.names)
 ```
 
 ## Loading Data to Database
-
-"Title_Type" table
-```{r}
-# Grab the needed columns from the current dataframe
-types <- df.tb[,c(0,2)]
-# Since this is a categorical table, grab unique values
-format <- unique(types)
-# Create a new dataframe with unique values
-df.tt <- data.frame(format)
-# Assign unique ids to the unique values - only works on initial loading of data
-df.tt <- tibble::rowid_to_column(df.tt, "format_id")
-# Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Title_Type",df.tt, overwrite=TRUE)
-```
-
-"Genres" table
-```{r}
-
-```
-
-"Media" table
-```{r}
-
-```
-
-"Media_Genres" table
-```{r}
-
-```
-
-"Episode" table
-```{r}
-
-```
-
-"Ratings" table
-```{r}
-
-```
-
-"People" table
-```{r}
-
-```
-
-"Known_For_Titles" table
-```{r}
-
-```
-
-"Professions" table
-```{r}
-
-```
-
-"Primary_Profession" table
-```{r}
-
-```
-
-"Crew" table
-```{r}
-
-```
-
-"Media_Directors" table
-```{r}
-
-```
-
-"Media_Writers" table
-```{r}
-
-```
-
-"Also_Known_As" table
-```{r}
-
-```
-
-"Title_Types" table
-```{r}
-
-```
-
-"Aka_Types" table
-```{r}
-
-```
-
-"Attributes" table
-```{r}
-
-```
-
-"Aka_Attributes" table
-```{r}
-
-```
 
