@@ -395,7 +395,7 @@ df.crew <- createDataframe(titleCrew, rows)
 tail(df.crew)
 ```
 
-The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be delt with in order to figure out which people we need to include in the database.
+The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be dealt with in order to figure out which people we need to include in the database.
 
 ```{r}
 head(df.crew, 10)
@@ -459,3 +459,104 @@ tail(df.names)
 ```
 
 ## Loading Data to Database
+
+"Title_Type" table
+```{r}
+# Grab the needed columns from the current dataframe
+types <- df.tb[,c(0,2)]
+# Since this is a categorical table, grab unique values
+format <- unique(types)
+# Create a new dataframe with unique values
+df.tt <- data.frame(format)
+# Assign unique ids to the unique values - only works on initial loading of data
+df.tt <- tibble::rowid_to_column(df.tt, "format_id")
+# Transfer the new dataframe into the database table
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Title_Type",df.tt, overwrite=TRUE)
+```
+
+"Genres" table
+```{r}
+
+```
+
+"Media" table
+```{r}
+
+```
+
+"Media_Genres" table
+```{r}
+
+```
+
+"Episode" table
+```{r}
+
+```
+
+"Ratings" table
+```{r}
+
+```
+
+"People" table
+```{r}
+
+```
+
+"Known_For_Titles" table
+```{r}
+
+```
+
+"Professions" table
+```{r}
+
+```
+
+"Primary_Profession" table
+```{r}
+
+```
+
+"Crew" table
+```{r}
+
+```
+
+"Media_Directors" table
+```{r}
+
+```
+
+"Media_Writers" table
+```{r}
+
+```
+
+"Also_Known_As" table
+```{r}
+
+```
+
+"Title_Types" table
+```{r}
+
+```
+
+"Aka_Types" table
+```{r}
+
+```
+
+"Attributes" table
+```{r}
+
+```
+
+"Aka_Attributes" table
+```{r}
+
+```
+
