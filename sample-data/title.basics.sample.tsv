@@ -1,0 +1,783 @@
+tconst	titleType	primaryTitle	originalTitle	isAdult	startYear	endYear	runtimeMinutes	genres
+tt0015324	movie	Sherlock Jr.	Sherlock Jr.	0	1924	NA	45	Action,Comedy,Romance
+tt0016332	movie	Seven Chances	Seven Chances	0	1925	NA	56	Comedy,Romance
+tt0017925	movie	The General	The General	0	1926	NA	67	Action,Adventure,Comedy
+tt0019421	movie	Steamboat Bill, Jr.	Steamboat Bill, Jr.	0	1928	NA	70	Action,Comedy,Drama
+tt0021156	movie	Morocco	Morocco	0	1930	NA	92	Drama,Romance
+tt0022100	movie	M	M - Eine Stadt sucht einen Mörder	0	1931	NA	117	Crime,Mystery,Thriller
+tt0022158	movie	Monkey Business	Monkey Business	0	1931	NA	77	Comedy,Musical
+tt0023382	movie	Red Dust	Red Dust	0	1932	NA	83	Drama,Romance
+tt0023969	movie	Duck Soup	Duck Soup	0	1933	NA	69	Comedy,Musical,War
+tt0025316	movie	It Happened One Night	It Happened One Night	0	1934	NA	105	Comedy,Romance
+tt0026752	movie	Mutiny on the Bounty	Mutiny on the Bounty	0	1935	NA	132	Adventure,Biography,Drama
+tt0026778	movie	A Night at the Opera	A Night at the Opera	0	1935	NA	96	Comedy,Music,Musical
+tt0027996	movie	Mr. Deeds Goes to Town	Mr. Deeds Goes to Town	0	1936	NA	115	Comedy,Drama,Romance
+tt0028772	movie	A Day at the Races	A Day at the Races	0	1937	NA	111	Comedy,Musical,Sport
+tt0029843	movie	The Adventures of Robin Hood	The Adventures of Robin Hood	0	1938	NA	102	Action,Adventure,Romance
+tt0029870	movie	Angels with Dirty Faces	Angels with Dirty Faces	0	1938	NA	97	Crime,Drama,Film-Noir
+tt0031210	movie	Dark Victory	Dark Victory	0	1939	NA	104	Drama,Romance
+tt0031381	movie	Gone with the Wind	Gone with the Wind	0	1939	NA	238	Drama,History,Romance
+tt0031867	movie	The Roaring Twenties	The Roaring Twenties	0	1939	NA	106	Crime,Drama,Film-Noir
+tt0031983	movie	The Story of Vernon and Irene Castle	The Story of Vernon and Irene Castle	0	1939	NA	93	Biography,Drama,Musical
+tt0032138	movie	The Wizard of Oz	The Wizard of Oz	0	1939	NA	102	Adventure,Family,Fantasy
+tt0032551	movie	The Grapes of Wrath	The Grapes of Wrath	0	1940	NA	129	Drama,History
+tt0032599	movie	His Girl Friday	His Girl Friday	0	1940	NA	92	Comedy,Drama,Romance
+tt0032904	movie	The Philadelphia Story	The Philadelphia Story	0	1940	NA	112	Comedy,Romance
+tt0032976	movie	Rebecca	Rebecca	0	1940	NA	130	Drama,Mystery,Romance
+tt0033238	movie	Waterloo Bridge	Waterloo Bridge	0	1940	NA	108	Drama,Romance,War
+tt0033870	movie	The Maltese Falcon	The Maltese Falcon	0	1941	NA	100	Film-Noir,Mystery
+tt0034167	movie	Sergeant York	Sergeant York	0	1941	NA	134	Biography,Drama,History
+tt0034240	movie	Sullivan's Travels	Sullivan's Travels	0	1941	NA	90	Adventure,Comedy,Drama
+tt0034248	movie	Suspicion	Suspicion	0	1941	NA	99	Film-Noir,Mystery,Thriller
+tt0034272	movie	That Hamilton Woman	That Hamilton Woman	0	1941	NA	125	Drama,History,Romance
+tt0034583	movie	Casablanca	Casablanca	0	1942	NA	102	Drama,Romance,War
+tt0034881	movie	I Married a Witch	I Married a Witch	0	1942	NA	77	Comedy,Fantasy,Romance
+tt0035140	movie	Now, Voyager	Now, Voyager	0	1942	NA	117	Drama,Romance
+tt0035432	movie	This Gun for Hire	This Gun for Hire	0	1942	NA	81	Crime,Drama,Film-Noir
+tt0035575	movie	Yankee Doodle Dandy	Yankee Doodle Dandy	0	1942	NA	126	Biography,Drama,Music
+tt0035896	movie	For Whom the Bell Tolls	For Whom the Bell Tolls	0	1943	NA	170	Adventure,Drama,History
+tt0036613	movie	Arsenic and Old Lace	Arsenic and Old Lace	0	1944	NA	118	Comedy,Crime,Thriller
+tt0036723	movie	Cover Girl	Cover Girl	0	1944	NA	107	Comedy,Music,Romance
+tt0036855	movie	Gaslight	Gaslight	0	1944	NA	114	Crime,Drama,Mystery
+tt0037059	movie	Meet Me in St. Louis	Meet Me in St. Louis	0	1944	NA	113	Comedy,Drama,Family
+tt0037382	movie	To Have and Have Not	To Have and Have Not	0	1944	NA	100	Adventure,Comedy,Film-Noir
+tt0038109	movie	Spellbound	Spellbound	0	1945	NA	111	Film-Noir,Mystery,Romance
+tt0038355	movie	The Big Sleep	The Big Sleep	0	1946	NA	114	Crime,Film-Noir,Mystery
+tt0038369	movie	The Blue Dahlia	The Blue Dahlia	0	1946	NA	96	Crime,Film-Noir,Mystery
+tt0038559	movie	Gilda	Gilda	0	1946	NA	110	Drama,Film-Noir,Romance
+tt0038787	movie	Notorious	Notorious	0	1946	NA	102	Drama,Film-Noir,Romance
+tt0039192	movie	Black Narcissus	Black Narcissus	0	1947	NA	101	Drama
+tt0039504	movie	Ivy	Ivy	0	1947	NA	99	Crime,Drama,Thriller
+tt0040051	tvSeries	Studio One in Hollywood	Studio One	0	1948	1958	60	Drama
+tt0040525	movie	The Lady from Shanghai	The Lady from Shanghai	0	1947	NA	87	Crime,Drama,Film-Noir
+tt0040536	movie	Letter from an Unknown Woman	Letter from an Unknown Woman	0	1948	NA	87	Drama,Romance
+tt0040552	movie	The Loves of Carmen	The Loves of Carmen	0	1948	NA	99	Adventure,Drama,Music
+tt0040746	movie	Rope	Rope	0	1948	NA	80	Crime,Drama,Mystery
+tt0040806	movie	The Snake Pit	The Snake Pit	0	1948	NA	108	Drama,Mystery
+tt0040897	movie	The Treasure of the Sierra Madre	The Treasure of the Sierra Madre	0	1948	NA	126	Adventure,Drama,Western
+tt0041038	tvSeries	The Lone Ranger	The Lone Ranger	0	1949	1957	30	Western
+tt0041452	movie	The Heiress	The Heiress	0	1949	NA	115	Drama,Romance
+tt0041546	movie	Kind Hearts and Coronets	Kind Hearts and Coronets	0	1949	NA	106	Comedy,Crime
+tt0041716	movie	On the Town	On the Town	0	1949	NA	98	Comedy,Musical,Romance
+tt0041951	tvEpisode	The Tenderfeet	The Tenderfeet	0	1949	NA	30	Western
+tt0042041	movie	White Heat	White Heat	0	1949	NA	114	Action,Crime,Drama
+tt0042192	movie	All About Eve	All About Eve	0	1950	NA	138	Drama
+tt0042279	movie	Branded	Branded	0	1950	NA	104	Action,Adventure,Drama
+tt0042816	tvEpisode	Othello	Othello	0	1950	NA	135	Drama
+tt0042889	tvEpisode	The Tragedy of King Richard II/II	The Tragedy of King Richard II/II	0	1950	NA	145	Drama
+tt0043014	movie	Sunset Blvd.	Sunset Blvd.	0	1950	NA	110	Drama,Film-Noir
+tt0043228	tvSeries	Schlitz Playhouse	Schlitz Playhouse of Stars	0	1951	1959	30	Comedy,Drama
+tt0043265	movie	The African Queen	The African Queen	0	1951	NA	105	Adventure,Drama,Romance
+tt0043278	movie	An American in Paris	An American in Paris	0	1951	NA	114	Drama,Musical,Romance
+tt0043338	movie	Ace in the Hole	Ace in the Hole	0	1951	NA	111	Drama,Film-Noir
+tt0043426	tvEpisode	Coriolanus	Coriolanus	0	1951	NA	60	Drama
+tt0043631	tvEpisode	The Life of King Henry V	The Life of King Henry V	0	1951	NA	133	Drama
+tt0043693	tvEpisode	Julius Caesar	Julius Caesar	0	1951	NA	NA	Drama
+tt0043710	tvEpisode	The Life and Death of King John	The Life and Death of King John	0	1952	NA	NA	Drama
+tt0044081	movie	A Streetcar Named Desire	A Streetcar Named Desire	0	1951	NA	122	Drama
+tt0044093	tvEpisode	The Three Musketeers	The Three Musketeers	0	1950	NA	60	Drama
+tt0044243	tvSeries	Broadway Television Theatre	Broadway Television Theatre	0	1952	1954	60	Comedy,Drama
+tt0044284	tvSeries	Omnibus	Omnibus	0	1952	1961	55	Drama,History,Music
+tt0044668	tvEpisode	The Gold Diggers	The Gold Diggers	0	1952	NA	90	Comedy,Drama
+tt0044706	movie	High Noon	High Noon	0	1952	NA	85	Drama,Thriller,Western
+tt0044901	tvEpisode	The Merry Wives of Windsor	The Merry Wives of Windsor	0	1952	NA	NA	Drama
+tt0045152	movie	Singin' in the Rain	Singin' in the Rain	0	1952	NA	103	Comedy,Musical,Romance
+tt0045519	tvEpisode	As You Like It	As You Like It	0	1953	NA	NA	Drama
+tt0045793	movie	From Here to Eternity	From Here to Eternity	0	1953	NA	118	Drama,Romance,War
+tt0045943	movie	Julius Caesar	Julius Caesar	0	1953	NA	120	Biography,Drama,History
+tt0045960	tvEpisode	King Lear	King Lear	0	1953	NA	75	Drama,History,Music
+tt0046135	tvEpisode	Number Three	Number Three	0	1953	NA	80	Drama
+tt0046150	tvEpisode	Othello	Othello	0	1953	NA	84	Drama
+tt0046250	movie	Roman Holiday	Roman Holiday	0	1953	NA	118	Comedy,Romance
+tt0046303	movie	Shane	Shane	0	1953	NA	118	Drama,Western
+tt0046359	movie	Stalag 17	Stalag 17	0	1953	NA	120	Comedy,Drama,War
+tt0046587	tvSeries	Climax!	Climax!	0	1954	1958	60	Drama
+tt0046593	tvSeries	The Magical World of Disney	Disneyland	0	1954	1997	120	Adventure,Drama,Family
+tt0046637	tvSeries	Producers' Showcase	Producers' Showcase	0	1954	1957	90	Comedy,Drama,Family
+tt0046643	tvSeries	Shower of Stars	Shower of Stars	0	1954	1958	60	Adventure,Drama,Family
+tt0046855	tvEpisode	A Christmas Carol	A Christmas Carol	0	1954	NA	60	Adventure,Drama,Family
+tt0046864	tvEpisode	The Comedy of Errors	The Comedy of Errors	0	1954	NA	NA	Drama
+tt0046912	movie	Dial M for Murder	Dial M for Murder	0	1954	NA	105	Crime,Thriller
+tt0047296	movie	On the Waterfront	On the Waterfront	0	1954	NA	108	Crime,Drama,Thriller
+tt0047396	movie	Rear Window	Rear Window	0	1954	NA	112	Mystery,Thriller
+tt0047478	movie	Seven Samurai	Shichinin no samurai	0	1954	NA	207	Action,Adventure,Drama
+tt0047522	movie	A Star Is Born	A Star Is Born	0	1954	NA	154	Drama,Musical,Romance
+tt0047702	tvSeries	The 20th Century-Fox Hour	The 20th Century-Fox Hour	0	1955	1957	60	Drama
+tt0047745	tvSeries	Jane Wyman Presents The Fireside Theatre	Jane Wyman Presents The Fireside Theatre	0	1955	1958	30	Drama
+tt0047768	tvSeries	Screen Directors Playhouse	Screen Directors Playhouse	0	1955	1956	30	Comedy,Drama,Romance
+tt0047810	tvEpisode	All My Sons	All My Sons	0	1958	NA	NA	Comedy,Drama
+tt0047852	tvEpisode	Bamboo Cross	Bamboo Cross	0	1955	NA	29	Drama
+tt0047858	tvEpisode	The Barretts of Wimpole Street	The Barretts of Wimpole Street	0	1956	NA	90	Comedy,Drama,Family
+tt0047961	tvEpisode	The Creature	The Creature	0	1955	NA	90	Drama
+tt0048028	movie	East of Eden	East of Eden	0	1955	NA	118	Drama
+tt0048067	tvEpisode	The Fifth Wheel	The Fifth Wheel	0	1956	NA	60	Drama
+tt0048302	tvEpisode	Life of Vernon Hathaway	Life of Vernon Hathaway	0	1955	NA	30	Comedy,Drama,Romance
+tt0048317	movie	Love Me or Leave Me	Love Me or Leave Me	0	1955	NA	122	Biography,Drama,Music
+tt0048371	tvEpisode	The Merchant of Venice	The Merchant of Venice	0	1955	NA	118	Drama
+tt0048378	tvEpisode	The Miracle on 34th Street	The Miracle on 34th Street	0	1955	NA	46	Drama
+tt0048462	tvEpisode	The Ox-Bow Incident	The Ox-Bow Incident	0	1955	NA	60	Drama
+tt0048545	movie	Rebel Without a Cause	Rebel Without a Cause	0	1955	NA	111	Drama
+tt0048562	tvEpisode	Rookie of the Year	Rookie of the Year	0	1955	NA	29	Comedy,Drama,Romance
+tt0048728	movie	To Catch a Thief	To Catch a Thief	0	1955	NA	106	Mystery,Romance,Thriller
+tt0048883	tvEpisode	The Makepeace Story #1: The Ruthless Destiny	The Makepeace Story #1: The Ruthless Destiny	0	1955	NA	90	Drama
+tt0048893	tvSeries	Playhouse 90	Playhouse 90	0	1956	1961	90	Comedy,Crime,Drama
+tt0049189	movie	...And God Created Woman	Et Dieu... créa la femme	0	1956	NA	95	Drama,Romance
+tt0049261	movie	Giant	Giant	0	1956	NA	201	Drama,Western
+tt0049408	movie	The King and I	The King and I	0	1956	NA	133	Biography,Drama,Musical
+tt0049456	movie	Lust for Life	Lust for Life	0	1956	NA	122	Biography,Drama
+tt0049473	tvEpisode	Man in Space	Man in Space	0	1955	NA	51	Adventure,Drama,Family
+tt0049572	tvEpisode	One	One	0	1956	NA	90	Comedy,Drama
+tt0049669	tvEpisode	Requiem for a Heavyweight	Requiem for a Heavyweight	0	1956	NA	73	Comedy,Crime,Drama
+tt0049833	movie	The Ten Commandments	The Ten Commandments	0	1956	NA	220	Adventure,Drama
+tt0050013	tvSeries	The DuPont Show of the Month	The DuPont Show of the Month	0	1957	1961	90	Comedy,Drama,History
+tt0050031	tvEpisode	Junior Miss	Junior Miss	0	1957	NA	90	Comedy,Drama,History
+tt0050083	movie	12 Angry Men	12 Angry Men	0	1957	NA	96	Crime,Drama
+tt0050105	movie	An Affair to Remember	An Affair to Remember	0	1957	NA	115	Drama,Musical,Romance
+tt0050212	movie	The Bridge on the River Kwai	The Bridge on the River Kwai	0	1957	NA	161	Adventure,Drama,War
+tt0050259	tvEpisode	The Comedian	The Comedian	0	1957	NA	90	Comedy,Crime,Drama
+tt0050318	tvEpisode	The Fourth Anniversary Show	The Fourth Anniversary Show	0	1957	NA	60	Adventure,Drama,Family
+tt0050320	tvEpisode	Disturbance	Disturbance	0	1958	NA	NA	Comedy,Drama
+tt0050419	movie	Funny Face	Funny Face	0	1957	NA	103	Comedy,Musical,Romance
+tt0050468	movie	Gunfight at the O.K. Corral	Gunfight at the O.K. Corral	0	1957	NA	122	Biography,Drama,Western
+tt0050641	tvEpisode	The Life of Henry V	The Life of Henry V	0	1957	NA	NA	Drama
+tt0050678	tvEpisode	Man in a Moon	Man in a Moon	0	1957	NA	60	Drama
+tt0050695	tvEpisode	Mayerling	Mayerling	0	1957	NA	90	Comedy,Drama,Family
+tt0050783	movie	Nights of Cabiria	Le notti di Cabiria	0	1957	NA	110	Drama
+tt0050976	movie	The Seventh Seal	Det sjunde inseglet	0	1957	NA	96	Drama,Fantasy
+tt0050986	movie	Wild Strawberries	Smultronstället	0	1957	NA	91	Drama,Romance
+tt0050988	tvEpisode	So Soon to Die	So Soon to Die	0	1957	NA	67	Comedy,Crime,Drama
+tt0051036	movie	Sweet Smell of Success	Sweet Smell of Success	0	1957	NA	96	Drama,Film-Noir
+tt0051201	movie	Witness for the Prosecution	Witness for the Prosecution	0	1957	NA	116	Crime,Drama,Mystery
+tt0051312	tvSeries	Shirley Temple's Storybook	Shirley Temple's Storybook	0	1958	1961	60	Drama,Family,Fantasy
+tt0051344	tvEpisode	Cole Porter's 'Aladdin'	Cole Porter's 'Aladdin'	0	1958	NA	90	Comedy,Drama,History
+tt0051523	tvEpisode	Days of Wine and Roses	Days of Wine and Roses	0	1958	NA	90	Comedy,Crime,Drama
+tt0051625	tvEpisode	For I Have Loved Strangers	For I Have Loved Strangers	0	1957	NA	90	Comedy,Crime,Drama
+tt0051680	tvEpisode	The Greatest Man in the World	The Greatest Man in the World	0	1958	NA	57	Drama
+tt0051739	movie	The Horse's Mouth	The Horse's Mouth	0	1958	NA	97	Comedy
+tt0051763	tvEpisode	If You Knew Tomorrow	If You Knew Tomorrow	0	1958	NA	NA	NA
+tt0051808	movie	The Hidden Fortress	Kakushi-toride no san-akunin	0	1958	NA	139	Adventure,Drama
+tt0051929	tvEpisode	A Midsummer Night's Dream	A Midsummer Night's Dream	0	1958	NA	105	Drama
+tt0052128	tvEpisode	Rest in Violence	Rest in Violence	0	1958	NA	60	Drama
+tt0052236	tvEpisode	Bankraub in Köln	Bankraub in Köln	0	1958	NA	36	Crime,Drama,Thriller
+tt0052237	tvEpisode	Das zwölfte Messer	Das zwölfte Messer	0	1958	NA	50	Crime,Drama,Thriller
+tt0052238	tvEpisode	Die Tote im Hafenbecken	Die Tote im Hafenbecken	0	1958	NA	50	Crime,Drama,Thriller
+tt0052239	tvEpisode	Die blaue Mütze	Die blaue Mütze	0	1958	NA	45	Crime,Drama,Thriller
+tt0052240	tvEpisode	Mordfall Oberhausen	Mordfall Oberhausen	0	1958	NA	35	Crime,Drama,Thriller
+tt0052241	tvEpisode	Sechs unter Verdacht	Sechs unter Verdacht	0	1958	NA	50	Crime,Drama,Thriller
+tt0052290	tvEpisode	This Day in Fear	This Day in Fear	0	1958	NA	60	Drama
+tt0052311	movie	Touch of Evil	Touch of Evil	0	1958	NA	95	Crime,Drama,Film-Noir
+tt0052357	movie	Vertigo	Vertigo	0	1958	NA	128	Mystery,Romance,Thriller
+tt0052365	movie	The Vikings	The Vikings	0	1958	NA	116	Action,Adventure,History
+tt0052458	tvSeries	The David Niven Show	The David Niven Show	0	1959	1959	30	Drama
+tt0052511	tvSeries	Startime	Startime	0	1959	1961	60	Comedy,Drama,Musical
+tt0052618	movie	Ben-Hur	Ben-Hur	0	1959	NA	212	Adventure,Drama,History
+tt0052628	tvEpisode	The Big Knife	The Big Knife	0	1958	NA	90	Comedy,Drama
+tt0052630	tvEpisode	Billy Budd	Billy Budd	0	1959	NA	90	Comedy,Drama,History
+tt0052647	tvEpisode	Brand	Brand	0	1959	NA	90	Drama
+tt0052730	tvEpisode	The Desperate Man	The Desperate Man	0	1961	NA	60	Mystery
+tt0052856	tvEpisode	Good Deed	Good Deed	0	1959	NA	30	Drama
+tt0052857	tvEpisode	Gordon Jacob	Gordon Jacob	0	1959	NA	17	Documentary
+tt0052866	tvEpisode	Fritz Kortner/The Guitar Craze	Fritz Kortner/The Guitar Craze	0	1959	NA	17	Documentary
+tt0052874	tvEpisode	Hamlet	Hamlet	0	1959	NA	88	Comedy,Drama,History
+tt0052931	tvEpisode	The Iron Harp	The Iron Harp	0	1958	NA	90	Comedy,Drama
+tt0052952	tvEpisode	Julius Caesar	Julius Caesar	0	1959	NA	105	Drama
+tt0053125	movie	North by Northwest	North by Northwest	0	1959	NA	136	Adventure,Mystery,Thriller
+tt0053137	movie	On the Beach	On the Beach	0	1959	NA	134	Drama,Romance,Sci-Fi
+tt0053172	movie	Pillow Talk	Pillow Talk	0	1959	NA	102	Comedy,Romance
+tt0053303	tvEpisode	Aktenzeichen: Welcker u.a. - Wegen Mordes	Aktenzeichen: Welcker u.a. - Wegen Mordes	0	1959	NA	63	Crime,Drama,Thriller
+tt0053304	tvEpisode	Das Alibi	Das Alibi	0	1959	NA	63	Crime,Drama,Thriller
+tt0053305	tvEpisode	Treffpunkt Bahnhof Zoo	Treffpunkt Bahnhof Zoo	0	1959	NA	55	Crime,Drama,Thriller
+tt0053343	tvEpisode	Margin for Error	Margin for Error	0	1955	NA	30	Drama
+tt0053384	tvEpisode	The Turn of the Screw	The Turn of the Screw	0	1959	NA	75	Comedy,Drama,Musical
+tt0053405	tvEpisode	Variations on a Mechanical Theme	Variations on a Mechanical Theme	0	1959	NA	13	Documentary
+tt0053581	tvEpisode	Alas, Babylon	Alas, Babylon	0	1960	NA	90	Comedy,Crime,Drama
+tt0053722	tvEpisode	Clue of the New Pin	Clue of the New Pin	0	1961	NA	58	Crime,Drama,Mystery
+tt0053723	tvEpisode	Clue of the Twisted Candle	Clue of the Twisted Candle	0	1960	NA	61	Crime,Drama,Mystery
+tt0053779	movie	La Dolce Vita	La dolce vita	0	1960	NA	174	Comedy,Drama
+tt0053827	tvEpisode	Flight Into Danger	Flight Into Danger	0	1956	NA	60	Drama
+tt0053946	movie	Inherit the Wind	Inherit the Wind	0	1960	NA	128	Biography,Drama,History
+tt0053966	tvEpisode	John Brown's Raid	John Brown's Raid	0	1960	NA	90	Comedy,Crime,Drama
+tt0053974	tvEpisode	Julius Caesar	Julius Caesar	0	1960	NA	120	Drama
+tt0054015	tvEpisode	The Land of Oz	The Land of Oz	0	1960	NA	55	Drama,Family,Fantasy
+tt0054028	tvEpisode	The Light Fantastic	The Light Fantastic	0	1960	NA	24	Documentary
+tt0054057	tvEpisode	The Malpas Mystery	The Malpas Mystery	0	1960	NA	69	Crime,Drama,Mystery
+tt0054062	tvEpisode	Marie Rambert Remembers	Marie Rambert Remembers	0	1960	NA	22	Documentary
+tt0054084	movie	Midnight Lace	Midnight Lace	0	1960	NA	103	Drama,Mystery,Thriller
+tt0054087	tvEpisode	The Miners' Picnic/Picasso	The Miners' Picnic/Picasso	0	1960	NA	NA	Documentary
+tt0054215	movie	Psycho	Psycho	0	1960	NA	109	Horror,Mystery,Thriller
+tt0054319	tvEpisode	The Nanette Fabray Show, or Help Me, Aphrodite	The Nanette Fabray Show, or Help Me, Aphrodite	0	1960	NA	NA	Comedy,Drama,Musical
+tt0054331	movie	Spartacus	Spartacus	0	1960	NA	197	Adventure,Biography,Drama
+tt0054338	tvEpisode	Die Zeugin im grünen Rock	Die Zeugin im grünen Rock	0	1960	NA	56	Crime,Drama,Thriller
+tt0054339	tvEpisode	E... 605	E... 605	0	1960	NA	97	Crime,Drama,Thriller
+tt0054340	tvEpisode	Verbrannte Spuren	Verbrannte Spuren	0	1960	NA	70	Crime,Drama,Thriller
+tt0054452	movie	La Vérité	La vérité	0	1960	NA	128	Drama
+tt0054513	tvSeries	Alcoa Premiere	Alcoa Premiere	0	1961	1963	60	Drama
+tt0054532	tvSeries	The Dick Powell Theatre	The Dick Powell Show	0	1961	1963	60	Comedy,Drama
+tt0054645	tvEpisode	Attempt to Kill	Attempt to Kill	0	1961	NA	59	Crime,Drama,Mystery
+tt0054654	tvEpisode	Backfire!	Backfire!	0	1962	NA	61	Crime,Drama,Mystery
+tt0054698	movie	Breakfast at Tiffany's	Breakfast at Tiffany's	0	1961	NA	115	Comedy,Drama,Romance
+tt0054749	movie	Two Women	La ciociara	0	1960	NA	101	Drama,War
+tt0054754	tvEpisode	Clue of the Silver Key	Clue of the Silver Key	0	1961	NA	59	Crime,Drama,Mystery
+tt0054794	tvEpisode	A Dead Secret	A Dead Secret	0	1959	NA	NA	Comedy,Drama
+tt0054796	tvEpisode	Death Trap	Death Trap	0	1962	NA	56	Crime,Drama,Mystery
+tt0054994	tvEpisode	The Horsemasters: Follow Your Heart	The Horsemasters: Follow Your Heart	0	1961	NA	90	Adventure,Drama,Family
+tt0054996	tvEpisode	House of Mystery	House of Mystery	0	1961	NA	56	Mystery
+tt0055031	movie	Judgment at Nuremberg	Judgment at Nuremberg	0	1961	NA	179	Drama,War
+tt0055130	tvEpisode	Man Detained	Man Detained	0	1961	NA	59	Crime,Drama,Mystery
+tt0055131	tvEpisode	The Man Out There	The Man Out There	0	1961	NA	55	Drama
+tt0055132	tvEpisode	Man at the Carlton Tower	Man at the Carlton Tower	0	1961	NA	57	Crime,Drama,Mystery
+tt0055203	tvEpisode	Murder Club	Murder Club	0	1961	NA	60	Drama
+tt0055250	tvEpisode	Old Battersea House	Old Battersea House	0	1961	NA	17	Documentary
+tt0055281	tvEpisode	Partners in Crime	Partners in Crime	0	1961	NA	54	Crime,Drama,Mystery
+tt0055314	tvEpisode	The Poisoned Earth	The Poisoned Earth	0	1961	NA	90	Comedy,Drama
+tt0055334	tvEpisode	Portrait of a Soviet Composer	Portrait of a Soviet Composer	0	1961	NA	28	Documentary
+tt0055359	tvEpisode	A Reason for Staying	A Reason for Staying	0	1961	NA	NA	Drama
+tt0055387	tvEpisode	The Rose Affair	The Rose Affair	0	1961	NA	58	Drama
+tt0055433	tvEpisode	Serjeant Musgrave's Dance	Serjeant Musgrave's Dance	0	1961	NA	78	Comedy,Drama
+tt0055443	tvEpisode	The Ship That Couldn't Stop	The Ship That Couldn't Stop	0	1961	NA	60	Drama
+tt0055476	tvEpisode	In der Nacht zum Dienstag...	In der Nacht zum Dienstag...	0	1961	NA	73	Crime,Drama,Thriller
+tt0055477	tvEpisode	Saison	Saison	0	1961	NA	85	Crime,Drama,Thriller
+tt0055663	tvSeries	Empire	Empire	0	1962	1964	60	Drama,Western
+tt0055685	tvSeries	The Lloyd Bridges Show	The Lloyd Bridges Show	0	1962	1963	30	Drama
+tt0055704	tvEpisode	Spur 211	Spur 211	0	1962	NA	113	Crime,Drama,Thriller
+tt0055808	tvEpisode	The Boston Terrier	The Boston Terrier	0	1962	NA	60	Comedy,Drama
+tt0055929	tvEpisode	The Scarecrow of Romney Marsh: Part 1	The Scarecrow of Romney Marsh: Part 1	0	1963	NA	129	Adventure,Drama,Family
+tt0055952	tvEpisode	Elgar	Elgar	0	1962	NA	55	Documentary
+tt0055961	tvEpisode	Escapade in Florence: Part 1	Escapade in Florence: Part 1	0	1962	NA	60	Adventure,Drama,Family
+tt0055989	tvEpisode	Flashing Spikes	Flashing Spikes	0	1962	NA	53	Drama
+tt0056033	tvEpisode	The Golden Horseshoe Revue	The Golden Horseshoe Revue	0	1962	NA	48	Adventure,Drama,Family
+tt0056152	tvEpisode	Youth on Ice	Eiga shi - Kôri no naka no seishun	0	1962	NA	25	Documentary,Short
+tt0056199	tvEpisode	Lotte Lenya Sings Kurt Weill	Lotte Lenya Sings Kurt Weill	0	1961	NA	45	Documentary
+tt0056250	tvEpisode	The Mooncussers: Graveyard of Ships	The Mooncussers: Graveyard of Ships	0	1962	NA	85	Adventure,Drama,Family
+tt0056266	tvEpisode	My Daddy Can Lick Your Daddy	My Daddy Can Lick Your Daddy	0	1963	NA	22	Drama
+tt0056295	tvEpisode	Number Six	Number Six	0	1962	NA	59	Crime,Drama,Mystery
+tt0056324	tvEpisode	A Pair of Boots	A Pair of Boots	0	1962	NA	48	Drama
+tt0056359	tvEpisode	Pop Goes the Easel	Pop Goes the Easel	0	1962	NA	44	Documentary
+tt0056373	tvEpisode	The Prince and the Pauper: The Pauper King	The Prince and the Pauper: The Pauper King	0	1962	NA	50	Adventure,Drama,Family
+tt0056374	tvEpisode	The Prisoner	The Prisoner	0	1963	NA	NA	Drama
+tt0056398	tvEpisode	Rebecca	Rebecca	0	1962	NA	59	Drama
+tt0056441	tvEpisode	Sammy, the Way-Out Seal: Part 1	Sammy, the Way-Out Seal: Part 1	0	1962	NA	89	Adventure,Drama,Family
+tt0056476	tvEpisode	Shadow of a Pale Horse	Shadow of a Pale Horse	0	1959	NA	NA	Comedy,Drama
+tt0056508	tvEpisode	Solo for Sparrow	Solo for Sparrow	0	1962	NA	56	Crime,Drama,Mystery
+tt0056523	tvEpisode	In jeder Stadt...	In jeder Stadt...	0	1962	NA	78	Crime,Drama,Thriller
+tt0056525	tvEpisode	Stamboul Train	Stamboul Train	0	1962	NA	NA	Drama
+tt0056578	tvEpisode	Unaired Pilot: This Rugged Land	Unaired Pilot: This Rugged Land	0	1963	NA	NA	Drama,Western
+tt0056590	tvEpisode	Time to Remember	Time to Remember	0	1962	NA	58	Crime,Drama,Mystery
+tt0056687	movie	What Ever Happened to Baby Jane?	What Ever Happened to Baby Jane?	0	1962	NA	134	Drama,Horror,Thriller
+tt0056754	tvSeries	Espionage	Espionage	0	1963	1964	48	Drama,War
+tt0056792	tvSeries	Vacation Playhouse	Vacation Playhouse	0	1963	1967	30	Comedy,Crime,Drama
+tt0056798	tvEpisode	The £20,000 Kiss	The £20,000 Kiss	0	1962	NA	57	Crime,Drama,Mystery
+tt0056801	movie	8½	8½	0	1963	NA	138	Drama
+tt0056809	tvEpisode	Accidental Death	Accidental Death	0	1963	NA	57	Crime,Drama,Mystery
+tt0056923	movie	Charade	Charade	0	1963	NA	113	Comedy,Mystery,Romance
+tt0056980	tvEpisode	The Debussy Film	The Debussy Film	0	1965	NA	82	Documentary
+tt0057010	tvEpisode	The Double	The Double	0	1963	NA	56	Crime,Drama,Mystery
+tt0057157	tvEpisode	The Horse Without a Head: The 100,000,000 Franc Train Robbery	The Horse Without a Head: The 100,000,000 Franc Train Robbery	0	1963	NA	60	Adventure,Drama,Family
+tt0057201	tvEpisode	Johnny Shiloh: Part 1	Johnny Shiloh: Part 1	0	1963	NA	60	Adventure,Drama,Family
+tt0057255	tvEpisode	Little Dog Lost	Little Dog Lost	0	1963	NA	60	Adventure,Drama,Family
+tt0057260	tvEpisode	Drama '63: Loop	Drama '63: Loop	0	1963	NA	60	Drama
+tt0057345	movie	Contempt	Le mépris	0	1963	NA	103	Drama,Romance
+tt0057413	movie	The Pink Panther	The Pink Panther	0	1963	NA	115	Comedy,Crime,Romance
+tt0057451	tvEpisode	Return to Sender	Return to Sender	0	1963	NA	61	Crime,Drama,Mystery
+tt0057456	tvEpisode	Ricochet	Ricochet	0	1963	NA	64	Crime,Drama,Mystery
+tt0057526	tvEpisode	Das Haus an der Stör	Das Haus an der Stör	0	1963	NA	84	Crime,Drama,Thriller
+tt0057585	tvEpisode	Tivoli	Tivoli	0	1965	NA	62	Drama
+tt0057668	tvEpisode	The Waltz King: Part 1	The Waltz King: Part 1	0	1963	NA	95	Adventure,Drama,Family
+tt0057671	tvEpisode	The Forgotten Army	Wasurerareta kôgun	0	1963	NA	25	Documentary,Short
+tt0057672	tvEpisode	Watch the Birdie	Watch the Birdie	0	1963	NA	28	Documentary
+tt0057817	tvEpisode	Act of Murder	Act of Murder	0	1964	NA	62	Crime,Drama,Mystery
+tt0057828	tvEpisode	Because I Love You	Aisurebakoso	0	1964	NA	56	Drama
+tt0057850	tvEpisode	Ode to an Old Teacher	Aogeba tôtoshi	0	1964	NA	30	Drama,Short
+tt0057856	tvEpisode	A National Railway Worker	Aru kokutetsu-jômuin: suto chôshi zenya	0	1964	NA	25	Documentary,Short
+tt0057867	tvEpisode	The Ballad of Hector the Stowaway Dog: Where the Heck Is Hector?	The Ballad of Hector the Stowaway Dog: Where the Heck Is Hector?	0	1964	NA	120	Adventure,Drama,Family
+tt0057874	tvEpisode	Bartok	Bartok	0	1964	NA	50	Documentary
+tt0057877	movie	Becket	Becket	0	1964	NA	148	Biography,Drama,History
+tt0057927	tvEpisode	The Caves of Steel	The Caves of Steel	0	1964	NA	75	NA
+tt0057947	tvEpisode	Chita Niseigo taiheiyô ôdan	Chita Niseigo taiheiyô ôdan	0	1964	NA	50	Documentary,Short
+tt0057959	tvEpisode	The Comedy of Errors	The Comedy of Errors	0	1964	NA	NA	Drama
+tt0057976	tvEpisode	Studio '64: The Crunch	Studio '64: The Crunch	0	1964	NA	60	Drama
+tt0058015	tvEpisode	The Diary of a Nobody: The Domestic Jottings of a City Clerk	The Diary of a Nobody: The Domestic Jottings of a City Clerk	0	1964	NA	38	Drama
+tt0058035	tvEpisode	The Dotty World of James Lloyd	The Dotty World of James Lloyd	0	1964	NA	NA	Documentary
+tt0058078	tvEpisode	Face of a Stranger	Face of a Stranger	0	1964	NA	53	Crime,Drama,Mystery
+tt0058116	tvEpisode	A Free Agent	A Free Agent	0	1964	NA	60	Drama,War
+tt0058141	tvEpisode	Gimei shôjo	Gimei shôjo	0	1964	NA	25	Documentary,Short
+tt0058180	tvEpisode	A Rebel's Fortress	Hankotsu no toride - Hachinosu-jô no kiroku	0	1964	NA	25	Documentary,Short
+tt0058302	tvEpisode	Le loup et le chien	Le loup et le chien	0	1966	NA	NA	NA
+tt0058335	movie	Marriage Italian Style	Matrimonio all'italiana	0	1964	NA	102	Comedy,Drama,Romance
+tt0058385	movie	My Fair Lady	My Fair Lady	0	1964	NA	170	Drama,Family,Musical
+tt0058568	tvEpisode	The Tomb of Youth	Seishun no ishibumi	0	1964	NA	40	Documentary,Short
+tt0058613	tvEpisode	Rehe	Rehe	0	1964	NA	109	Crime,Drama,Thriller
+tt0058614	tvEpisode	Strandkorb 421	Strandkorb 421	0	1964	NA	93	Crime,Drama,Thriller
+tt0058640	tvEpisode	The Tenderfoot: Part 3	The Tenderfoot: Part 3	0	1964	NA	60	Adventure,Drama,Family
+tt0058746	tvEpisode	Who Was Maddox?	Who Was Maddox?	0	1964	NA	62	Crime,Drama,Mystery
+tt0058836	tvSeries	Out of the Unknown	Out of the Unknown	0	1965	1971	60	Drama,Horror,Sci-Fi
+tt0058853	tvSeries	The Wednesday Play	The Wednesday Play	0	1964	1970	75	Drama
+tt0058893	tvEpisode	Alice	Alice	0	1965	NA	72	Drama
+tt0058900	tvEpisode	Always on Sunday	Always on Sunday	0	1965	NA	45	Documentary
+tt0058908	tvEpisode	Angus Slowly Sinking?	Angus Slowly Sinking?	0	1965	NA	NA	Drama
+tt0058914	tvEpisode	Application Form	Application Form	0	1965	NA	30	Crime,Drama
+tt0058916	tvEpisode	Are You Ready for the Music?	Are You Ready for the Music?	0	1965	NA	90	Drama
+tt0058927	tvEpisode	Auto-Stop	Auto-Stop	0	1965	NA	75	Drama
+tt0058931	tvEpisode	The Babysitter	The Babysitter	0	1965	NA	NA	Thriller
+tt0058937	tvEpisode	Ballerina: Part 1	Ballerina: Part 1	0	1966	NA	60	Adventure,Drama,Family
+tt0058984	tvEpisode	The Bond	The Bond	0	1965	NA	75	Drama
+tt0058989	tvEpisode	Boy in the Smoke	Boy in the Smoke	0	1965	NA	NA	Drama
+tt0059011	tvEpisode	Campaign for One	Campaign for One	0	1965	NA	75	Drama
+tt0059020	tvEpisode	Cathy Come Home	Cathy Come Home	0	1966	NA	75	Drama
+tt0059047	tvEpisode	The World of George Orwell: Coming Up for Air	The World of George Orwell: Coming Up for Air	0	1965	NA	NA	Drama
+tt0059048	tvEpisode	Common Ground	Common Ground	0	1965	NA	NA	Drama
+tt0059053	tvEpisode	The Confidence Course	The Confidence Course	0	1965	NA	61	Drama
+tt0059061	tvEpisode	The Counterfeit Man	The Counterfeit Man	0	1965	NA	60	Drama,Horror,Sci-Fi
+tt0059086	tvEpisode	A Day Out for Lucy	A Day Out for Lucy	0	1965	NA	NA	Drama
+tt0059092	tvEpisode	Dead Man's Chest	Dead Man's Chest	0	1965	NA	59	Crime,Drama,Mystery
+tt0059158	tvEpisode	Esther's Altar	Esther's Altar	0	1965	NA	NA	Drama
+tt0059165	tvEpisode	Family Christmas	Family Christmas	0	1965	NA	30	Crime,Drama
+tt0059191	tvEpisode	For the West	For the West	0	1965	NA	75	Drama
+tt0059198	tvEpisode	The Fox and the Forest	The Fox and the Forest	0	1965	NA	60	Drama,Horror,Sci-Fi
+tt0059225	tvEpisode	The Girl Who Loved Robots	The Girl Who Loved Robots	0	1965	NA	75	Drama
+tt0059230	tvEpisode	Give the Clown His Supper	Give the Clown His Supper	0	1965	NA	30	Crime,Drama
+tt0059286	tvEpisode	The House	The House	0	1965	NA	NA	Thriller
+tt0059333	tvEpisode	The Joel Brand Story	The Joel Brand Story	0	1965	NA	NA	Drama
+tt0059396	tvEpisode	The Long Street	The Long Street	0	1965	NA	NA	Drama
+tt0059420	tvEpisode	Make Me an Offer	Make Me an Offer	0	1966	NA	120	Drama
+tt0059450	tvEpisode	Drama '64: Miss Hanago	Drama '64: Miss Hanago	0	1964	NA	NA	Drama
+tt0059451	tvEpisode	Miss Julie	Miss Julie	0	1965	NA	90	Drama
+tt0059461	tvEpisode	Monica	Monica	0	1965	NA	30	Crime,Drama
+tt0059476	tvEpisode	Mr. Ponge	Mr. Ponge	0	1965	NA	30	Crime,Drama
+tt0059510	tvEpisode	The World of George Orwell: 1984	The World of George Orwell: 1984	0	1965	NA	120	Drama
+tt0059513	tvEpisode	No Place Like Earth	No Place Like Earth	0	1965	NA	60	Drama,Horror,Sci-Fi
+tt0059523	tvEpisode	Portraits from the North: The Nutter	Portraits from the North: The Nutter	0	1965	NA	NA	Drama
+tt0059537	tvEpisode	Old Man of Chelsea Reach	Old Man of Chelsea Reach	0	1965	NA	NA	Drama
+tt0059566	tvEpisode	Parson's Pleasure	Parson's Pleasure	0	1965	NA	30	Crime,Drama
+tt0059569	tvEpisode	Passage to India	Passage to India	0	1965	NA	110	Drama
+tt0059571	tvEpisode	The Passenger	The Passenger	0	1965	NA	30	Crime,Drama
+tt0059591	tvEpisode	A Piece of Resistance	A Piece of Resistance	0	1966	NA	80	Drama
+tt0059658	tvEpisode	Rosmersholm	Rosmersholm	0	1965	NA	NA	Drama
+tt0059708	tvEpisode	The Seven O'Clock Crunch	The Seven O'Clock Crunch	0	1965	NA	75	Drama
+tt0059717	tvEpisode	The Siege of Manchester	The Siege of Manchester	0	1965	NA	NA	Drama
+tt0059749	movie	The Spy Who Came in from the Cold	The Spy Who Came In from the Cold	0	1965	NA	112	Drama,Thriller
+tt0059751	tvEpisode	Nacht zum Ostersonntag	Nacht zum Ostersonntag	0	1965	NA	82	Crime,Drama,Thriller
+tt0059752	tvEpisode	Stand Up, Nigel Barton	Stand Up, Nigel Barton	0	1965	NA	75	Drama
+tt0059753	tvEpisode	The Cage	The Cage	0	1986	NA	63	Action,Adventure,Sci-Fi
+tt0059759	tvEpisode	Strangler's Web	Strangler's Web	0	1965	NA	55	Crime,Drama,Mystery
+tt0059808	tvEpisode	Time in Advance	Time in Advance	0	1965	NA	60	Drama,Horror,Sci-Fi
+tt0059822	tvEpisode	Tomorrow, Just You Wait	Tomorrow, Just You Wait	0	1965	NA	75	Drama
+tt0059830	tvEpisode	The Trial and Torture of Sir John Rampayne	The Trial and Torture of Sir John Rampayne	0	1965	NA	75	Drama
+tt0059847	tvEpisode	Unman, Wittering and Zigo	Unman, Wittering and Zigo	0	1965	NA	NA	Drama
+tt0059849	tvEpisode	Die Unverbesserlichen	Die Unverbesserlichen	0	1965	NA	80	Drama
+tt0059854	tvEpisode	Up the Junction	Up the Junction	0	1965	NA	72	Drama
+tt0059886	tvEpisode	Vote, Vote, Vote for Nigel Barton	Vote, Vote, Vote for Nigel Barton	0	1965	NA	80	Drama
+tt0059956	movie	Viva Maria!	Viva Maria!	0	1965	NA	120	Adventure,Comedy,Romance
+tt0060028	tvSeries	Star Trek: The Original Series	Star Trek	0	1966	1969	50	Action,Adventure,Sci-Fi
+tt0060031	tvEpisode	Talking to a Stranger	Talking to a Stranger	0	1966	NA	90	Drama
+tt0060100	tvEpisode	Amerika	Amerika	0	1966	NA	120	Drama
+tt0060119	tvEpisode	Ape and Essence	Ape and Essence	0	1966	NA	75	Drama
+tt0060121	movie	Arabesque	Arabesque	0	1966	NA	105	Action,Adventure,Crime
+tt0060166	tvEpisode	The Big Man Coughed and Died	The Big Man Coughed and Died	0	1966	NA	75	Drama
+tt0060180	tvEpisode	The Bone Yard	The Bone Yard	0	1966	NA	60	Drama
+tt0060202	tvEpisode	Calf Love	Calf Love	0	1966	NA	75	Drama
+tt0060208	tvEpisode	The Canterville Ghost	The Canterville Ghost	0	1966	NA	NA	Comedy,Drama,Musical
+tt0060211	tvEpisode	The Caramel Crisis	The Caramel Crisis	0	1966	NA	30	Crime,Drama
+tt0060217	tvEpisode	Case Suspended	Case Suspended	0	1966	NA	30	Crime,Drama
+tt0060235	tvEpisode	The Wesker Trilogy: Chicken Soup with Barley	The Wesker Trilogy: Chicken Soup with Barley	0	1966	NA	NA	Drama
+tt0060255	tvEpisode	The Connoisseur	The Connoisseur	0	1966	NA	75	Drama
+tt0060257	tvEpisode	Corridors of Power	Corridors of Power	0	1966	NA	NA	Drama
+tt0060282	tvEpisode	Dare I Weep, Dare I Mourn?	Dare I Weep, Dare I Mourn?	0	1966	NA	60	Comedy,Drama,Musical
+tt0060284	tvEpisode	Days to Come	Days to Come	0	1966	NA	95	Drama
+tt0060292	tvEpisode	Death of a Salesman	Death of a Salesman	0	1966	NA	NA	Drama
+tt0060322	tvEpisode	Doctor Knock	Doctor Knock	0	1966	NA	NA	Drama
+tt0060331	tvEpisode	Don't Shoot the Composer	Don't Shoot the Composer	0	1966	NA	NA	Documentary
+tt0060365	tvEpisode	Ella	Ella	0	1966	NA	30	Crime,Drama
+tt0060367	tvEpisode	Emergency Ward 9	Emergency Ward 9	0	1966	NA	30	Crime,Drama
+tt0060370	tvEpisode	The Enchanted Night	The Enchanted Night	0	1966	NA	30	Crime,Drama
+tt0060384	tvEpisode	Evening Primrose	Evening Primrose	0	1966	NA	60	Comedy,Drama,Musical
+tt0060387	tvEpisode	The Eye	The Eye	0	1966	NA	50	Drama,Horror,Sci-Fi
+tt0060394	tvEpisode	The Family Reunion	The Family Reunion	0	1966	NA	NA	Drama
+tt0060403	tvEpisode	The Fastest Draw	The Fastest Draw	0	1966	NA	NA	Drama,Horror,Sci-Fi
+tt0060412	tvEpisode	Final Demand	Final Demand	0	1966	NA	NA	Drama
+tt0060419	tvEpisode	Focus	Focus	0	1966	NA	NA	Drama
+tt0060425	tvEpisode	Four-Way Incident	Four-Way Incident	0	1966	NA	30	Crime,Drama
+tt0060428	tvEpisode	Frankenstein Mark 2	Frankenstein Mark 2	0	1966	NA	50	Drama,Horror,Sci-Fi
+tt0060460	tvEpisode	Girl of My Dreams	Girl of My Dreams	0	1966	NA	NA	Drama
+tt0060463	movie	The Glass Bottom Boat	The Glass Bottom Boat	0	1966	NA	110	Comedy,Romance
+tt0060470	tvEpisode	Gordon of Khartoum	Gordon of Khartoum	0	1966	NA	NA	Drama
+tt0060493	tvEpisode	The Head Waiter	The Head Waiter	0	1966	NA	45	Drama
+tt0060506	tvEpisode	A Hero of Our Time	A Hero of Our Time	0	1966	NA	85	Drama
+tt0060556	tvEpisode	Jean Renoir le patron, 1re partie: La recherche du relatif	Jean Renoir le patron, 1re partie: La recherche du relatif	0	1967	NA	94	Documentary
+tt0060567	tvEpisode	The Judge	The Judge	0	1966	NA	60	Drama
+tt0060634	tvEpisode	Little Master Mind	Little Master Mind	0	1966	NA	75	Drama
+tt0060643	tvEpisode	The Machine Stops	The Machine Stops	0	1966	NA	50	Drama,Horror,Sci-Fi
+tt0060644	tvEpisode	Macready's Gala	Macready's Gala	0	1966	NA	70	Drama
+tt0060656	tvEpisode	The Main Chance	The Main Chance	0	1964	NA	61	Crime,Drama,Mystery
+tt0060657	tvEpisode	The Making of Jericho	The Making of Jericho	0	1966	NA	NA	Drama
+tt0060663	tvEpisode	A Man Like That	A Man Like That	0	1966	NA	NA	Drama
+tt0060682	tvEpisode	The Mayfly and the Frog	The Mayfly and the Frog	0	1966	NA	75	Drama
+tt0060715	tvEpisode	Willie and the Yank: The Mosby Raiders	Willie and the Yank: The Mosby Raiders	0	1967	NA	79	Adventure,Drama,Family
+tt0060727	tvEpisode	The Murderer	The Murderer	0	1966	NA	60	Drama
+tt0060772	tvEpisode	O-Goshi	O-Goshi	0	1966	NA	30	Crime,Drama
+tt0060781	tvEpisode	On the March to the Sea	On the March to the Sea	0	1966	NA	NA	Drama
+tt0060827	movie	Persona	Persona	0	1966	NA	85	Drama,Thriller
+tt0060844	tvEpisode	Play to Win	Play to Win	0	1966	NA	30	Crime,Drama
+tt0060875	tvEpisode	The Queen & the Welshman	The Queen & the Welshman	0	1966	NA	90	Drama
+tt0060876	tvEpisode	The Queen and Jackson	The Queen and Jackson	0	1966	NA	NA	Drama
+tt0060953	tvEpisode	The Seagull	The Seagull	0	1968	NA	NA	Drama
+tt0060981	tvEpisode	Silent Song	Silent Song	0	1966	NA	75	Drama
+tt0060996	tvEpisode	The Snow Ball	The Snow Ball	0	1966	NA	75	Drama
+tt0061025	tvEpisode	Der fünfte Mann	Der fünfte Mann	0	1966	NA	86	Crime,Drama,Thriller
+tt0061027	tvEpisode	Where No Man Has Gone Before	Where No Man Has Gone Before	0	1966	NA	50	Action,Adventure,Sci-Fi
+tt0061048	tvEpisode	The Suspect	The Suspect	0	1966	NA	60	Drama
+tt0061063	tvEpisode	A Tale of Two Wives	A Tale of Two Wives	0	1966	NA	75	Drama
+tt0061100	tvEpisode	Toddler on the Run	Toddler on the Run	0	1966	NA	75	Drama
+tt0061104	tvEpisode	Too Many Cooks	Too Many Cooks	0	1966	NA	50	Drama,Horror,Sci-Fi
+tt0061110	tvEpisode	The Towers of Manhattan	The Towers of Manhattan	0	1966	NA	30	Crime,Drama
+tt0061129	tvEpisode	The Twelfth Hour	The Twelfth Hour	0	1966	NA	NA	Drama
+tt0061143	tvEpisode	Nichts dazugelernt	Nichts dazugelernt	0	1966	NA	89	Drama
+tt0061145	tvEpisode	Up and Down	Up and Down	0	1966	NA	NA	Drama
+tt0061171	tvEpisode	A Walk in the Sea	A Walk in the Sea	0	1966	NA	75	Drama
+tt0061172	tvEpisode	Walk's End	Walk's End	0	1966	NA	50	Drama,Horror,Sci-Fi
+tt0061178	tvEpisode	Where the Buffalo Roam	Where the Buffalo Roam	0	1966	NA	75	Drama
+tt0061184	movie	Who's Afraid of Virginia Woolf?	Who's Afraid of Virginia Woolf?	0	1966	NA	131	Drama
+tt0061185	tvEpisode	Who's a Good Boy Then?	Who's a Good Boy Then?	0	1966	NA	75	Drama
+tt0061187	tvEpisode	The Widower	The Widower	0	1966	NA	60	Drama
+tt0061231	tvEpisode	Alfred of the Amazon	Alfred of the Amazon	0	1967	NA	30	Comedy,Crime,Drama
+tt0061312	tvEpisode	10 Kisten Whisky	10 Kisten Whisky	0	1967	NA	92	Crime,Thriller
+tt0061327	tvEpisode	An Absolute Treasure	An Absolute Treasure	0	1967	NA	30	Crime,Drama
+tt0061348	tvEpisode	Am Rande der Manege	Am Rande der Manege	0	1967	NA	74	Crime,Thriller
+tt0061361	tvEpisode	Another Moon Called Earth	Another Moon Called Earth	0	1967	NA	30	Crime,Drama
+tt0061392	tvEpisode	The Beetle Hunter	The Beetle Hunter	0	1967	NA	NA	Drama
+tt0061413	tvEpisode	Boa Constrictor	Boa Constrictor	0	1967	NA	30	Crime,Drama
+tt0061422	tvEpisode	A Boy Called Nuthin': Part 1	A Boy Called Nuthin': Part 1	0	1967	NA	87	Adventure,Drama,Family
+tt0061425	tvEpisode	The Brown Hand	The Brown Hand	0	1967	NA	NA	Drama
+tt0061430	tvEpisode	The Burning Bush	The Burning Bush	0	1967	NA	NA	Drama
+tt0061466	tvEpisode	The Chemistry of Love	The Chemistry of Love	0	1967	NA	NA	Drama
+tt0061527	tvEpisode	Crabbe's Practice	Crabbe's Practice	0	1967	NA	NA	Drama
+tt0061533	tvEpisode	The Croxley Master	The Croxley Master	0	1967	NA	NA	Drama
+tt0061544	tvEpisode	The Cupboard	The Cupboard	0	1967	NA	NA	Drama
+tt0061552	tvEpisode	Dante's Inferno	Dante's Inferno	0	1967	NA	90	Biography,Documentary,Music
+tt0061554	tvEpisode	Days in the Trees	Days in the Trees	0	1967	NA	85	Drama
+tt0061564	tvEpisode	The Devil a Monk Would Be	The Devil a Monk Would Be	0	1967	NA	75	Drama
+tt0061639	tvEpisode	Failpass	Failpass	0	1967	NA	30	Crime,Drama
+tt0061642	tvEpisode	Fall of the Goat	Fall of the Goat	0	1967	NA	75	Drama
+tt0061644	tvEpisode	The Fantasist	The Fantasist	0	1967	NA	NA	Drama
+tt0061666	tvEpisode	Firebrand	Firebrand	0	1967	NA	NA	Drama
+tt0061713	tvEpisode	Girls in Uniform	Girls in Uniform	0	1967	NA	NA	Drama
+tt0061721	tvEpisode	The Gorge	The Gorge	0	1968	NA	75	Drama
+tt0061760	tvEpisode	Henry IV	Henry IV	0	1967	NA	NA	Drama
+tt0061813	tvEpisode	The Magicians: The Incantation of Casanova	The Magicians: The Incantation of Casanova	0	1967	NA	NA	Drama
+tt0061825	tvEpisode	The Isle Is Full of Noises	The Isle Is Full of Noises	0	1967	NA	30	Crime,Drama
+tt0061871	tvEpisode	Kittens Are Brave	Kittens Are Brave	0	1967	NA	NA	Drama
+tt0061901	tvEpisode	Leave Me Alone	Leave Me Alone	0	1967	NA	30	Crime,Drama
+tt0061915	tvEpisode	Long After Summer	Long After Summer	0	1967	NA	50	Romance
+tt0061921	tvEpisode	Love with a Few Hairs	Love with a Few Hairs	0	1967	NA	NA	Romance
+tt0061940	tvEpisode	A Magnum for Schneider	A Magnum for Schneider	0	1967	NA	60	Drama
+tt0061965	tvEpisode	The Memorandum	The Memorandum	0	1967	NA	NA	Drama
+tt0061967	tvEpisode	Message for Posterity	Message for Posterity	0	1967	NA	79	Drama
+tt0061991	tvEpisode	The Moon and Sixpence	The Moon and Sixpence	0	1967	NA	NA	Drama
+tt0062066	tvEpisode	An Officer of the Court	An Officer of the Court	0	1967	NA	75	Drama
+tt0062072	tvEpisode	Oldenberg	Oldenberg	0	1967	NA	30	Crime,Drama
+tt0062074	tvEpisode	On the Eve of Publication	On the Eve of Publication	0	1968	NA	55	Drama
+tt0062081	tvEpisode	The Order	The Order	0	1967	NA	75	Drama
+tt0062095	tvEpisode	The Parachute	The Parachute	0	1968	NA	77	Drama
+tt0062134	tvEpisode	Play with a Tiger	Play with a Tiger	0	1967	NA	NA	Drama
+tt0062158	tvEpisode	The Profile of a Gentleman	The Profile of a Gentleman	0	1967	NA	75	Drama
+tt0062170	tvEpisode	Quite an Ordinary Knife	Quite an Ordinary Knife	0	1967	NA	NA	Drama
+tt0062172	tvEpisode	R.S.V.P.	R.S.V.P.	0	1967	NA	30	Crime,Drama
+tt0062176	tvEpisode	The Raging Moon	The Raging Moon	0	1967	NA	NA	Romance
+tt0062214	tvEpisode	Romeo and Juliet	Romeo and Juliet	0	1967	NA	NA	Drama
+tt0062280	tvEpisode	A Slight Ache	A Slight Ache	0	1967	NA	58	Drama
+tt0062303	tvEpisode	Stan's Day Out	Stan's Day Out	0	1967	NA	NA	Drama
+tt0062344	tvEpisode	Taste	Taste	0	1967	NA	30	Crime,Drama
+tt0062348	tvEpisode	Teeth	Teeth	0	1967	NA	30	Crime,Drama
+tt0062406	tvEpisode	Two and Two Make Twenty Two	Two and Two Make Twenty Two	0	1967	NA	30	Crime,Drama
+tt0062423	tvEpisode	...und ihr Optimismus	...und ihr Optimismus	0	1967	NA	84	Drama
+tt0062469	tvEpisode	Wanted	Wanted	0	1967	NA	30	Crime,Drama
+tt0062471	tvEpisode	Wanted: Single Gentleman	Wanted: Single Gentleman	0	1967	NA	75	Drama
+tt0062476	tvEpisode	The Waste Spaces	The Waste Spaces	0	1967	NA	NA	Comedy,Drama
+tt0062495	tvEpisode	The Willow House School	The Willow House School	0	1967	NA	NA	Drama
+tt0062568	tvSeries	Hawaii Five-O	Hawaii Five-O	0	1968	1980	60	Crime,Drama,Mystery
+tt0062578	tvSeries	Land of the Giants	Land of the Giants	0	1968	1970	60	Sci-Fi
+tt0062599	tvSeries	Premiere	Premiere	0	1968	1968	60	Drama
+tt0062603	tvEpisode	Something to Hide: The First Floor	Something to Hide: The First Floor	0	1968	NA	30	Crime,Drama
+tt0062622	movie	2001: A Space Odyssey	2001: A Space Odyssey	0	1968	NA	149	Adventure,Sci-Fi
+tt0062672	tvEpisode	Anyone for Tennis?	Anyone for Tennis?	0	1968	NA	75	Drama
+tt0062717	tvEpisode	A Beast with Two Backs	A Beast with Two Backs	0	1968	NA	71	Drama
+tt0062720	tvEpisode	Before Breakfast	Before Breakfast	0	1968	NA	30	Crime,Drama
+tt0062735	tvEpisode	Black Exchange	Black Exchange	0	1968	NA	NA	Comedy,Drama,Musical
+tt0062750	tvEpisode	The Bonegrinder	The Bonegrinder	0	1968	NA	78	Comedy,Drama
+tt0062756	tvEpisode	Braddock	Braddock	0	1968	NA	30	Drama
+tt0062791	tvEpisode	Charlie	Charlie	0	1968	NA	75	Drama
+tt0062795	tvEpisode	The Chequers Manoeuvre	The Chequers Manoeuvre	0	1968	NA	30	Crime,Drama
+tt0062811	tvEpisode	Coincidence	Coincidence	0	1968	NA	70	Drama
+tt0062835	tvEpisode	Cross Examine	Cross Examine	0	1968	NA	30	Crime,Drama
+tt0062843	tvEpisode	The Curse of the Donkins	The Curse of the Donkins	0	1968	NA	NA	Drama
+tt0062845	tvEpisode	Cyrano de Bergerac	Cyrano de Bergerac	0	1968	NA	NA	Drama
+tt0062854	tvEpisode	The Pacific War	Daitôa sensô	0	1968	NA	98	Documentary
+tt0062910	tvEpisode	The Drummer and the Bloke	The Drummer and the Bloke	0	1968	NA	70	Drama
+tt0062954	tvEpisode	The Fall of Kelvin Walker	The Fall of Kelvin Walker	0	1968	NA	NA	Drama
+tt0062956	tvEpisode	The Fanatics	The Fanatics	0	1968	NA	NA	Drama
+tt0062999	tvEpisode	Game, Set and Match	Game, Set and Match	0	1968	NA	30	Crime,Drama
+tt0063046	tvEpisode	Cocoon	Cocoon	0	1968	NA	97	Crime,Drama,Mystery
+tt0063047	tvEpisode	Hay Fever	Hay Fever	0	1968	NA	90	Drama
+tt0063078	tvEpisode	Home Sweet Honeycomb	Home Sweet Honeycomb	0	1968	NA	NA	Drama
+tt0063100	tvEpisode	How to Irritate People	How to Irritate People	0	1969	NA	68	Talk-Show
+tt0063150	tvEpisode	Jamie, on a Flying Visit	Jamie, on a Flying Visit	0	1968	NA	65	Drama
+tt0063187	tvEpisode	The Kiss of Blood	The Kiss of Blood	0	1968	NA	25	Horror
+tt0063209	tvEpisode	The Lady Is a Liar	The Lady Is a Liar	0	1968	NA	90	Drama
+tt0063227	movie	The Lion in Winter	The Lion in Winter	0	1968	NA	134	Biography,Drama,History
+tt0063235	tvEpisode	Lonely Road	Lonely Road	0	1968	NA	NA	Comedy,Drama,Musical
+tt0063264	tvEpisode	The Male Animal	The Male Animal	0	1968	NA	NA	Drama
+tt0063266	tvEpisode	Man and Superman	Man and Superman	0	1968	NA	NA	Drama
+tt0063284	tvEpisode	A Matter of Principle	A Matter of Principle	0	1968	NA	30	Crime,Drama
+tt0063298	tvEpisode	A Midsummer Night's Dream	A Midsummer Night's Dream	0	1964	NA	NA	Comedy,Drama
+tt0063302	tvEpisode	Mille miglia	Mille miglia	0	1968	NA	70	Drama
+tt0063327	tvEpisode	Murphy's Law	Murphy's Law	0	1968	NA	NA	Drama
+tt0063343	tvEpisode	The News-Benders	The News-Benders	0	1968	NA	30	Crime,Drama
+tt0063349	tvEpisode	A Night with Mrs. Da Tanka	A Night with Mrs. Da Tanka	0	1968	NA	75	Drama
+tt0063355	tvEpisode	No Such Thing as a Vampire	No Such Thing as a Vampire	0	1968	NA	25	Horror
+tt0063367	tvEpisode	Nothing Will Be the Same	Nothing Will Be the Same	0	1968	NA	60	Drama
+tt0063377	tvEpisode	Of Public Concern	Of Public Concern	0	1968	NA	30	Crime,Drama
+tt0063381	tvEpisode	Whistle and I'll Come to You	Whistle and I'll Come to You	0	1968	NA	42	Biography,Documentary,Music
+tt0063438	tvEpisode	The Pistol Shot	The Pistol Shot	0	1968	NA	NA	Drama
+tt0063442	movie	Planet of the Apes	Planet of the Apes	0	1968	NA	112	Adventure,Sci-Fi
+tt0063449	tvEpisode	Post Mortem	Post Mortem	0	1968	NA	NA	Comedy,Drama,Musical
+tt0063455	tvEpisode	Present Laughter	Present Laughter	0	1967	NA	100	Comedy,Drama
+tt0063457	tvEpisode	The Princess	The Princess	0	1968	NA	50	Comedy,Drama,Musical
+tt0063460	tvEpisode	A Private Place	A Private Place	0	1968	NA	30	Crime,Drama
+tt0063481	tvEpisode	A Question of Honour	A Question of Honour	0	1968	NA	30	Crime,Drama
+tt0063566	tvEpisode	Schrott	Schrott	0	1968	NA	85	Crime,Thriller
+tt0063590	tvEpisode	Shaggy Dog	Shaggy Dog	0	1968	NA	51	Drama
+tt0063628	tvEpisode	Song of Summer	Song of Summer	0	1968	NA	74	Biography,Documentary,Music
+tt0063637	tvEpisode	Spoiled	Spoiled	0	1968	NA	75	Drama
+tt0063639	tvEpisode	St. Joan	St. Joan	0	1968	NA	NA	Drama
+tt0063641	tvEpisode	Ein Toter zuviel	Ein Toter zuviel	0	1968	NA	82	Crime,Drama,Thriller
+tt0063645	tvEpisode	Still Death	Still Death	0	1968	NA	30	Crime,Drama
+tt0063659	tvEpisode	The Swallow's Nest	The Swallow's Nest	0	1968	NA	NA	Drama
+tt0063676	tvEpisode	The Tempest	The Tempest	0	1968	NA	NA	Drama
+tt0063686	tvEpisode	Thibaud the Crusader	Les deux croix	0	1969	NA	NA	Action,Adventure
+tt0063702	tvEpisode	To See How Far It Is	To See How Far It Is	0	1968	NA	75	Drama
+tt0063706	tvEpisode	Toggle	Toggle	0	1968	NA	75	Drama
+tt0063743	tvEpisode	...und ihre Sorgen	...und ihre Sorgen	0	1968	NA	105	Drama
+tt0063749	tvEpisode	Up at the Villa	Up at the Villa	0	1968	NA	NA	Romance
+tt0063795	tvEpisode	Waters of the Moon	Waters of the Moon	0	1968	NA	90	Drama
+tt0063815	tvEpisode	Wind Versus Polygamy	Wind Versus Polygamy	0	1968	NA	75	Drama
+tt0063817	tvEpisode	Winner Take All	Winner Take All	0	1968	NA	NA	Comedy,Drama,Musical
+tt0063875	tvSeries	The Bold Ones: The Protectors	The Bold Ones: The Protectors	0	1969	1970	60	Drama
+tt0063927	tvSeries	Marcus Welby, M.D.	Marcus Welby, M.D.	0	1969	1976	60	Drama
+tt0063928	tvSeries	Medical Center	Medical Center	0	1969	1976	60	Drama
+tt0063955	tvSeries	Then Came Bronson	Then Came Bronson	0	1969	1970	60	Adventure,Drama
+tt0064058	tvEpisode	The Back of Beyond	The Back of Beyond	0	1969	NA	50	Drama
+tt0064077	tvEpisode	Before the Party	Before the Party	0	1969	NA	50	Drama
+tt0064090	tvEpisode	Birthday	Birthday	0	1969	NA	75	Drama
+tt0064097	tvEpisode	Blood of the Lamb	Blood of the Lamb	0	1969	NA	80	Drama
+tt0064116	movie	Once Upon a Time in the West	C'era una volta il West	0	1968	NA	165	Western
+tt0064138	tvEpisode	A Casual Affair	A Casual Affair	0	1969	NA	50	Drama
+tt0064163	tvEpisode	A Child and a Half	A Child and a Half	0	1969	NA	75	Drama
+tt0064173	tvEpisode	Close the Coalhouse Door	Close the Coalhouse Door	0	1969	NA	80	Drama
+tt0064174	tvEpisode	Collector's Item	Collector's Item	0	1969	NA	50	Sci-Fi
+tt0064184	tvEpisode	Conversation at Night	Conversation at Night	0	1969	NA	30	Crime,Drama
+tt0064187	tvEpisode	The Creative Impulse	The Creative Impulse	0	1969	NA	50	Drama
+tt0064214	tvEpisode	Deadlock	Deadlock	0	1969	NA	100	Drama
+tt0064289	tvEpisode	The English Boy	The English Boy	0	1969	NA	NA	Drama
+tt0064292	tvEpisode	Episode	Episode	0	1969	NA	50	Drama
+tt0064304	tvEpisode	Exklusiv!	Exklusiv!	0	1971	NA	98	Crime,Drama,Thriller
+tt0064309	tvEpisode	The Eye of Heaven	The Eye of Heaven	0	1969	NA	NA	Romance
+tt0064314	tvEpisode	Familienärger	Familienärger	0	1969	NA	83	Crime,Thriller
+tt0064325	tvEpisode	Das Fenster zum Garten	Das Fenster zum Garten	0	1969	NA	100	Crime,Thriller
+tt0064342	tvEpisode	The Fosters	The Fosters	0	1969	NA	50	Drama,Horror,Sci-Fi
+tt0064361	tvEpisode	Gangster	Gangster	0	1969	NA	30	Crime,Drama
+tt0064367	tvEpisode	Get Off My Cloud	Get Off My Cloud	0	1969	NA	50	Drama,Horror,Sci-Fi
+tt0064404	tvEpisode	Happy	Happy	0	1969	NA	80	Drama
+tt0064412	tvEpisode	The Heiress	The Heiress	0	1969	NA	NA	Drama
+tt0064444	tvEpisode	A Hot Day	A Hot Day	0	1969	NA	30	Crime,Drama
+tt0064468	tvEpisode	An Ideal Husband	An Ideal Husband	0	1969	NA	82	Drama
+tt0064475	tvEpisode	Pilot	Pilot	0	1969	NA	73	Action,Adventure,Sci-Fi
+tt0064502	tvEpisode	It Wasn't Me	It Wasn't Me	0	1969	NA	60	Drama
+tt0064525	tvEpisode	Julius Caesar	Julius Caesar	0	1969	NA	NA	Drama
+tt0064584	tvEpisode	The Letter	The Letter	0	1969	NA	50	Drama
+tt0064600	tvEpisode	Lord Mountdrago	Lord Mountdrago	0	1969	NA	50	Drama
+tt0064636	tvEpisode	A Matter of Humanities	A Matter of Humanities	0	1969	NA	120	Drama
+tt0064648	tvEpisode	Portrait of a Dead Girl	Portrait of a Dead Girl	0	1970	NA	98	Action,Crime,Drama
+tt0064657	tvEpisode	Men of Iron	Men of Iron	0	1969	NA	NA	Drama
+tt0064678	tvEpisode	Mao Tse-Tung and the Cultural Revolution	Mô Takutô to bunka daikakumei	0	1969	NA	50	Documentary
+tt0064692	tvEpisode	Moonlight on the Highway	Moonlight on the Highway	0	1969	NA	52	Drama
+tt0064700	tvEpisode	Mother Love	Mother Love	0	1969	NA	50	Drama
+tt0064705	tvEpisode	My Dog, the Thief: Part 1	My Dog, the Thief: Part 1	0	1969	NA	88	Adventure,Drama,Family
+tt0064725	tvEpisode	Pilot	Pilot	0	1969	NA	98	Drama,Fantasy,Horror
+tt0064830	tvEpisode	Portrait of Jennie	Portrait of Jennie	0	1969	NA	NA	Romance
+tt0064901	tvEpisode	Roly Poly	Roly Poly	0	1969	NA	30	Crime,Drama
+tt0064903	tvEpisode	Roses, Roses, All the Way	Roses, Roses, All the Way	0	1969	NA	30	Crime,Drama
+tt0064922	tvEpisode	Salve Regina	Salve Regina	0	1969	NA	30	Drama
+tt0064942	tvEpisode	Scenes from Family Life	Scenes from Family Life	0	1969	NA	NA	Drama
+tt0064998	tvEpisode	Sling Your Hook	Sling Your Hook	0	1969	NA	75	Drama
+tt0065014	tvEpisode	Some of My Best Friends Are Horses	Some of My Best Friends Are Horses	0	1971	NA	NA	Documentary
+tt0065015	tvEpisode	Something in the Cellar	Something in the Cellar	0	1969	NA	50	Drama,Horror,Sci-Fi
+tt0065017	tvEpisode	Son of Man	Son of Man	0	1969	NA	90	Drama
+tt0065056	tvEpisode	The Switch	The Switch	0	1969	NA	30	Crime,Drama
+tt0065066	tvEpisode	A Tall, Stalwart Lancer	A Tall, Stalwart Lancer	0	1965	NA	NA	Comedy,Drama,Romance
+tt0065068	tvEpisode	Target Generation	Target Generation	0	1969	NA	50	Drama,Horror,Sci-Fi
+tt0065074	tvEpisode	Wer klingelt schon zur Fernsehzeit	Wer klingelt schon zur Fernsehzeit	0	1970	NA	60	Crime,Drama
+tt0065087	tvEpisode	Pilot	Pilot	0	1969	NA	100	Adventure,Drama
+tt0065098	tvEpisode	The Three Sisters	The Three Sisters	0	1970	NA	NA	Drama
+tt0065115	tvEpisode	The Tormentors	The Tormentors	0	1966	NA	70	Comedy,Drama
+tt0065141	tvEpisode	Operation Heartbeat	Operation Heartbeat	0	1969	NA	100	Drama
+tt0065158	tvEpisode	...und ihre Menschenkenntnis	...und ihre Menschenkenntnis	0	1969	NA	106	Drama
+tt0065190	tvEpisode	A Voyage Round My Father	A Voyage Round My Father	0	1969	NA	80	Drama
+tt0065232	tvEpisode	The Young Lawyers	The Young Lawyers	0	1969	NA	74	Drama
+tt0065303	tvSeries	The Immortal	The Immortal	0	1969	1971	60	Action,Adventure,Sci-Fi
+tt0065317	tvSeries	McCloud	McCloud	0	1970	1977	120	Action,Crime,Drama
+tt0065327	tvSeries	Night Gallery	Night Gallery	0	1969	1973	50	Drama,Fantasy,Horror
+tt0065357	tvSeries	The Young Lawyers	The Young Lawyers	0	1969	1971	60	Drama
+tt0065381	tvEpisode	Alias Smith and Jones	Alias Smith and Jones	0	1971	NA	74	Western
+tt0065382	tvEpisode	The Alien Corn	The Alien Corn	0	1970	NA	50	Drama
+tt0065404	tvEpisode	Angels Are So Few	Angels Are So Few	0	1970	NA	63	Comedy,Drama
+tt0065426	tvEpisode	Arthur Wants You for a Sunbeam	Arthur Wants You for a Sunbeam	0	1970	NA	NA	Comedy,Drama
+tt0065461	tvEpisode	Ben	Ben	0	1970	NA	30	Crime,Drama
+tt0065487	tvEpisode	The Boy Who Stole the Elephant: Part 1	The Boy Who Stole the Elephant: Part 1	0	1970	NA	60	Adventure,Drama,Family
+tt0065540	tvEpisode	Roy Dotrice as Anton Chekhov	Roy Dotrice as Anton Chekhov	0	1970	NA	NA	Biography
+tt0065559	tvEpisode	The Closed Shop	The Closed Shop	0	1970	NA	50	Drama
+tt0065608	tvEpisode	Dance of the Seven Veils	Dance of the Seven Veils	0	1970	NA	59	Biography,Documentary,Music
+tt0065609	tvEpisode	Danton	Danton	0	1970	NA	NA	Biography
+tt0065645	tvEpisode	A Distant Thunder	A Distant Thunder	0	1970	NA	55	Comedy,Drama
+tt0065682	tvEpisode	A Selection from E.E. Cummings	A Selection from E.E. Cummings	0	1970	NA	NA	Biography
+tt0065689	tvEpisode	Emma's Time	Emma's Time	0	1970	NA	80	Drama
+tt0065697	tvEpisode	The Engagement	The Engagement	0	1970	NA	44	Animation,Comedy,Drama
+tt0065725	tvEpisode	Five Finger Exercise	Five Finger Exercise	0	1970	NA	120	Drama
+tt0065728	tvEpisode	Flotsam and Jetsam	Flotsam and Jetsam	0	1970	NA	50	Drama
+tt0065741	tvEpisode	Frau gesucht...	Frau gesucht...	0	1970	NA	84	Crime,Thriller
+tt0065745	tvEpisode	Froschmänner	Froschmänner	0	1970	NA	104	Crime,Thriller
+tt0065811	tvEpisode	Hamlet	Hamlet	0	1970	NA	85	Drama
+tt0065822	tvEpisode	Hearts and Flowers	Hearts and Flowers	0	1970	NA	75	Comedy,Drama
+tt0065849	tvEpisode	Hope	Hope	0	1970	NA	30	Crime,Drama
+tt0065860	tvEpisode	Howards End	Howards End	0	1970	NA	NA	Drama
+tt0065864	tvEpisode	The Hunting of Lionel Crane	The Hunting of Lionel Crane	0	1970	NA	75	Drama
+tt0065902	tvEpisode	Is That Your Body, Boy?	Is That Your Body, Boy?	0	1970	NA	34	Crime,Drama
+tt0065910	tvEpisode	Jane	Jane	0	1970	NA	50	Drama
+tt0065937	tvEpisode	Ian McKellen as John Keats	Ian McKellen as John Keats	0	1970	NA	NA	Biography
+tt0065941	tvEpisode	A King and His Keeper	A King and His Keeper	0	1970	NA	NA	Biography
+tt0065971	tvEpisode	Lay Down Your Arms	Lay Down Your Arms	0	1970	NA	78	Drama
+tt0065972	tvEpisode	Laying It Off for Spangle	Laying It Off for Spangle	0	1970	NA	30	Crime,Drama
+tt0065982	tvEpisode	The Lie	The Lie	0	1970	NA	90	Comedy,Drama
+tt0066000	tvEpisode	Pilot	Pilot	0	1971	NA	90	Action,Crime,Drama
+tt0066003	tvEpisode	Jeremy Brett as Byron	Jeremy Brett as Byron	0	1970	NA	NA	Biography
+tt0066028	tvEpisode	Macbeth	Macbeth	0	1970	NA	NA	Drama
+tt0066084	tvEpisode	Miira no koi	Miira no koi	0	1973	NA	45	Horror
+tt0066180	tvEpisode	Olive	Olive	0	1970	NA	50	Drama
+tt0066235	tvEpisode	Powderkeg	Powderkeg	0	1971	NA	93	Action,Adventure,War
+tt0066254	tvEpisode	God Bless the Children (Pilot)	God Bless the Children (Pilot)	0	1970	NA	120	Drama
+tt0066257	tvEpisode	Puppen reden nicht	Puppen reden nicht	0	1970	NA	95	Crime,Thriller
+tt0066278	tvEpisode	The Raid	The Raid	0	1970	NA	30	Crime,Drama
+tt0066280	tvEpisode	Rain	Rain	0	1970	NA	50	Drama
+tt0066281	tvEpisode	The Rainbirds	The Rainbirds	0	1971	NA	65	Comedy,Drama
+tt0066293	tvEpisode	Rest in Peace, Uncle Fred	Rest in Peace, Uncle Fred	0	1970	NA	60	Drama
+tt0066625	tvSeries	Alias Smith and Jones	Alias Smith and Jones	0	1971	1973	60	Western
+tt0066631	tvSeries	Bearcats!	Bearcats!	0	1971	1971	120	Action,Adventure,War
+tt0066681	tvSeries	Longstreet	Longstreet	0	1971	1972	90	Action,Crime,Drama
+tt0066705	tvSeries	The Psychiatrist	The Psychiatrist	0	1970	NA	60	Drama
+tt0066921	movie	A Clockwork Orange	A Clockwork Orange	0	1971	NA	136	Crime,Drama,Sci-Fi
+tt0068646	movie	The Godfather	The Godfather	0	1972	NA	175	Crime,Drama
+tt0068767	movie	Fist of Fury	Jing wu men	0	1972	NA	106	Action,Drama,Romance
+tt0068935	movie	The Way of the Dragon	Meng long guo jiang	0	1972	NA	99	Action,Adventure,Comedy
+tt0069946	movie	The Day of the Dolphin	The Day of the Dolphin	0	1973	NA	104	Drama,Sci-Fi,Thriller
+tt0070034	movie	Enter the Dragon	Enter the Dragon	0	1973	NA	102	Action,Crime,Drama
+tt0070723	movie	Soylent Green	Soylent Green	0	1973	NA	97	Crime,Mystery,Sci-Fi
+tt0070849	movie	Last Tango in Paris	Ultimo tango a Parigi	0	1972	NA	129	Drama,Romance
+tt0071129	movie	Amarcord	Amarcord	0	1973	NA	123	Comedy,Drama
+tt0071877	movie	Murder on the Orient Express	Murder on the Orient Express	0	1974	NA	128	Crime,Drama,Mystery
+tt0072308	movie	The Towering Inferno	The Towering Inferno	0	1974	NA	165	Action,Drama,Thriller
+tt0072562	tvSeries	Saturday Night Live	Saturday Night Live	0	1975	NA	90	Comedy,Music
+tt0072684	movie	Barry Lyndon	Barry Lyndon	0	1975	NA	185	Adventure,Drama,History
+tt0074802	movie	Lipstick	Lipstick	0	1976	NA	89	Crime,Drama,Thriller
+tt0074958	movie	Network	Network	0	1976	NA	121	Drama
+tt0076085	movie	A Special Day	Una giornata particolare	0	1977	NA	106	Drama
+tt0076759	movie	Star Wars: Episode IV - A New Hope	Star Wars	0	1977	NA	121	Action,Adventure,Fantasy
+tt0077269	movie	The Boys from Brazil	The Boys from Brazil	0	1978	NA	125	Drama,Mystery,Sci-Fi
+tt0077594	movie	Game of Death	Game of Death	0	1978	NA	100	Action,Crime,Drama
+tt0077800	movie	Killer Fish	Killer Fish	0	1979	NA	101	Horror,Sci-Fi,Thriller
+tt0077975	movie	National Lampoon's Animal House	National Lampoon's Animal House	0	1978	NA	109	Comedy
+tt0078723	movie	1941	1941	0	1979	NA	118	Action,Comedy,War
+tt0078788	movie	Apocalypse Now	Apocalypse Now	0	1979	NA	147	Drama,Mystery,War
+tt0080388	movie	Atlantic City	Atlantic City	0	1980	NA	104	Crime,Drama,Romance
+tt0080455	movie	The Blues Brothers	The Blues Brothers	0	1980	NA	133	Action,Adventure,Comedy
+tt0080979	movie	Kagemusha	Kagemusha	0	1980	NA	180	Drama,History,War
+tt0082031	movie	Arthur	Arthur	0	1981	NA	97	Comedy,Romance
+tt0082846	movie	On Golden Pond	On Golden Pond	0	1981	NA	109	Drama
+tt0083922	movie	Fanny and Alexander	Fanny och Alexander	0	1982	NA	188	Drama
+tt0085101	tvMiniSeries	The Thorn Birds	The Thorn Birds	0	1983	1983	460	Drama,Romance
+tt0087803	movie	1984	Nineteen Eighty-Four	0	1984	NA	113	Drama,Sci-Fi
+tt0089881	movie	Ran	Ran	0	1985	NA	162	Action,Drama,War
+tt0091763	movie	Platoon	Platoon	0	1986	NA	120	Drama,War
+tt0096320	movie	Twins	Twins	0	1988	NA	107	Comedy,Crime
+tt0100802	movie	Total Recall	Total Recall	0	1990	NA	113	Action,Sci-Fi,Thriller
+tt0102122	movie	Inner Sanctum	Inner Sanctum	0	1991	NA	90	Drama,Thriller
+tt0110138	movie	Inner Sanctum II	Inner Sanctum II	0	1994	NA	82	Drama,Horror,Romance
+tt0117057	movie	The Mirror Has Two Faces	The Mirror Has Two Faces	0	1996	NA	126	Comedy,Drama,Romance
+tt0117631	movie	Shine	Shine	0	1996	NA	105	Biography,Drama,Music
+tt0117731	movie	Star Trek: First Contact	Star Trek: First Contact	0	1996	NA	111	Action,Adventure,Drama
+tt0119488	movie	L.A. Confidential	L.A. Confidential	0	1997	NA	138	Crime,Drama,Mystery
+tt0120338	movie	Titanic	Titanic	0	1997	NA	194	Drama,Romance
+tt0120647	movie	Deep Impact	Deep Impact	0	1998	NA	120	Action,Drama,Romance
+tt0120663	movie	Eyes Wide Shut	Eyes Wide Shut	0	1999	NA	159	Drama,Mystery,Thriller
+tt0120746	movie	The Mask of Zorro	The Mask of Zorro	0	1998	NA	136	Action,Adventure,Comedy
+tt0161126	tvSeries	Armchair Theatre	Armchair Theatre	0	1956	1974	60	Drama
+tt0165592	tvSeries	Play for Today	Play for Today	0	1970	1984	75	Comedy,Drama
+tt0165593	tvSeries	BBC Play of the Month	BBC Play of the Month	0	1965	1983	120	Drama
+tt0168387	tvSeries	Thibaud	Thibaud	0	1968	NA	NA	Action,Adventure
+tt0190181	tvSeries	The Edgar Wallace Mystery Theatre	The Edgar Wallace Mystery Theatre	0	1959	1965	NA	Crime,Drama,Mystery
+tt0200358	tvSeries	Omnibus	Omnibus	0	1967	2003	NA	Biography,Documentary,Music
+tt0212698	tvSeries	Theatre 625	Theatre 625	0	1964	1968	90	Drama
+tt0212699	tvSeries	Thirty-Minute Theatre	Thirty-Minute Theatre	0	1965	1973	30	Crime,Drama
+tt0217931	tvSeries	Les fables de La Fontaine	Les fables de La Fontaine	0	1966	NA	26	NA
+tt0233023	tvSeries	ABC Stage 67	ABC Stage 67	0	1966	1967	51	Comedy,Drama,Musical
+tt0242203	tvSeries	Die fünfte Kolonne	Die fünfte Kolonne	0	1963	1968	60	Drama
+tt0242211	tvSeries	Das Kriminalmuseum	Das Kriminalmuseum	0	1963	1970	75	Crime,Drama
+tt0259792	tvSeries	Monitor	Monitor	0	1958	NA	NA	Documentary
+tt0260607	tvSeries	David Frost Presents	David Frost Presents	0	1968	NA	NA	Talk-Show
+tt0297530	tvSeries	The Company of Five	The Company of Five	0	1968	NA	51	Drama
+tt0297621	tvSeries	ITV Saturday Night Theatre	ITV Saturday Night Theatre	0	1969	NA	78	Drama
+tt0298665	tvSeries	ITV Playhouse	ITV Playhouse	0	1967	NA	NA	Comedy,Drama
+tt0320048	tvSeries	Kraft Mystery Theater	Kraft Mystery Theater	0	1959	1963	60	Mystery
+tt0341798	tvSeries	Encounter	General Motors Presents	0	1952	1961	60	Drama
+tt0348926	tvSeries	Festival	Festival	0	1960	NA	60	Drama
+tt0383216	movie	The Pink Panther	The Pink Panther	0	2006	NA	93	Adventure,Comedy,Crime
+tt0396335	tvSeries	Late Night Horror	Late Night Horror	0	1968	1968	NA	Horror
+tt0398430	tvSeries	Boy Meets Girl	Boy Meets Girl	0	1967	1969	50	Romance
+tt0403808	tvSeries	Studio 4	Studio 4	0	1962	NA	60	Drama
+tt0405611	tvSeries	The Wednesday Thriller	The Wednesday Thriller	0	1965	NA	50	Thriller
+tt0407402	tvSeries	The Jazz Age	The Jazz Age	0	1968	NA	50	Comedy,Drama,Musical
+tt0441950	tvSeries	ITV Television Playhouse	ITV Television Playhouse	0	1955	1967	60	Drama
+tt0453991	tvSeries	Colgate Theatre	Colgate Theatre	0	1958	NA	NA	NA
+tt0497975	tvSeries	Six	Six	0	1964	NA	NA	Drama
+tt0499549	movie	Avatar	Avatar	0	2009	NA	162	Action,Adventure,Fantasy
+tt0793361	tvSeries	Stahlnetz	Stahlnetz	0	1958	2002	NA	Crime,Drama,Thriller
+tt0797756	tvSeries	Dem Täter auf der Spur	Dem Täter auf der Spur	0	1967	1973	NA	Crime,Thriller
+tt0806910	tvSeries	Tatort	Tatort	0	1970	NA	90	Crime,Drama,Thriller
+tt0815352	tvSeries	Cinéastes de notre temps	Cinéastes de notre temps	0	1964	1972	NA	Documentary
+tt0861682	tvSeries	Thirteen Against Fate	Thirteen Against Fate	0	1966	NA	50	Drama
+tt0914702	tvSeries	ITV Play of the Week	ITV Play of the Week	0	1955	1974	90	Comedy,Drama
+tt0958966	tvSeries	W. Somerset Maugham	W. Somerset Maugham	0	1969	1970	50	Drama
+tt0959862	tvSeries	The Magnavox Theater	The Magnavox Theater	0	1950	NA	60	Drama
+tt0969640	tvSeries	Londoners	Londoners	0	1965	NA	NA	Drama
+tt0969924	tvSeries	Drama 61-67	Drama 61-67	0	1961	1967	60	Drama
+tt0989125	tvSeries	BBC Sunday-Night Theatre	BBC Sunday-Night Theatre	0	1950	1959	NA	Drama
+tt0990935	tvSeries	BBC Sunday-Night Play	BBC Sunday-Night Play	0	1960	1963	60	Drama
+tt10275908	tvSeries	Non-fikushon gekijô	Non-fikushon gekijô	0	1962	1968	NA	Documentary,Short
+tt10283858	tvSeries	Terebi geijutsuza	Terebi geijutsuza	0	1964	1964	NA	Drama,Short
+tt10306302	tvSeries	Musume no kekkon	Musume no kekkon	0	1963	1964	NA	Drama
+tt10524910	tvSeries	20 seiki awâ	20 seiki awâ	0	1968	1969	NA	Documentary
+tt1077047	tvSeries	Horror Theater Unbalance	Kyôfu gekijô umbalance	0	1973	NA	NA	Horror
+tt1157603	tvSeries	Die Unverbesserlichen	Die Unverbesserlichen	0	1965	1971	NA	Drama
+tt1245421	tvSeries	ITV Sunday Night Drama	ITV Sunday Night Drama	0	1959	1980	NA	Comedy,Drama,Romance
+tt1314953	tvSeries	Festival	Festival	0	1963	1964	60	Drama
+tt1323588	tvSeries	Sir Arthur Conan Doyle	Sir Arthur Conan Doyle	0	1967	NA	50	Drama
+tt1342999	tvSeries	Biography	Biography	0	1970	NA	85	Biography
+tt1384817	tvSeries	Story Parade	Story Parade	0	1964	1965	NA	NA
+tt1415092	tvSeries	NBC Experiment in Television	NBC Experiment in Television	0	1967	1971	60	Animation,Comedy,Drama
+tt1601979	tvSeries	Plays of Today	Plays of Today	0	1969	NA	NA	Drama
+tt1646046	tvSeries	Television Playwright	Television Playwright	0	1958	1959	NA	Drama
+tt1685416	tvSeries	Solo	Solo	0	1970	NA	20	Biography
+tt1711895	tvSeries	Sunday Night	Sunday Night	0	1965	1968	NA	Documentary
+tt1845727	tvSeries	Terminus	Terminus	0	1955	NA	30	Drama
+tt2199914	tvSeries	Theatre '62	Theatre '62	0	1961	1962	60	Drama
+tt4280482	tvSeries	Television World Theatre	Television World Theatre	0	1957	1958	1285	Drama
+tt4280486	tvMiniSeries	World Theatre	World Theatre	0	1959	NA	NA	Drama
+tt4383620	tvSeries	Behind the Scenes	Behind the Scenes	0	1971	NA	24	Documentary

@@ -13,7 +13,7 @@ The code below will download all the compressed tsv files required by this noteb
 
 ## Setup
 
-The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. We have used Python for this task because it has more built in language constructs for file and string processing without loading everything into memory as a dataframe. The remainder of the notebook will be R based.
+The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. In normal circumstances we would do this with a faster language that is better suited for file manipulation in a separate script. For the purposes of this assignment we have included the entire script below as a single chunk. If you are running this yourself and want to either download fresh copies of the data from IMDB, or process existing copies, then you should change the `download` and/or `process` variables to TRUE below. But be warned this will take a VERY long time depending on your computer. We have included the processed files with our submission so that you do not have to wait for this unless you want to.
 
 ```{r}
 library(data.table)
@@ -24,9 +24,9 @@ library(dplyr)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
-# Caution: This will take a long time!
+# Caution: This will take a long time and may overwhelm your computer!!! 
 download <- FALSE
-process <- TRUE
+process <- FALSE
 
 # File constants
 dataDir <- "./data/"
@@ -42,9 +42,7 @@ titleRatings <- "title.ratings"
 gz <- ".tsv.gz"
 sampleTsv <- ".sample.tsv"
 
-# Constants for selecting titles to include
-numEpRows <- 500
-numNameRows <- 50
+# ========== Functions ==========
 
 downloadData <- function() {
   #' Downloads all needed data files from IMDB.
@@ -57,10 +55,10 @@ downloadData <- function() {
   }
 }
 
-createDataframe <- function(file, rows=-1) {
+createDataframe <- function(filename, rows=-1) {
   #' Creates a dataframe out of a tsv file from IMDB. Can specify a row limit
   #' with rows, but defaults to the whole file.
-  fread(file, na.strings = "\\N", encoding = "UTF-8", data.table = FALSE, 
+  fread(filename, na.strings = "\\N", encoding = "UTF-8", data.table = FALSE, 
         showProgress = FALSE, nrows = rows)  # fread is a faster alternative to read.tsv
 }
 
@@ -71,6 +69,7 @@ createTitleIdSet <- function(episodeRows, nameRows) {
   #' movie (that is not a show).
   epPaths <- getFullAndSamplePaths(titleEpisode)
   namePaths <- getFullAndSamplePaths(nameBasics)
+  
   df.eps <- createDataframe(epPaths$full, episodeRows)
   df.names <- createDataframe(namePaths$full, nameRows)
   
@@ -92,6 +91,21 @@ createTitleIdSet <- function(episodeRows, nameRows) {
   titleSet
 }
 
+createNamesIdSet <- function(princNames, dirNames, writeNames) {
+  # Gather all unique name IDs into single series
+  allNames <- unique(
+    union_all(
+      princNames,
+      dirNames,
+      writeNames
+    )
+  )
+  # Add them to a hash
+  nameSet = hash(allNames, 1:length(allNames))  # values don't matter for the set
+  
+  nameSet
+}
+
 writeEpisodeSample <- function(numRows) {
   #' Writes sample data from the episodes tsv. This can be processed faster
   #' than others because we simply select a number of rows to included from
@@ -101,15 +115,62 @@ writeEpisodeSample <- function(numRows) {
   write_tsv(df, paths$sample)
 }
 
-writeTsvFilterByTitle <- function(dataframe, filterSet, filename) {
+writeFilteredTsv <- function(filename, filterSet, colname = "tconst") {
   #' Writes an existing dataframe after filtering it on tconst
+  paths <- getFullAndSamplePaths(filename)
+  df <- createDataframe(paths$full)
   
   # This may take several minutes...
-  filter(dataframe, has.key(tconst, filterSet))
+  if (colname == "tconst") {
+    df <- filter(df, has.key(tconst, filterSet))  
+  } else if (colname == "titleId") {
+    df <- filter(df, has.key(titleId, filterSet))
+  } else if (colname == "nconst") {
+    df <- filter(df, has.key(nconst, filterSet)) 
+  }
+  # Don't filter if colname different
   
   # Write out the data
-  paths <- getFullAndSamplePaths(outPath)
-  write_tst(dataframe, paths$sample)
+  write_tsv(df, paths$sample)
+  
+  # Return the filtered dataframe in case it needs further processing
+  df
+}
+
+flattenAndWriteCrewToDirectors <- function(crewDataframe) {
+  #' Takes the crew data and flattens the directors column so all values are
+  #' on their own line and then writes it to disk. Will be used later.
+  # Separate directors
+  df.directors <- crewDataframe[c("tconst", "directors")] %>%
+    mutate(directors = strsplit(as.character(directors), ",")) %>%
+    unnest(directors)
+  
+  # Remove titles with no director listed
+  df.directors <- drop_na(df.directors)
+  
+  # Write
+  outfile <- paste(sampleDataDir, "title.directors", sampleTsv, sep="")
+  write_tsv(df.directors, outfile)
+  
+  df.directors
+}
+
+flattenAndWriteCrewToWriters <- function(crewDataframe) {
+  #' Takes the crew data and flattens the writers column so all values are
+  #' on their own line and then writes it to disk. Will be used later.
+  # Separate writers
+  df.writers <- crewDataframe[c("tconst", "writers")] %>%
+    mutate(writers = strsplit(as.character(writers), ",")) %>%
+    unnest(writers)
+  
+  # Remove titles with no director listed
+  df.writers <- drop_na(df.writers)
+  
+  # Write
+  outfile <- paste(sampleDataDir, "title.writers", sampleTsv, sep="")
+  write_tsv(df.writers, outfile)
+  
+  df.writers
 }
 
 getFullAndSamplePaths <- function(filename) {
@@ -120,6 +181,8 @@ getFullAndSamplePaths <- function(filename) {
   list("full" = full, "sample" = sample)
 }
 
+# ========== Actual processing ==========
+
 if (download) {
   downloadData()
 }
@@ -128,18 +191,35 @@ if (process) {
   if (!dir.exists(sampleDataDir)) {
     dir.create(sampleDataDir)  
   }
+  # Constants for selecting titles to include
+  numEpRows <- 500
+  numNameRows <- 50
+  
   # Get titles to include
   titleIdSet <- createTitleIdSet(numEpRows, numNameRows)
   
+  # Process files that we do not need to extract name ids from
   writeEpisodeSample(numEpRows)
-}
+  writeFilteredTsv(titleBasics, titleIdSet)
+  writeFilteredTsv(titleAkas, titleIdSet, "titleId")
+  writeFilteredTsv(titleRatings, titleIdSet)
+  
+  # Process files that do need to extract name ids
+  df <- writeFilteredTsv(titlePrincipals, titleIdSet)
+  princ.names <- as.character(df$nconst)
+  df <- writeFilteredTsv(titleCrew, titleIdSet)
+  dirs.names <- flattenAndWriteCrewToDirectors(df)
+  write.names <- flattenAndWriteCrewToWriters(df)
 
-# paths <- getOldAndNewPaths(nameBasics)
-# df <- createDataframe(paths$full, 50)
-# kfTitles <- drop_na(df["knownForTitles"]) %>%
-#     mutate(knownForTitles = strsplit(as.character(knownForTitles), ",")) %>%
-#     unnest(knownForTitles)
-# head(kfTitles)
+  nameIdSet <- createNamesIdSet(
+    princ.names,
+    dirs.names$directors,
+    write.names$writers
+  )
+
+  # Finally, process the names table
+  writeFilteredTsv(nameBasics, nameIdSet, "nconst")
+}
 ```
 
 Before working with the data we need to create a place to store it. This section will set up a SQLite database and any constants needed later.
