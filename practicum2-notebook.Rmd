@@ -575,6 +575,7 @@ df_media <- add_column(df_media, format_id = 0, .after = 2)
 # Get a list of the categories available
 types <- df_tt[,c(0,2)]
 head(types)
+class(types)
 # For each category, assign the FK id
 for(term in types) {
   search1 <- df_tt$titleType == term
@@ -591,6 +592,7 @@ for(term in types) {
 
 # Drop the category column, only the FK id column is needed
 df_media$titleType <- NULL
+
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
@@ -607,12 +609,14 @@ df_mg <- df_mgl %>%
   unnest(genres)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_mg <- tibble::rowid_to_column(df_mg, "mg_id")
+# Remove titles with no genre listed
+df_mg <- drop_na(df_mg)
+# Add a column for the FK id
+df_mg <- add_column(df_mg, genre_id = 0, .after = 2)
 head(df_mg)
 
 # Since genres is a categorical table, grab unique values
 df_genres <- unique(df_mg["genres"])
-# Remove titles with no genre listed
-df_genres <- drop_na(df_genres)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_genres <- tibble::rowid_to_column(df_genres, "genre_id")
 # Rename column names to match table
@@ -620,15 +624,30 @@ colnames(df_genres) <- c("genre_id", "genre")
 head(df_genres)
 
 # Convert the genre into the appropriate FK id
+# Get a vector list of the categories available
+types <- df_genres[["genre"]]
+head(types)
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_genres$genre == term
+  # Get the FK id for the category
+  id <- df_genres[which(search1),][1,1]
+  search2 <- df_mg$genres == term
+  # Replace default 0 value with the FK id
+  df_mg$genre_id[search2] <- id
+}
 
-# Rename column names to match table
-colnames(df_mg) <- c("mg_id", "tconst", "genre_id")
-head(df_mg)
+# If this was not the initial read of the dataset, we would want to search to ensure there are no default FK ids left.
+# If there were, this would mean we would need to add them to the category table and then update the FK ids.
+# As the categories were just determined using the same initial dataset, this is not needed at this time.
+
+# Drop the category column, only the FK id column is needed
+df_mg$genres <- NULL
 
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-#dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
 "Episodes" table
