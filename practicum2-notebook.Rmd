@@ -575,7 +575,6 @@ df_media <- add_column(df_media, format_id = 0, .after = 2)
 # Get a list of the categories available
 types <- df_tt[,c(0,2)]
 head(types)
-class(types)
 # For each category, assign the FK id
 for(term in types) {
   search1 <- df_tt$titleType == term
@@ -686,12 +685,50 @@ dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
 
 "Categories" table
 ```{r}
-
+# Grab the needed columns from the current dataframe
+types <- df.princ[,c(0,4)]
+# Since this is a categorical table, grab unique values
+format <- unique(types)
+# Create a new dataframe with unique values
+df_cat <- data.frame(format)
+# Assign unique ids to the unique values - only works on initial loading of data
+df_cat <- tibble::rowid_to_column(df_cat, "category_id")
+# Transfer the new dataframe into the database table
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
 ```
 
 "Crew" table
 ```{r}
+# Grab the needed columns from the current dataframe
+df_crew <- df.princ[,-c(0,6)]
+# Add a column for the FK id
+df_crew <- add_column(df_crew, category_id = 0, .after = 3)
 
+# Get a list of the categories available
+types <- df_cat[,c(0,2)]
+head(types)
+class(types)
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_cat$category == term
+  # Get the FK id for the category
+  id <- df_cat[which(search1),][1,1]
+  search2 <- df_crew$category == term
+  # Replace default 0 value with the FK id
+  df_crew$category_id[search2] <- id
+}
+
+# If this was not the initial read of the dataset, we would want to search to ensure there are no default FK ids left.
+# If there were, this would mean we would need to add them to the category table and then update the FK ids.
+# As the categories were just determined using the same initial dataset, this is not needed at this time.
+
+# Drop the category column, only the FK id column is needed
+df_crew$category <- NULL
+
+# Transfer the new dataframe into the database table
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
 ```
 
 "Cast" and "Characters" tables
