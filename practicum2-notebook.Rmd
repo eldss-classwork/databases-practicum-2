@@ -398,7 +398,7 @@ tables <- c(
     );"
   ),
   build_table(
-    "Title_Types (
+    "Types (
       type_id INTEGER PRIMARY KEY,
       type TEXT NOT NULL
     );"
@@ -628,7 +628,7 @@ dbWriteTable(conn,"Genres",df.genres, overwrite=TRUE)
 
 ```
 
-"Title_Types" table
+"Types" table
 ```{r}
 
 ```
