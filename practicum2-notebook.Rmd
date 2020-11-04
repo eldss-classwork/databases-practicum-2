@@ -542,29 +542,33 @@ dbWriteTable(conn,"Title_Type",df_tt, overwrite=TRUE)
 
 "Media" table
 ```{r}
+# Grab the needed columns from the current dataframe
 df_media <- df.titles[,-c(0,9)]
+# Add a column for the FK id
 df_media <- add_column(df_media, format_id = 0, .after = 2)
-head(df_media)
 
-term <- "movie"
-search1 <- df_tt$titleType == term
-id <- df_tt[which(search1),][1,1]
-search2 <- df_media$titleType == term
-df_media$format_id[search2] <- id
-head(df_media)
+# Get a list of the categories available
+types <- df_tt[,c(0,2)]
+head(types)
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_tt$titleType == term
+  # Get the FK id for the category
+  id <- df_tt[which(search1),][1,1]
+  search2 <- df_media$titleType == term
+  # Replace default 0 value with the FK id
+  df_media$format_id[search2] <- id
+}
 
-# types <- df_tt[,c(0,2)]
-# head(types)
-# for (term in types){
-#   search1 <- df_tt$titleType == term
-#   id <- df_tt[which(search1),][1,1]
-#   search2 <- df_media$titleType == term
-#   df_media$format_id[search2] <- id
-# }
+# If this was not the initial read of the dataset, we would want to search to ensure there are no default FK ids left.
+# If there were, this would mean we would need to add them to the category table and then update the FK ids.
+# As the categories were just determined using the same initial dataset, this is not needed at this time.
 
-# df_media$titleType <- NULL
-# dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
-
+# Drop the category column, only the FK id column is needed
+df_media$titleType <- NULL
+# Transfer the new dataframe into the database table
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
 ```
 
 "Genres" and "Media_Genres" tables
@@ -599,7 +603,6 @@ head(df_mg)
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-dbReadTable(conn,"Genres")
 #dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
