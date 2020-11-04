@@ -652,12 +652,16 @@ dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 
 "Episodes" table
 ```{r}
-
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
 ```
 
 "Ratings" table
 ```{r}
-
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
 ```
 
 "People" table
