@@ -265,7 +265,7 @@ build_table <- function(table_def) {
 # Build table definition list
 tables <- c(
   build_table(
-    "Title_Type (
+    "Formats (
       format_id INTEGER PRIMARY KEY,
       format TEXT NOT NULL
     );"
@@ -280,7 +280,7 @@ tables <- c(
       startYear INTEGER,
       endYear INTEGER,
       runtimeMins INTEGER,
-      FOREIGN KEY (format_id) REFERENCES Title_Type(format_id)
+      FOREIGN KEY (format_id) REFERENCES Formats(format_id)
     );"
   ),
   build_table(
@@ -292,7 +292,7 @@ tables <- c(
     );"
   ),
   build_table(
-    "Episode (
+    "Episodes (
       tconst TEXT PRIMARY KEY,
       parentTconst TEXT NOT NULL,
       seasonNumer INTEGER,
@@ -354,16 +354,41 @@ tables <- c(
     );"
   ),
   build_table(
+    "Categories (
+      category_id INTEGER PRIMARY KEY,
+      category TEXT NOT NULL
+    );"
+  ),
+  build_table(
     "Crew (
       tconst TEXT NOT NULL,
       ordering INTEGER NOT NULL,
       nconst TEXT NOT NULL,
-      category TEXT,
+      category_id INTEGER NOT NULL,
       job TEXT,
       characters TEXT,
       PRIMARY KEY (tconst, ordering),
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
-      FOREIGN KEY (nconst) REFERENCES People(nconst)
+      FOREIGN KEY (nconst) REFERENCES People(nconst),
+      FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+    );"
+  ),
+  build_table(
+    "Characters (
+      character_id INTEGER PRIMARY KEY,
+      character TEXT NOT NULL
+    );"
+  ),
+  build_table(
+    "Cast (
+      cast_id INTEGER PRIMARY KEY,
+      tconst TEXT NOT NULL,
+      ordering INTEGER NOT NULL,
+      character_id INTEGER NOT NULL,
+      -- Media table PK tconst has ref. integrity through Crew Table
+      FOREIGN KEY (tconst, ordering) REFERENCES Crew(tconst, ordering),
+      FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+      CONSTRAINT unique_crew_tc_ord_tid UNIQUE (tconst, ordering, character_id)
     );"
   ),
   build_table(
@@ -412,7 +437,7 @@ tables <- c(
       type_id INTEGER NOT NULL,
       -- Media table PK tconst has ref. integrity through AKA Table
       FOREIGN KEY (tconst, ordering) REFERENCES Also_Known_As(tconst, ordering),
-      FOREIGN KEY (type_id) REFERENCES Title_Types(type_id),
+      FOREIGN KEY (type_id) REFERENCES Types(type_id),
       CONSTRAINT unique_akat_tc_ord_tid UNIQUE (tconst, ordering, type_id)
     );"
   ),
