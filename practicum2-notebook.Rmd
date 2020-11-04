@@ -550,7 +550,7 @@ head(df.names)
 
 ## Loading Data to Database
 
-"Title_Type" table
+"Formats" table
 ```{r}
 # Grab the needed columns from the current dataframe
 types <- df.titles[,c(0,2)]
@@ -562,7 +562,7 @@ df_tt <- data.frame(format)
 df_tt <- tibble::rowid_to_column(df_tt, "format_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Title_Type",df_tt, overwrite=TRUE)
+dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
 ```
 
 "Media" table
@@ -631,7 +631,7 @@ dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
 #dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
-"Episode" table
+"Episodes" table
 ```{r}
 
 ```
@@ -661,7 +661,17 @@ dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
 
 ```
 
+"Categories" table
+```{r}
+
+```
+
 "Crew" table
+```{r}
+
+```
+
+"Cast" and "Characters" tables
 ```{r}
 
 ```
