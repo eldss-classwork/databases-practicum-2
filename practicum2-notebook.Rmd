@@ -1,21 +1,22 @@
 ---
-title: "CS5200 Fall 2020: Practicum 2"
+title: 'CS5200 Fall 2020: Practicum 2'
 author: "Chandra Davis, Evan Douglass"
 output:
   pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
 ---
 
 ## Overview
 
 We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/
 
-The code below will download all the compressed tsv files required by this notebook into a folder called `data/`. You can leave them in their compressed format, as that is how we will read them in to this notebook. The downloads can take some time, so if you already have the files in a `data/` folder, we will avoid downloading them again. If you would like to replace the files, for example if new ones were published, you can change the `updateData` variable in the next code block to `TRUE`.
-
 ## Setup
 
-The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. In normal circumstances we would do this with a faster language that is better suited for file manipulation in a separate script. For the purposes of this assignment we have included the entire script below as a single chunk. If you are running this yourself and want to either download fresh copies of the data from IMDB, or process existing copies, then you should change the `download` and/or `process` variables to TRUE below. But be warned this will take a VERY long time depending on your computer. We have included the processed files with our submission so that you do not have to wait for this unless you want to.
+The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. In normal circumstances we would do this with a faster language that is better suited for file manipulation in a separate script. For the purposes of this assignment we have included the entire script below as a single chunk. If you are running this yourself and want to either download fresh copies of the data from IMDB, or process existing copies, then you should change the `download` and/or `process` variables to `TRUE` below. But be warned this will take a VERY long time depending on your computer. We have included the processed files with our submission so that you do not have to wait for this unless you want to.
 
-```{r}
+```{r, results='hide', message=FALSE}
 library(data.table)
 library(hash)
 library(readr)
@@ -184,6 +185,9 @@ getFullAndSamplePaths <- function(filename) {
 # ========== Actual processing ==========
 
 if (download) {
+  if (!dir.exists(dataDir)) {
+    dir.create(dataDir)
+  }
   downloadData()
 }
 
@@ -225,104 +229,18 @@ if (process) {
 Before working with the data we need to create a place to store it. This section will set up a SQLite database and any constants needed later.
 
 ```{r}
-# include option means no output
 library(RSQLite)
-
-
 
 # Setup SQLite database
 DB_NAME <- "imdb-data.db"
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
-
-# Set up data folder and variables needed for download of datasets
-dir.create("data", showWarnings=FALSE)
-
-URL <- "https://datasets.imdbws.com/"
-updateData <- FALSE  # Change to TRUE if you want to update these files
-directory <- "./data/"
-nameBasics <- "name.basics.tsv.gz"
-titleBasics <- "title.basics.tsv.gz"
-titleAkas <- "title.akas.tsv.gz"
-titleCrew <- "title.crew.tsv.gz"
-titleEpisode <- "title.episode.tsv.gz"
-titlePrincipals <- "title.principals.tsv.gz"
-titleRatings <- "title.ratings.tsv.gz"
-```
-
-We will also need the following functions to read in data from files and convert them to dataframes.
-
-```{r}
-# Can use read_csv for everything now
-createDataframe <- function(file, rows=-1) {
-  #' Creates a dataframe out of a gzipped tsv file. Can specify a row limit
-  #' with rows, but defaults to the whole file.
-  fread(file, na.strings = "\\N", encoding = "UTF-8", data.table = FALSE, 
-        showProgress = FALSE, nrows = rows)  # fread is a faster alternative to read.tsv
-}
-
-findMaxRowExactKey <- function(file, stopKeyValue) {
-  #' Finds the row value in the gzipped tsv immediately before the given key
-  #' value. stopKeyValue is assumed to be the first entry in a line of the tsv.
-  #' It should also be the key above the last one you want to include, as there
-  #' are some files with multiple of the same key in a row.
-  fconn <- gzfile(file, 'r')
-  rowNum <- -1
-  while (TRUE) {
-    # Read one line
-    line <- readLines(fconn, n=1)
-    if (length(line) == 0) {
-      break
-    }
-    
-    # Stop if the key is found, or on EOF
-    foundLine <- startsWith(line, stopKeyValue)
-    if (foundLine) {
-      break
-    }
-    rowNum <- rowNum + 1
-  }
-  close(fconn)
-  rowNum
-}
-
-findMaxRowLessThanKey <- function(file, stopKeyValue) {
-  #' Similar to findMaxRowExactKey except it can be used in files where the 
-  #' exact key may not be present. Will return the row value directly below
-  #' the first row with a key greater than or equal to the given key. This
-  #' function is less efficient than the exact key version because it requires
-  #' parsing the number part of a key.
-  fconn <- gzfile(file, 'r')
-  rowNum <- 0
-  stopKeyNum <- parse_number(stopKeyValue)
-  while (TRUE) {
-    # Read one line
-    line <- readLines(fconn, n=1)
-    
-    # Ignore header line
-    if (startsWith(line, "tconst")) {
-      next
-    }
-    
-    # Split line and parse number part of key
-    parts <- strsplit(line, "\t")[[1]]
-    keyNum <- parse_number(parts[1])
-    
-    # Stop if the key is found, or on EOF
-    if (length(line) == 0 || keyNum >= stopKeyNum) {
-      break
-    }
-    rowNum <- rowNum + 1
-  }
-  close(fconn)
-  rowNum
-}
 ```
 
 ## Database Schema
 
 The following chunk creates all the necessary tables in our database based on the schema presented earlier.
 
-```{r}
+```{r, results='hide'}
 # First we need to remove any existing data,
 # for example, if this has been run before.
 drop_table <- function(table_name) {
@@ -330,12 +248,12 @@ drop_table <- function(table_name) {
 }
 
 # Saving rows affected to a var prevents output
-rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
+dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
 curr_tables <- dbListTables(conn)
 for (table in curr_tables) {
   dbExecute(conn, drop_table(table))
 }
-rows_aff <- dbExecute(conn, "PRAGMA foreign_keys = ON;")
+dbExecute(conn, "PRAGMA foreign_keys = ON;")
 
 # Now we can create the tables
 build_table <- function(table_def) {
@@ -525,121 +443,83 @@ for (table_stmt in tables) {
 
 ## Reading Data Locally
 
-Next we need to load data into the database. Because of the size of the data set, we will take a small sample of it for the purposes of this practicum.
+Next we need to gather. Because of the size of the data set, we will take a small sample of it for the purposes of this practicum.
+
+Let's set up some constants first.
+
+```{r}
+dir <- "./sample-data/"
+ext <- ".sample.tsv"
+names <- paste(dir, "name.basics", ext, sep="")
+titles <- paste(dir, "title.basics", ext, sep="")
+akas <- paste(dir, "title.akas", ext, sep="")
+episodes <- paste(dir, "title.episode", ext, sep="")
+principals <- paste(dir, "title.principals", ext, sep="")
+directors <- paste(dir, "title.directors", ext, sep="")
+writers <- paste(dir, "title.writers", ext, sep="")
+ratings <- paste(dir, "title.ratings", ext, sep="")
+```
 
 ### Titles
 
 The number of titles we choose to include will determine the amount of data read in from other files. Therefore we will get this data first.
 
-```{r}
-# We've decided arbitrarily to load 2000(?) titles/media
-stopTconst <- "tt0002001"
-rows <- findMaxRowExactKey(titleBasics, stopTconst)
-df.tb <- createDataframe(titleBasics, rows)
-tail(df.tb)
+```{r, message=FALSE}
+df.titles <- read_tsv(titles)
+head(df.titles)
 ```
 
 ### AKAs
 
-```{r}
-rows <- findMaxRowExactKey(titleAkas, stopTconst)
-df.akas <- createDataframe(titleAkas, rows)
-tail(df.akas)
+```{r, message=FALSE}
+df.akas <- read_tsv(akas)
+head(df.akas)
 ```
 
 ### Episodes
 
-There are no episodes below tt0002000. Is this OK? How should we deal with this?
+```{r, message=FALSE}
+df.eps <- read_tsv(episodes)
+head(df.eps)
+```
 
 ### Ratings
 
-```{r}
-rows <- findMaxRowLessThanKey(titleRatings, stopTconst)
-df.ratings <- createDataframe(titleRatings, rows)
-tail(df.ratings)
+```{r, message=FALSE}
+df.ratings <- read_tsv(ratings)
+head(df.ratings)
 ```
 
 ### Principles
 
-Principles will help us determine which people to include
-
-```{r}
-rows <- findMaxRowExactKey(titlePrincipals, stopTconst)
-df.princ <- createDataframe(titlePrincipals, rows)
-tail(df.princ)
+```{r, message=FALSE}
+df.princ <- read_tsv(principals)
+head(df.princ)
 ```
 
 ### Crew
 
-Crew data also contains data about people who worked on titles/media.
+In pre-processing the crew data was split into seperate sets for directors and writers.
 
-```{r}
-rows <- findMaxRowExactKey(titleCrew, stopTconst)
-df.crew <- createDataframe(titleCrew, rows)
-tail(df.crew)
+#### Directors
+
+```{r, message=FALSE}
+df.dirs <- read_tsv(directors)
+head(df.dirs)
 ```
 
-The Crew data has some values in directors and writers that are separated by commas. Note the 7th row in the output below. These will have to be delt with in order to figure out which people we need to include in the database.
+#### Writers
 
-```{r}
-head(df.crew, 10)
-```
-
-We use tidyverse packages to split out the writers and directors into separate dataframes, with each name id on it's own line.
-
-```{r}
-# Separate directors
-df.directors <- df.crew[c("tconst", "directors")] %>%
-  mutate(directors = strsplit(as.character(directors), ",")) %>%
-  unnest(directors)
-
-# Remove titles with no director listed
-df.directors <- drop_na(df.directors)
-
-head(df.directors, 10)
-```
-```{r}
-# Separate writers
-df.writers <- df.crew[c("tconst", "writers")] %>%
-  mutate(writers = strsplit(as.character(writers), ",")) %>%
-  unnest(writers)
-
-# Remove rows with no writers listed
-df.writers <- drop_na(df.writers)
-
-head(df.writers, 10)
+```{r, message=FALSE}
+df.writers <- read_tsv(writers)
+head(df.writers)
 ```
 
 ### Names/People
 
-Getting data from the name basics data is more complicated. Unlike the other files, there is no natural ordering on the media IDs. However, we do have name IDs for every crew member on the media that we are including. By creating a set of these name IDs we can use it to filter out people we don't want.
-
-Unfortunately we will have to read in the whole file, so this will take some time if running it yourself. We could filter the original file and write out a new one with the filtered rows, but this requires parsing the whole file anyways, so it makes more sense to simply read in the whole file to a dataframe and then filter that.
-
-```{r}
-# This may take a while...
-df.names <- createDataframe(nameBasics)
-tail(df.names)
-
-```
-
-```{r}
-# Gather all unique name IDs into single series
-allNames <- unique(
-  union_all(
-    as.character(df.princ$nconst),
-    df.directors$directors,
-    df.writers$writers
-  )
-)
-
-# Add them to a hash
-nameSet = hash(allNames, 1:length(allNames))  # values don't matter for the set
-
-# Filter for used names
-# This may take several minutes. May be longer than the reading...
-df.names <- filter(df.names, has.key(nconst, nameSet))
-tail(df.names)
+```{r, message=FALSE}
+df.names <- read_tsv(names)
+head(df.names)
 ```
 
 ## Loading Data to Database
@@ -647,7 +527,7 @@ tail(df.names)
 "Title_Type" table
 ```{r}
 # Grab the needed columns from the current dataframe
-types <- df.tb[,c(0,2)]
+types <- df.titles[,c(0,2)]
 # Since this is a categorical table, grab unique values
 format <- unique(types)
 # Create a new dataframe with unique values
@@ -661,14 +541,14 @@ dbWriteTable(conn,"Title_Type",df.tt, overwrite=TRUE)
 
 "Media" table
 ```{r}
-df.media <- df.tb[,-c(0,9)]
+df.media <- df.titles[,-c(0,9)]
 head(df.media)
 ```
 
 "Genres" and "Media_Genres" tables
 ```{r}
 # Grab the needed columns from the current dataframe
-df.mgl <- df.tb[,c(1,9)]
+df.mgl <- df.titles[,c(1,9)]
 
 # Separate multi-valued attributes
 df.mg <- df.mgl %>% 

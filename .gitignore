@@ -3,6 +3,11 @@ data/
 *.db
 *.sqlite
 *.html
+*.pdf
+*tex
+*.docx
+*.doc
+*.log
 
 # Default
 # History files
