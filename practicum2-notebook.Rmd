@@ -22,6 +22,7 @@ library(hash)
 library(readr)
 library(tidyr)
 library(dplyr)
+library(tibble)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
@@ -531,51 +532,75 @@ types <- df.titles[,c(0,2)]
 # Since this is a categorical table, grab unique values
 format <- unique(types)
 # Create a new dataframe with unique values
-df.tt <- data.frame(format)
+df_tt <- data.frame(format)
 # Assign unique ids to the unique values - only works on initial loading of data
-df.tt <- tibble::rowid_to_column(df.tt, "format_id")
+df_tt <- tibble::rowid_to_column(df_tt, "format_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Title_Type",df.tt, overwrite=TRUE)
+dbWriteTable(conn,"Title_Type",df_tt, overwrite=TRUE)
 ```
 
 "Media" table
 ```{r}
-df.media <- df.titles[,-c(0,9)]
-head(df.media)
+df_media <- df.titles[,-c(0,9)]
+df_media <- add_column(df_media, format_id = 0, .after = 2)
+head(df_media)
+
+term <- "movie"
+search1 <- df_tt$titleType == term
+id <- df_tt[which(search1),][1,1]
+search2 <- df_media$titleType == term
+df_media$format_id[search2] <- id
+head(df_media)
+
+# types <- df_tt[,c(0,2)]
+# head(types)
+# for (term in types){
+#   search1 <- df_tt$titleType == term
+#   id <- df_tt[which(search1),][1,1]
+#   search2 <- df_media$titleType == term
+#   df_media$format_id[search2] <- id
+# }
+
+# df_media$titleType <- NULL
+# dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
+
 ```
 
 "Genres" and "Media_Genres" tables
 ```{r}
 # Grab the needed columns from the current dataframe
-df.mgl <- df.titles[,c(1,9)]
+df_mgl <- df.titles[,c(1,9)]
 
 # Separate multi-valued attributes
-df.mg <- df.mgl %>% 
+df_mg <- df_mgl %>% 
   mutate(genres = strsplit(genres, ",")) %>%
   unnest(genres)
 # Assign unique ids to the unique values - only works on initial loading of data
-df.mg <- tibble::rowid_to_column(df.mg, "mg_id")
-head(df.mg)
+df_mg <- tibble::rowid_to_column(df_mg, "mg_id")
+head(df_mg)
 
 # Since genres is a categorical table, grab unique values
-df.genres <- unique(df.mg["genres"])
+df_genres <- unique(df_mg["genres"])
+# Remove titles with no genre listed
+df_genres <- drop_na(df_genres)
 # Assign unique ids to the unique values - only works on initial loading of data
-df.genres <- tibble::rowid_to_column(df.genres, "genre_id")
+df_genres <- tibble::rowid_to_column(df_genres, "genre_id")
 # Rename column names to match table
-colnames(df.genres) <- c("genre_id", "genre")
-head(df.genres)
+colnames(df_genres) <- c("genre_id", "genre")
+head(df_genres)
 
 # Convert the genre into the appropriate FK id
 
 # Rename column names to match table
-colnames(df.mg) <- c("mg_id", "tconst", "genre_id")
-head(df.mg)
+colnames(df_mg) <- c("mg_id", "tconst", "genre_id")
+head(df_mg)
 
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Genres",df.genres, overwrite=TRUE)
-#dbWriteTable(conn,"Media_Genres",df.mg, overwrite=TRUE)
+dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
+dbReadTable(conn,"Genres")
+#dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
 "Episode" table
