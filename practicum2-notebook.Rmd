@@ -23,7 +23,7 @@ library(readr)
 library(tidyr)
 library(dplyr)
 library(tibble)
-library(stringi)
+library(stringr)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
@@ -662,7 +662,7 @@ df_mg$genres <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+#dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
 ### "Episodes" table
@@ -813,7 +813,7 @@ df_cast$characters <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
-dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+#dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 ```
 
