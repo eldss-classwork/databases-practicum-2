@@ -23,6 +23,7 @@ library(readr)
 library(tidyr)
 library(dplyr)
 library(tibble)
+library(stringi)
 
 # False by default. Change to true if you need these files or want new versions.
 # This may necessitate filtering the datasets as well.
@@ -574,7 +575,6 @@ df_media <- add_column(df_media, format_id = 0, .after = 2)
 
 # Get a list of the categories available
 types <- df_tt[,c(0,2)]
-head(types)
 # For each category, assign the FK id
 for(term in types) {
   search1 <- df_tt$titleType == term
@@ -600,10 +600,10 @@ dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
 "Genres" and "Media_Genres" tables
 ```{r}
 # Grab the needed columns from the current dataframe
-df_mgl <- df.titles[,c(1,9)]
+df_mg <- df.titles[,c(1,9)]
 
 # Separate multi-valued attributes
-df_mg <- df_mgl %>% 
+df_mg <- df_mg %>% 
   mutate(genres = strsplit(genres, ",")) %>%
   unnest(genres)
 # Assign unique ids to the unique values - only works on initial loading of data
@@ -612,7 +612,6 @@ df_mg <- tibble::rowid_to_column(df_mg, "mg_id")
 df_mg <- drop_na(df_mg)
 # Add a column for the FK id
 df_mg <- add_column(df_mg, genre_id = 0, .after = 2)
-head(df_mg)
 
 # Since genres is a categorical table, grab unique values
 df_genres <- unique(df_mg["genres"])
@@ -620,12 +619,10 @@ df_genres <- unique(df_mg["genres"])
 df_genres <- tibble::rowid_to_column(df_genres, "genre_id")
 # Rename column names to match table
 colnames(df_genres) <- c("genre_id", "genre")
-head(df_genres)
 
 # Convert the genre into the appropriate FK id
 # Get a vector list of the categories available
 types <- df_genres[["genre"]]
-head(types)
 # For each category, assign the FK id
 for(term in types) {
   search1 <- df_genres$genre == term
@@ -707,8 +704,6 @@ df_crew <- add_column(df_crew, category_id = 0, .after = 3)
 
 # Get a list of the categories available
 types <- df_cat[,c(0,2)]
-head(types)
-class(types)
 # For each category, assign the FK id
 for(term in types) {
   search1 <- df_cat$category == term
@@ -733,6 +728,64 @@ dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
 
 "Cast" and "Characters" tables
 ```{r}
+# Grab the needed columns from the current dataframe
+df_cast <- df.princ[,-c(3,4,5)]
+# Remove titles with no genre listed
+df_cast <- drop_na(df_cast)
+
+# Remove brackets from data
+df_cast <- df_cast %>% 
+  mutate(characters = str_replace(characters,"\\[",""))
+df_cast <- df_cast %>% 
+  mutate(characters = str_replace(characters,"\\]",""))
+
+# Separate multi-valued attributes
+df_cast <- df_cast %>% 
+  mutate(characters = strsplit(characters, "\",\"")) %>%
+  unnest(characters)
+
+# Remove quotes from data
+df_cast <- df_cast %>% 
+  mutate(characters = str_replace(characters,"\"",""))
+df_cast <- df_cast %>% 
+  mutate(characters = str_replace(characters,"\"",""))
+
+# Assign unique ids to the unique values - only works on initial loading of data
+df_cast <- tibble::rowid_to_column(df_cast, "cast_id")
+# Add a column for the FK id
+df_cast <- add_column(df_cast, character_id = 0, .after = 3)
+
+# Since genres is a categorical table, grab unique values
+df_characters <- unique(df_cast["characters"])
+# Assign unique ids to the unique values - only works on initial loading of data
+df_characters <- tibble::rowid_to_column(df_characters, "character_id")
+# Rename column names to match table
+colnames(df_characters) <- c("character_id", "character")
+
+# Convert the genre into the appropriate FK id
+# Get a vector list of the categories available
+types <- df_characters[["character"]]
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_characters$character == term
+  # Get the FK id for the category
+  id <- df_characters[which(search1),][1,1]
+  search2 <- df_cast$characters == term
+  # Replace default 0 value with the FK id
+  df_cast$character_id[search2] <- id
+}
+
+# If this was not the initial read of the dataset, we would want to search to ensure there are no default FK ids left.
+# If there were, this would mean we would need to add them to the category table and then update the FK ids.
+# As the categories were just determined using the same initial dataset, this is not needed at this time.
+
+# Drop the category column, only the FK id column is needed
+df_cast$characters <- NULL
+
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
+dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 ```
 
