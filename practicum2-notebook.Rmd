@@ -791,12 +791,24 @@ dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 "Media_Directors" table
 ```{r}
-
+# Assign unique ids to the unique values - only works on initial loading of data
+df_direct <- tibble::rowid_to_column(df.dirs, "md_id")
+# Rename the columns to match the database table
+colnames(df_direct) <- c("md_id", "tconst", "nconst")
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
 ```
 
 "Media_Writers" table
 ```{r}
-
+# Assign unique ids to the unique values - only works on initial loading of data
+df_write <- tibble::rowid_to_column(df.writers, "mw_id")
+# Rename the columns to match the database table
+colnames(df_write) <- c("mw_id", "tconst", "nconst")
+# Transfer the new dataframes into the database tables
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
 ```
 
 "Also_Known_As" table
