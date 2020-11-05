@@ -2,10 +2,10 @@
 title: 'CS5200 Fall 2020: Practicum 2'
 author: "Chandra Davis, Evan Douglass"
 output:
+  word_document: default
   pdf_document: default
   html_document:
     df_print: paged
-  word_document: default
 ---
 
 ## Overview
@@ -130,8 +130,7 @@ writeFilteredTsv <- function(filename, filterSet, colname = "tconst") {
     df <- filter(df, has.key(titleId, filterSet))
   } else if (colname == "nconst") {
     df <- filter(df, has.key(nconst, filterSet)) 
-  }
-  # Don't filter if colname different
+  } # Don't filter if colname different
   
   # Write out the data
   write_tsv(df, paths$sample)
@@ -592,6 +591,7 @@ df_tt <- tibble::rowid_to_column(df_tt, "format_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
+dbGetQuery(conn, headSql("Formats"))
 ```
 
 ### "Media" table
@@ -624,6 +624,7 @@ df_media$titleType <- NULL
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
+dbGetQuery(conn, headSql("Media"))
 ```
 
 ### "Genres" and "Media_Genres" tables
@@ -673,7 +674,9 @@ df_mg$genres <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-# dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+dbGetQuery(conn, headSql("Genres"))
+dbGetQuery(conn, headSql("Media_Genres"))
 ```
 
 ### "Episodes" table
@@ -682,6 +685,7 @@ dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
+dbGetQuery(conn, headSql("Episodes"))
 ```
 
 ###"Ratings" table
@@ -690,6 +694,7 @@ dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
+dbGetQuery(conn, headSql("Ratings"))
 ```
 
 ### "People" table
@@ -876,8 +881,9 @@ df_cast$characters <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
-# dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
-
+dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+dbGetQuery(conn, headSql("Characters"))
+dbGetQuery(conn, headSql("Cast"))
 ```
 
 ### "Media_Directors" table
