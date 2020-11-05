@@ -1006,7 +1006,7 @@ dbGetQuery(conn, headSql("Also_Known_As"))
 
 ```{r, message=FALSE}
 # Get aka types
-df.akaTypes <- df.akas[c("titleId", "ordering", "types")]
+df.akaTypes <- drop_na(df.akas[c("titleId", "ordering", "types")])
 
 # Extract unique types
 types <- unique(df.akas$types)
@@ -1050,7 +1050,7 @@ dbGetQuery(conn, headSql("Aka_Types"))
 
 ```{r, message=FALSE}
 # Get aka attributes
-df.akaAtts <- df.akas[c("titleId", "ordering", "attributes")]
+df.akaAtts <- drop_na(df.akas[c("titleId", "ordering", "attributes")])
 
 # Extract unique attributes
 attributes <- unique(df.akas$attributes)
@@ -1091,3 +1091,31 @@ dbWriteTable(conn, "Aka_Attributes", df.akaAtts, overwrite=TRUE)
 dbGetQuery(conn, headSql("Attributes"))
 dbGetQuery(conn, headSql("Aka_Attributes"))
 ```
+
+## Update Tables
+
+```{r}
+
+```
+
+
+## Triggers
+
+```{r}
+
+```
+
+
+## View
+
+```{r}
+
+```
+
+
+## Queries
+
+```{r}
+
+```
+
