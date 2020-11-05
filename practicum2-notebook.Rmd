@@ -860,7 +860,45 @@ df_aka <- df.akas[,-c(6,7)]
 # Rename the columns to match the database table
 colnames(df_aka) <- c("tconst", "ordering", "title", "region", "language", "isOriginalTitle")
 
+# Add a column for the FK id
+df_aka <- add_column(df_aka, region_id = NA, .after = 3)
 
+# Get a list of the categories available
+types <- df_reg[,c(0,2)]
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_reg$region == term
+  # Get the FK id for the category
+  id <- df_reg[which(search1),][1,1]
+  search2 <- df_aka$region == term
+  # Replace default 0 value with the FK id
+  df_aka$region_id[search2] <- id
+}
+
+# Add a column for the FK id
+df_aka <- add_column(df_aka, lang_id = NA, .after = 5)
+
+# Get a list of the categories available
+types <- df_lang[,c(0,2)]
+# For each category, assign the FK id
+for(term in types) {
+  search1 <- df_lang$language == term
+  # Get the FK id for the category
+  id <- df_lang[which(search1),][1,1]
+  search2 <- df_aka$language == term
+  # Replace default 0 value with the FK id
+  df_aka$lang_id[search2] <- id
+}
+
+# Since the original default values were set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+
+# Drop the category columns, only the FK id columns are needed
+df_aka$region <- NULL
+df_aka$language <- NULL
+
+# Transfer the new dataframe into the database table
+# Overwrite is true because this should be the initial reading of the data
+dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
 ```
 
 "Types" and "Aka_Types" tables
