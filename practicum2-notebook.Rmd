@@ -565,6 +565,17 @@ head(df.names)
 
 ## Loading Data to Database
 
+This section will take the data extracted previously, manipulate it as needed, and then add it to our database as needed.
+
+To show our additions worked, we will show the top 5 rows that were just added to the current table. The following function provides the SQL to do this.
+
+```{r}
+headSql <- function(tableName) {
+  paste("SELECT * FROM", tableName, "LIMIT 5;")
+}
+```
+
+
 ### "Formats" table
 
 ```{r}
@@ -662,7 +673,7 @@ df_mg$genres <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+# dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
 ### "Episodes" table
@@ -684,25 +695,75 @@ dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
 ### "People" table
 
 ```{r}
+# Grab single valued columns
+df.namesTable <- df.names[, c(1,2,3,4)]
 
+# Add age and numMovie columns
+# Leave NA for now, will use update statements to change later
+df.namesTable$age <- as.integer(NA)
+df.namesTable$numMovies <- as.integer(NA)
+
+# Add to table
+dbWriteTable(conn, "People", df.namesTable, overwrite=TRUE)
+dbGetQuery(conn, headSql("People"))
 ```
 
 ### "Known_For_Titles" table
 
 ```{r}
+# Extract the titles that people are known for and flatten it out
+# so only one name and one title appear in the same record.
+df.knownForTitles <- drop_na(df.names[c("nconst", "knownForTitles")]) %>%
+    mutate(knownForTitles = strsplit(as.character(knownForTitles), ",")) %>%
+    unnest(knownForTitles)
 
+# Add PK column based on row number
+df.knownForTitles <- tibble::rowid_to_column(df.knownForTitles, "kt_id")
+
+# Put in database
+dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
+dbGetQuery(conn, headSql("Known_For_Titles"))
 ```
 
-### "Professions" table
+### "Professions" and "Primary_Profession" table
 
 ```{r}
+# Extract the titles that people are known for and flatten it out
+# so only one name and one title appear in the same record.
+df.primaryProfessions <- drop_na(df.names[c("nconst", "primaryProfession")]) %>%
+    mutate(primaryProfession = strsplit(as.character(primaryProfession), ",")) %>%
+    unnest(primaryProfession)
 
-```
+# Extract unique professions
+professions <- unique(df.primaryProfessions$primaryProfession)
+df.professions <- data.frame(professions)
 
-### "Primary_Profession" table
+# Add PK columns
+df.professions <- tibble::rowid_to_column(df.professions, "prof_id")
+df.primaryProfessions <- tibble::rowid_to_column(df.primaryProfessions, "pp_id")
 
-```{r}
+# Rename columns as needed
+df.professions <- df.professions %>%
+  rename(prof_title = professions)
+df.primaryProfessions <- df.primaryProfessions %>%
+  rename(prof_id = primaryProfession)
 
+# Replace profession strings with an id
+profList <- df.professions$prof_title
+for (i in 1:length(profList)) {
+  prof <- profList[i]
+  df.primaryProfessions$prof_id[which(
+    df.primaryProfessions$prof_id == prof
+  )] <- i
+}
+df.primaryProfessions <- transform(
+  df.primaryProfessions, prof_id = as.integer(prof_id))
+
+# Add to database
+dbWriteTable(conn, "Professions", df.professions, overwrite=TRUE)
+dbWriteTable(conn, "Primary_Profession", df.primaryProfessions, overwrite=TRUE)
+dbGetQuery(conn, headSql("Professions"))
+dbGetQuery(conn, headSql("Primary_Profession"))
 ```
 
 ### "Categories" table
@@ -719,6 +780,7 @@ df_cat <- tibble::rowid_to_column(df_cat, "category_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
+dbGetQuery(conn, headSql("Categories"))
 ```
 
 ### "Crew" table
@@ -751,6 +813,7 @@ df_crew$category <- NULL
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
+dbGetQuery(conn, headSql("Crew"))
 ```
 
 ### "Cast" and "Characters" tables
@@ -813,7 +876,7 @@ df_cast$characters <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
-dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+# dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 ```
 
@@ -827,6 +890,7 @@ colnames(df_direct) <- c("md_id", "tconst", "nconst")
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
+dbGetQuery(conn, headSql("Media_Directors"))
 ```
 
 ### "Media_Writers" table
@@ -839,6 +903,7 @@ colnames(df_write) <- c("mw_id", "tconst", "nconst")
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
+dbGetQuery(conn, headSql("Media_Writers"))
 ```
 
 ### "Regions" table
@@ -857,6 +922,7 @@ df_reg <- tibble::rowid_to_column(df_reg, "region_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Regions",df_reg, overwrite=TRUE)
+dbGetQuery(conn, headSql("Regions"))
 ```
 
 ### "Languages" table
@@ -874,6 +940,7 @@ df_lang <- tibble::rowid_to_column(df_lang, "lang_id")
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Languages",df_lang, overwrite=TRUE)
+dbGetQuery(conn, headSql("Languages"))
 ```
 
 ### "Also_Known_As" table
@@ -926,16 +993,95 @@ df_aka$language <- NULL
 # Transfer the new dataframe into the database table
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
+dbGetQuery(conn, headSql("Also_Known_As"))
 ```
 
 ### "Types" and "Aka_Types" tables
 
-```{r}
+```{r, message=FALSE}
+# Get aka types
+df.akaTypes <- df.akas[c("titleId", "ordering", "types")]
 
+# Extract unique types
+types <- unique(df.akas$types)
+df.types <- data.frame(types)
+df.types <- drop_na(df.types)
+
+# Add PK columns
+df.types <- tibble::rowid_to_column(df.types, "type_id")
+df.akaTypes <- tibble::rowid_to_column(df.akaTypes, "akt_id")
+
+# Rename and change type of columns as needed
+df.types <- df.types %>%
+  rename(type = types)
+df.types <- transform(
+  df.types, type = as.character(type))
+
+colnames(df.akaTypes) <- c("akt_id", "tconst", "ordering", "type_id")
+
+# Replace type strings with an id
+typeList <- df.types$type
+for (i in 1:length(profList)) {
+  type <- typeList[i]
+  df.akaTypes$type_id[which(
+    df.akaTypes$type_id == type
+  )] <- i
+}
+df.akaTypes <- transform(
+  df.akaTypes,
+  type_id = as.integer(type_id),
+  ordering = as.integer(ordering)
+)
+
+# Add to database
+dbWriteTable(conn, "Types", df.types, overwrite=TRUE)
+dbWriteTable(conn, "Aka_Types", df.akaTypes, overwrite=TRUE)
+dbGetQuery(conn, headSql("Types"))
+dbGetQuery(conn, headSql("Aka_Types"))
 ```
 
 ### "Attributes" and "Aka_Attributes" tables
 
-```{r}
+```{r, message=FALSE}
+# Get aka attributes
+df.akaAtts <- df.akas[c("titleId", "ordering", "attributes")]
 
+# Extract unique attributes
+attributes <- unique(df.akas$attributes)
+df.attributes <- data.frame(attributes)
+df.attributes <- drop_na(df.attributes)
+
+# Add PK columns
+df.attributes <- tibble::rowid_to_column(df.attributes, "att_id")
+df.akaAtts <- tibble::rowid_to_column(df.akaAtts, "aka_id")
+
+# Rename and change type of columns as needed
+df.attributes <- df.attributes %>%
+  rename(att_name = attributes)
+df.attributes <- transform(
+  df.attributes, att_name = as.character(att_name))
+
+colnames(df.akaAtts) <- c("aka_id", "tconst", "ordering", "att_id")
+
+# Replace type strings with an id
+attList <- df.attributes$att_name
+for (i in 1:length(profList)) {
+  att <- attList[i]
+  df.akaAtts$att_id[which(
+    df.akaAtts$att_id == att
+  )] <- i
+}
+
+df.akaAtts <- transform(
+  df.akaAtts,
+  # introduces some NAs by coercion, this is OK, there are many NAs
+  att_id = as.integer(att_id),
+  ordering = as.integer(ordering)
+)
+
+# Add to database
+dbWriteTable(conn, "Attributes", df.attributes, overwrite=TRUE)
+dbWriteTable(conn, "Aka_Attributes", df.akaAtts, overwrite=TRUE)
+dbGetQuery(conn, headSql("Attributes"))
+dbGetQuery(conn, headSql("Aka_Attributes"))
 ```
