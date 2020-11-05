@@ -486,7 +486,7 @@ for (table_stmt in tables) {
 
 Next we need to gather. Because of the size of the data set, we will take a small sample of it for the purposes of this practicum.
 
-Let's set up some constants first.
+We'll set up some constants first.
 
 ```{r}
 dir <- "./sample-data/"
@@ -540,7 +540,7 @@ head(df.princ)
 
 ### Crew
 
-In pre-processing the crew data was split into seperate sets for directors and writers.
+In pre-processing the crew data was split into separate sets for directors and writers.
 
 #### Directors
 
@@ -565,7 +565,8 @@ head(df.names)
 
 ## Loading Data to Database
 
-"Formats" table
+### "Formats" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 types <- df.titles[,c(0,2)]
@@ -582,7 +583,8 @@ df_tt <- tibble::rowid_to_column(df_tt, "format_id")
 dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
 ```
 
-"Media" table
+### "Media" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 df_media <- df.titles[,-c(0,9)]
@@ -601,7 +603,9 @@ for(term in types) {
   df_media$format_id[search2] <- id
 }
 
-# Since the original default value was set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+# Since the original default value was set to NA, when it is transferred 
+# to the database, those values will change to NULL. 
+# No additional checks are needed
 
 # Drop the category column, only the FK id column is needed
 df_media$titleType <- NULL
@@ -611,7 +615,8 @@ df_media$titleType <- NULL
 dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
 ```
 
-"Genres" and "Media_Genres" tables
+### "Genres" and "Media_Genres" tables
+
 ```{r}
 # Grab the needed columns from the current dataframe
 df_mg <- df.titles[,c(1,9)]
@@ -647,7 +652,9 @@ for(term in types) {
   df_mg$genre_id[search2] <- id
 }
 
-# Since the original default value was set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+# Since the original default value was set to NA, when it is transferred 
+# to the database, those values will change to NULL. 
+# No additional checks are needed
 
 # Drop the category column, only the FK id column is needed
 df_mg$genres <- NULL
@@ -658,41 +665,48 @@ dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
 dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
-"Episodes" table
+### "Episodes" table
+
 ```{r}
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
 ```
 
-"Ratings" table
+###"Ratings" table
+
 ```{r}
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
 ```
 
-"People" table
+### "People" table
+
 ```{r}
 
 ```
 
-"Known_For_Titles" table
+### "Known_For_Titles" table
+
 ```{r}
 
 ```
 
-"Professions" table
+### "Professions" table
+
 ```{r}
 
 ```
 
-"Primary_Profession" table
+### "Primary_Profession" table
+
 ```{r}
 
 ```
 
-"Categories" table
+### "Categories" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 types <- df.princ[,c(0,4)]
@@ -707,7 +721,8 @@ df_cat <- tibble::rowid_to_column(df_cat, "category_id")
 dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
 ```
 
-"Crew" table
+### "Crew" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 df_crew <- df.princ[,-c(0,6)]
@@ -726,7 +741,9 @@ for(term in types) {
   df_crew$category_id[search2] <- id
 }
 
-# Since the original default value was set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+# Since the original default value was set to NA, when it is transferred 
+# to the database, those values will change to NULL. 
+# No additional checks are needed
 
 # Drop the category column, only the FK id column is needed
 df_crew$category <- NULL
@@ -736,7 +753,8 @@ df_crew$category <- NULL
 dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
 ```
 
-"Cast" and "Characters" tables
+### "Cast" and "Characters" tables
+
 ```{r}
 # Grab the needed columns from the current dataframe
 df_cast <- df.princ[,-c(3,4,5)]
@@ -785,7 +803,9 @@ for(term in types) {
   df_cast$character_id[search2] <- id
 }
 
-# Since the original default value was set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+# Since the original default value was set to NA, when it is transferred 
+# to the database, those values will change to NULL. 
+# No additional checks are needed
 
 # Drop the category column, only the FK id column is needed
 df_cast$characters <- NULL
@@ -797,7 +817,8 @@ dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 ```
 
-"Media_Directors" table
+### "Media_Directors" table
+
 ```{r}
 # Assign unique ids to the unique values - only works on initial loading of data
 df_direct <- tibble::rowid_to_column(df.dirs, "md_id")
@@ -808,7 +829,8 @@ colnames(df_direct) <- c("md_id", "tconst", "nconst")
 dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
 ```
 
-"Media_Writers" table
+### "Media_Writers" table
+
 ```{r}
 # Assign unique ids to the unique values - only works on initial loading of data
 df_write <- tibble::rowid_to_column(df.writers, "mw_id")
@@ -819,7 +841,8 @@ colnames(df_write) <- c("mw_id", "tconst", "nconst")
 dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
 ```
 
-"Regions" table
+### "Regions" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 types <- df.akas[,c(0,4)]
@@ -836,7 +859,7 @@ df_reg <- tibble::rowid_to_column(df_reg, "region_id")
 dbWriteTable(conn,"Regions",df_reg, overwrite=TRUE)
 ```
 
-"Languages" table
+### "Languages" table
 ```{r}
 # Grab the needed columns from the current dataframe
 types <- df.akas[,c(0,5)]
@@ -853,12 +876,14 @@ df_lang <- tibble::rowid_to_column(df_lang, "lang_id")
 dbWriteTable(conn,"Languages",df_lang, overwrite=TRUE)
 ```
 
-"Also_Known_As" table
+### "Also_Known_As" table
+
 ```{r}
 # Grab the needed columns from the current dataframe
 df_aka <- df.akas[,-c(6,7)]
 # Rename the columns to match the database table
-colnames(df_aka) <- c("tconst", "ordering", "title", "region", "language", "isOriginalTitle")
+colnames(df_aka) <- c("tconst", "ordering", "title", "region",
+                      "language", "isOriginalTitle")
 
 # Add a column for the FK id
 df_aka <- add_column(df_aka, region_id = NA, .after = 3)
@@ -890,7 +915,9 @@ for(term in types) {
   df_aka$lang_id[search2] <- id
 }
 
-# Since the original default values were set to NA, when it is transferred to the database, those values will change to NULL. No additional checks are needed
+# Since the original default values were set to NA, when it is transferred 
+# to the database, those values will change to NULL. 
+# No additional checks are needed
 
 # Drop the category columns, only the FK id columns are needed
 df_aka$region <- NULL
@@ -901,12 +928,14 @@ df_aka$language <- NULL
 dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
 ```
 
-"Types" and "Aka_Types" tables
+### "Types" and "Aka_Types" tables
+
 ```{r}
 
 ```
 
-"Attributes" and "Aka_Attributes" tables
+### "Attributes" and "Aka_Attributes" tables
+
 ```{r}
 
 ```
