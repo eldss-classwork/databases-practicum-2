@@ -597,7 +597,7 @@ types <- df_tt[,c(0,2)]
 for(term in types) {
   search1 <- df_tt$titleType == term
   # Get the FK id for the category
-  id <- df_tt[which(search1),][1,1]
+  id <- df_tt[which(search1),][["format_id"]]
   search2 <- df_media$titleType == term
   # Replace default 0 value with the FK id
   df_media$format_id[search2] <- id
@@ -646,7 +646,7 @@ types <- df_genres[["genre"]]
 for(term in types) {
   search1 <- df_genres$genre == term
   # Get the FK id for the category
-  id <- df_genres[which(search1),][1,1]
+  id <- df_genres[which(search1),][["genre_id"]]
   search2 <- df_mg$genres == term
   # Replace default 0 value with the FK id
   df_mg$genre_id[search2] <- id
@@ -662,7 +662,7 @@ df_mg$genres <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-#dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
 ```
 
 ### "Episodes" table
@@ -735,7 +735,7 @@ types <- df_cat[,c(0,2)]
 for(term in types) {
   search1 <- df_cat$category == term
   # Get the FK id for the category
-  id <- df_cat[which(search1),][1,1]
+  id <- df_cat[which(search1),][["category_id"]]
   search2 <- df_crew$category == term
   # Replace default 0 value with the FK id
   df_crew$category_id[search2] <- id
@@ -797,7 +797,7 @@ types <- df_characters[["character"]]
 for(term in types) {
   search1 <- df_characters$character == term
   # Get the FK id for the category
-  id <- df_characters[which(search1),][1,1]
+  id <- df_characters[which(search1),][["character_id"]]
   search2 <- df_cast$characters == term
   # Replace default 0 value with the FK id
   df_cast$character_id[search2] <- id
@@ -813,7 +813,7 @@ df_cast$characters <- NULL
 # Transfer the new dataframes into the database tables
 # Overwrite is true because this should be the initial reading of the data
 dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
-#dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
 
 ```
 
@@ -894,7 +894,7 @@ types <- df_reg[,c(0,2)]
 for(term in types) {
   search1 <- df_reg$region == term
   # Get the FK id for the category
-  id <- df_reg[which(search1),][1,1]
+  id <- df_reg[which(search1),][["region_id"]]
   search2 <- df_aka$region == term
   # Replace default 0 value with the FK id
   df_aka$region_id[search2] <- id
@@ -909,7 +909,7 @@ types <- df_lang[,c(0,2)]
 for(term in types) {
   search1 <- df_lang$language == term
   # Get the FK id for the category
-  id <- df_lang[which(search1),][1,1]
+  id <- df_lang[which(search1),][["lang_id"]]
   search2 <- df_aka$language == term
   # Replace default 0 value with the FK id
   df_aka$lang_id[search2] <- id
