@@ -279,14 +279,14 @@ tables <- c(
       isAdult INTEGER, -- 0=false, else true
       startYear INTEGER,
       endYear INTEGER,
-      runtimeMins INTEGER,
+      runtimeMinutes INTEGER,
       FOREIGN KEY (format_id) REFERENCES Formats(format_id)
     );"
   ),
   build_table(
     "Ratings (
       tconst TEXT PRIMARY KEY,
-      averageRating REAL
+      averageRating REAL,
       numVotes INTEGER,
       FOREIGN KEY (tconst) REFERENCES Media(tconst)
     );"
@@ -295,7 +295,7 @@ tables <- c(
     "Episodes (
       tconst TEXT PRIMARY KEY,
       parentTconst TEXT NOT NULL,
-      seasonNumer INTEGER,
+      seasonNumber INTEGER,
       episodeNumber INTEGER,
       FOREIGN KEY (tconst) REFERENCES Media(tconst),
       FOREIGN KEY (parentTconst) REFERENCES Media(tconst)
@@ -588,9 +588,10 @@ df_tt <- data.frame(format)
 df_tt <- drop_na(df_tt)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_tt <- tibble::rowid_to_column(df_tt, "format_id")
+colnames(df_tt) <- c("format_id", "format")
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Formats",df_tt, append=TRUE)
 dbGetQuery(conn, headSql("Formats"))
 ```
 
@@ -606,7 +607,7 @@ df_media <- add_column(df_media, format_id = NA, .after = 1)
 types <- df_tt[,c(0,2)]
 # For each category, assign the FK id
 for(term in types) {
-  search1 <- df_tt$titleType == term
+  search1 <- df_tt$format == term
   # Get the FK id for the category
   id <- df_tt[which(search1),][["format_id"]]
   search2 <- df_media$titleType == term
@@ -622,8 +623,8 @@ for(term in types) {
 df_media$titleType <- NULL
 
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Media",df_media, append=TRUE)
 dbGetQuery(conn, headSql("Media"))
 ```
 
@@ -672,9 +673,9 @@ for(term in types) {
 df_mg$genres <- NULL
 
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Genres",df_genres, overwrite=TRUE)
-dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Genres",df_genres, append=TRUE)
+dbWriteTable(conn,"Media_Genres",df_mg, append=TRUE)
 dbGetQuery(conn, headSql("Genres"))
 dbGetQuery(conn, headSql("Media_Genres"))
 ```
@@ -683,8 +684,8 @@ dbGetQuery(conn, headSql("Media_Genres"))
 
 ```{r}
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Episodes",df.eps, append=TRUE)
 dbGetQuery(conn, headSql("Episodes"))
 ```
 
@@ -692,8 +693,8 @@ dbGetQuery(conn, headSql("Episodes"))
 
 ```{r}
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Ratings",df.ratings, append=TRUE)
 dbGetQuery(conn, headSql("Ratings"))
 ```
 
@@ -709,7 +710,8 @@ df.namesTable$age <- as.integer(NA)
 df.namesTable$numMovies <- as.integer(NA)
 
 # Add to table
-dbWriteTable(conn, "People", df.namesTable, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn, "People", df.namesTable, append=TRUE)
 dbGetQuery(conn, headSql("People"))
 ```
 
@@ -726,6 +728,7 @@ df.knownForTitles <- drop_na(df.names[c("nconst", "knownForTitles")]) %>%
 df.knownForTitles <- tibble::rowid_to_column(df.knownForTitles, "kt_id")
 
 # Put in database
+# Append is true because we want to maintain the relationships during table creation
 dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
 dbGetQuery(conn, headSql("Known_For_Titles"))
 ```
@@ -765,8 +768,9 @@ df.primaryProfessions <- transform(
   df.primaryProfessions, prof_id = as.integer(prof_id))
 
 # Add to database
-dbWriteTable(conn, "Professions", df.professions, overwrite=TRUE)
-dbWriteTable(conn, "Primary_Profession", df.primaryProfessions, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn, "Professions", df.professions, append=TRUE)
+dbWriteTable(conn, "Primary_Profession", df.primaryProfessions, append=TRUE)
 dbGetQuery(conn, headSql("Professions"))
 dbGetQuery(conn, headSql("Primary_Profession"))
 ```
@@ -783,8 +787,8 @@ df_cat <- data.frame(format)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_cat <- tibble::rowid_to_column(df_cat, "category_id")
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Categories",df_cat, append=TRUE)
 dbGetQuery(conn, headSql("Categories"))
 ```
 
@@ -816,8 +820,8 @@ for(term in types) {
 df_crew$category <- NULL
 
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Crew",df_crew, append=TRUE)
 dbGetQuery(conn, headSql("Crew"))
 ```
 
@@ -879,9 +883,9 @@ for(term in types) {
 df_cast$characters <- NULL
 
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Characters",df_characters, overwrite=TRUE)
-dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Characters",df_characters, append=TRUE)
+dbWriteTable(conn,"Cast",df_cast, append=TRUE)
 dbGetQuery(conn, headSql("Characters"))
 dbGetQuery(conn, headSql("Cast"))
 ```
@@ -894,8 +898,8 @@ df_direct <- tibble::rowid_to_column(df.dirs, "md_id")
 # Rename the columns to match the database table
 colnames(df_direct) <- c("md_id", "tconst", "nconst")
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Media_Directors",df_direct, append=TRUE)
 dbGetQuery(conn, headSql("Media_Directors"))
 ```
 
@@ -907,8 +911,8 @@ df_write <- tibble::rowid_to_column(df.writers, "mw_id")
 # Rename the columns to match the database table
 colnames(df_write) <- c("mw_id", "tconst", "nconst")
 # Transfer the new dataframes into the database tables
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Media_Writers",df_write, append=TRUE)
 dbGetQuery(conn, headSql("Media_Writers"))
 ```
 
@@ -926,8 +930,8 @@ df_reg <- drop_na(df_reg)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_reg <- tibble::rowid_to_column(df_reg, "region_id")
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Regions",df_reg, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Regions",df_reg, append=TRUE)
 dbGetQuery(conn, headSql("Regions"))
 ```
 
@@ -944,8 +948,8 @@ df_lang <- drop_na(df_lang)
 # Assign unique ids to the unique values - only works on initial loading of data
 df_lang <- tibble::rowid_to_column(df_lang, "lang_id")
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Languages",df_lang, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Languages",df_lang, append=TRUE)
 dbGetQuery(conn, headSql("Languages"))
 ```
 
@@ -997,8 +1001,8 @@ df_aka$region <- NULL
 df_aka$language <- NULL
 
 # Transfer the new dataframe into the database table
-# Overwrite is true because this should be the initial reading of the data
-dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn,"Also_Known_As",df_aka, append=TRUE)
 dbGetQuery(conn, headSql("Also_Known_As"))
 ```
 
@@ -1040,8 +1044,9 @@ df.akaTypes <- transform(
 )
 
 # Add to database
-dbWriteTable(conn, "Types", df.types, overwrite=TRUE)
-dbWriteTable(conn, "Aka_Types", df.akaTypes, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn, "Types", df.types, append=TRUE)
+dbWriteTable(conn, "Aka_Types", df.akaTypes, append=TRUE)
 dbGetQuery(conn, headSql("Types"))
 dbGetQuery(conn, headSql("Aka_Types"))
 ```
@@ -1086,8 +1091,9 @@ df.akaAtts <- transform(
 )
 
 # Add to database
-dbWriteTable(conn, "Attributes", df.attributes, overwrite=TRUE)
-dbWriteTable(conn, "Aka_Attributes", df.akaAtts, overwrite=TRUE)
+# Append is true because we want to maintain the relationships during table creation
+dbWriteTable(conn, "Attributes", df.attributes, append=TRUE)
+dbWriteTable(conn, "Aka_Attributes", df.akaAtts, append=TRUE)
 dbGetQuery(conn, headSql("Attributes"))
 dbGetQuery(conn, headSql("Aka_Attributes"))
 ```
