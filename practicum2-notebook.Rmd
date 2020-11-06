@@ -31,7 +31,7 @@ library(stringr)
 download <- FALSE
 process <- FALSE
 create <- TRUE
-load <- TRUE
+load <- create
 
 # File constants
 dataDir <- "./data/"
@@ -511,36 +511,46 @@ ratings <- paste(dir, "title.ratings", ext, sep="")
 The number of titles we choose to include will determine the amount of data read in from other files. Therefore we will get this data first.
 
 ```{r, message=FALSE}
-df.titles <- read_tsv(titles)
-head(df.titles)
+if (load) {
+  df.titles <- read_tsv(titles)
+  head(df.titles)
+}
 ```
 
 ### AKAs
 
 ```{r, message=FALSE}
-df.akas <- read_tsv(akas)
-head(df.akas)
+if (load) {
+  df.akas <- read_tsv(akas)
+  head(df.akas)
+}
 ```
 
 ### Episodes
 
 ```{r, message=FALSE}
-df.eps <- read_tsv(episodes)
-head(df.eps)
+if (load) {
+  df.eps <- read_tsv(episodes)
+  head(df.eps)
+}
 ```
 
 ### Ratings
 
 ```{r, message=FALSE}
-df.ratings <- read_tsv(ratings)
-head(df.ratings)
+if (load) {
+  df.ratings <- read_tsv(ratings)
+  head(df.ratings)
+}
 ```
 
 ### Principles
 
 ```{r, message=FALSE}
-df.princ <- read_tsv(principals)
-head(df.princ)
+if (load) {
+  df.princ <- read_tsv(principals)
+  head(df.princ)
+}
 ```
 
 ### Crew
@@ -550,22 +560,28 @@ In pre-processing the crew data was split into separate sets for directors and w
 #### Directors
 
 ```{r, message=FALSE}
-df.dirs <- read_tsv(directors)
-head(df.dirs)
+if (load) {
+  df.dirs <- read_tsv(directors)
+  head(df.dirs)
+}
 ```
 
 #### Writers
 
 ```{r, message=FALSE}
-df.writers <- read_tsv(writers)
-head(df.writers)
+if (load) {
+  df.writers <- read_tsv(writers)
+  head(df.writers)
+}
 ```
 
 ### Names/People
 
 ```{r, message=FALSE}
-df.names <- read_tsv(names)
-head(df.names)
+if (load) {
+  df.names <- read_tsv(names)
+  head(df.names)
+}
 ```
 
 ## Loading Data to Database
@@ -600,13 +616,14 @@ loadFormats <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Formats",df_tt, append=TRUE)
   dbGetQuery(conn, headSql("Formats"))
+  return(df_tt)
 }
 ```
 
 ### "Media" table
 
 ```{r}
-loadMedia <- function(){
+loadMedia <- function(df_tt){
   # Grab the needed columns from the current dataframe
   df_media <- df.titles[,-c(0,9)]
   # Add a column for the FK id
@@ -813,13 +830,14 @@ loadCategories <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Categories",df_cat, append=TRUE)
   dbGetQuery(conn, headSql("Categories"))
+  return(df_cat)
 }
 ```
 
 ### "Crew" table
 
 ```{r}
-loadCrew <- function(){
+loadCrew <- function(df_cat){
   # Grab the needed columns from the current dataframe
   df_crew <- df.princ[,-c(0,6)]
   # Add a column for the FK id
@@ -966,6 +984,7 @@ loadRegions <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Regions",df_reg, append=TRUE)
   dbGetQuery(conn, headSql("Regions"))
+  return(df_reg)
 }
 ```
 
@@ -986,13 +1005,14 @@ loadLangs <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Languages",df_lang, append=TRUE)
   dbGetQuery(conn, headSql("Languages"))
+  return(df_lang)
 }
 ```
 
 ### "Also_Known_As" table
 
 ```{r}
-loadAKA <- function(){
+loadAKA <- function(df_reg, df_lang){
   # Grab the needed columns from the current dataframe
   df_aka <- df.akas[,-c(6,7)]
   # Rename the columns to match the database table
@@ -1144,22 +1164,22 @@ loadAttributes <- function(){
 ### Load the data into the tables
 ```{r}
 if (load) {
-  loadFormats()
-  loadMedia()
+  df_cat1 <- loadFormats()
+  loadMedia(df_cat1)
   loadGenres()
   loadEpisodes()
   loadRatings()
   loadPeople()
   loadKFT()
   loadProfessions()
-  loadCategories()
-  #loadCrew()
+  df_cat1 <- loadCategories()
+  #loadCrew(df_cat1)
   #loadCast()
   loadDirectors()
   loadWriters()
-  loadRegions()
-  loadLangs()
-  loadAKA()
+  df_cat1 <- loadRegions()
+  df_cat2 <- loadLangs()
+  loadAKA(df_cat1, df_cat2)
   loadTypes()
   loadAttributes()
 }
@@ -1209,7 +1229,7 @@ ON people.nconst=limited.nconst;
 ```
 
 ```{sql connection=conn}
-SELECT * from actors LIMIT 5;
+SELECT * FROM actors LIMIT 5;
 ```
 
 ## Queries
@@ -1220,15 +1240,35 @@ SELECT * from actors LIMIT 5;
 
 ```
 
+```{sql connection=conn}
+SELECT * FROM Formats;
+```
+
+```{sql connection=conn}
+SELECT tconst FROM Media WHERE format_id=2 LIMIT 5;
+```
+
+```{sql connection=conn}
+SELECT * FROM Episodes JOIN (SELECT tconst FROM Media WHERE format_id=2 LIMIT 5) series ON series.tconst=Episodes.parentTconst;
+```
+
 ###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
 ```{r}
 
 ```
 
+```{sql connection=conn}
+SELECT * FROM actors LIMIT 5;
+```
+
 ###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
 
 ```{r}
 
+```
+
+```{sql connection=conn}
+SELECT * FROM actors LIMIT 5;
 ```
 
