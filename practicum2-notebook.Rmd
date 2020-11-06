@@ -1255,11 +1255,33 @@ GROUP BY parentTconst;
 ###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
 ```{r}
-
+average <- dbGetQuery(conn, "SELECT AVG(averageRating) AS value FROM Ratings")[["value"]]
+average
 ```
 
 ```{sql connection=conn}
-SELECT * FROM actors LIMIT 5;
+SELECT * FROM Formats;
+```
+
+```{sql connection=conn}
+SELECT People.nconst, primaryName, age 
+FROM People 
+JOIN
+  (SELECT nconst
+  FROM Primary_Profession pp 
+  WHERE prof_id IN (2,4)) actors
+ON people.nconst=actors.nconst LIMIT 5;
+```
+
+```{sql connection=conn}
+SELECT Media.tconst, averageRating
+FROM Media 
+JOIN
+  (SELECT tconst, averageRating
+  FROM Ratings 
+  WHERE averageRating > ?average) above
+ON above.tconst=Media.tconst
+WHERE format_id = 1;
 ```
 
 ###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
