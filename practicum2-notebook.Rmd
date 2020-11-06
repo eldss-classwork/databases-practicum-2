@@ -1241,16 +1241,16 @@ SELECT * FROM actors LIMIT 5;
 ```
 
 ```{sql connection=conn}
-SELECT * FROM Formats;
+SELECT primaryTitle, parentTconst, MAX(seasonNumber) AS numSeasons
+FROM Episodes 
+JOIN 
+  (SELECT tconst, primaryTitle 
+  FROM Media 
+  WHERE format_id=2) series 
+ON series.tconst=Episodes.parentTconst
+GROUP BY parentTconst;
 ```
 
-```{sql connection=conn}
-SELECT tconst FROM Media WHERE format_id=2 LIMIT 5;
-```
-
-```{sql connection=conn}
-SELECT * FROM Episodes JOIN (SELECT tconst FROM Media WHERE format_id=2 LIMIT 5) series ON series.tconst=Episodes.parentTconst;
-```
 
 ###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
