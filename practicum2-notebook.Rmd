@@ -248,6 +248,8 @@ drop_table <- function(table_name) {
   paste("DROP TABLE IF EXISTS ", table_name, ";", sep="")
 }
 
+dbExecute(conn,"DROP VIEW IF EXISTS actors;")
+
 # Saving rows affected to a var prevents output
 dbExecute(conn, "PRAGMA foreign_keys = OFF;") # Avoid FK checks
 curr_tables <- dbListTables(conn)
@@ -821,7 +823,7 @@ df_crew$category <- NULL
 
 # Transfer the new dataframe into the database table
 # Append is true because we want to maintain the relationships during table creation
-dbWriteTable(conn,"Crew",df_crew, append=TRUE)
+#dbWriteTable(conn,"Crew",df_crew, append=TRUE)
 dbGetQuery(conn, headSql("Crew"))
 ```
 
@@ -885,7 +887,7 @@ df_cast$characters <- NULL
 # Transfer the new dataframes into the database tables
 # Append is true because we want to maintain the relationships during table creation
 dbWriteTable(conn,"Characters",df_characters, append=TRUE)
-dbWriteTable(conn,"Cast",df_cast, append=TRUE)
+#dbWriteTable(conn,"Cast",df_cast, append=TRUE)
 dbGetQuery(conn, headSql("Characters"))
 dbGetQuery(conn, headSql("Cast"))
 ```
@@ -1031,7 +1033,7 @@ colnames(df.akaTypes) <- c("akt_id", "tconst", "ordering", "type_id")
 
 # Replace type strings with an id
 typeList <- df.types$type
-for (i in 1:length(profList)) {
+for (i in 1:length(typeList)) {
   type <- typeList[i]
   df.akaTypes$type_id[which(
     df.akaTypes$type_id == type
@@ -1076,7 +1078,7 @@ colnames(df.akaAtts) <- c("aka_id", "tconst", "ordering", "att_id")
 
 # Replace type strings with an id
 attList <- df.attributes$att_name
-for (i in 1:length(profList)) {
+for (i in 1:length(attList)) {
   att <- attList[i]
   df.akaAtts$att_id[which(
     df.akaAtts$att_id == att
@@ -1113,9 +1115,6 @@ dbGetQuery(conn, headSql("Aka_Attributes"))
 
 
 ## View
-```{sql connection=conn}
-DROP VIEW IF EXISTS actors;
-```
 
 ```{sql connection=conn}
 CREATE VIEW actors
