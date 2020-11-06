@@ -1135,6 +1135,20 @@ SELECT * from actors LIMIT 5;
 
 ## Queries
 
+###Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
+
+```{r}
+
+```
+
+###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
+
+```{r}
+
+```
+
+###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
+
 ```{r}
 
 ```
