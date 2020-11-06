@@ -1113,11 +1113,25 @@ dbGetQuery(conn, headSql("Aka_Attributes"))
 
 
 ## View
-
-```{r}
-
+```{sql connection=conn}
+DROP VIEW IF EXISTS actors;
 ```
 
+```{sql connection=conn}
+CREATE VIEW actors
+(name, age, alive, numMovies)
+AS
+SELECT 
+  primaryName, 
+  age, 
+  CASE WHEN deathYear is NULL THEN "No" ELSE "Yes" END, 
+  numMovies 
+FROM people;
+```
+
+```{sql connection=conn}
+SELECT * from actors LIMIT 5;
+```
 
 ## Queries
 
