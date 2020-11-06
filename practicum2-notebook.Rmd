@@ -1183,6 +1183,10 @@ if (load) {
 ## View
 
 ```{sql connection=conn}
+DROP VIEW IF EXISTS actors;
+```
+
+```{sql connection=conn}
 CREATE VIEW actors
 (name, age, alive, numMovies)
 AS
@@ -1190,8 +1194,18 @@ SELECT
   primaryName, 
   age, 
   CASE WHEN deathYear is NULL THEN "No" ELSE "Yes" END, 
-  numMovies 
-FROM people;
+  titles 
+FROM people
+JOIN
+  (SELECT counts.nconst, prof_id, titles 
+  FROM Primary_Profession pp 
+  JOIN 
+    (SELECT nconst, COUNT(nconst) AS titles 
+    FROM Known_For_Titles 
+    GROUP BY nconst) counts 
+  ON counts.nconst=pp.nconst
+  WHERE prof_id IN (2,4)) limited
+ON people.nconst=limited.nconst;
 ```
 
 ```{sql connection=conn}
