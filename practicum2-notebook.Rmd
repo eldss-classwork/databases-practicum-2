@@ -1326,7 +1326,65 @@ barplot(timing, names.arg=labels, ylab="Timing", col = rainbow(20), ylim=range(p
 ```{r}
 barplot(timing, names.arg=labels, ylab="Timing", col = rainbow(20), ylim=range(pretty(c(0,timing))))
 ```
+```{r}
+# Create the input vectors.
+colors = rainbow(4)
+actors <- c("Ginger Rogers","Fred Astaire","Eve Southern")
 
+noIndexVec <- c(no_index)
+indexVec <- c(index)
+
+for(actor in actors) {
+  noIndexVec <- append(noIndexVec,timeTest(actor,FALSE))
+  indexVec <- append(indexVec,timeTest(actor,TRUE))
+}
+
+axisRange <- append(timing,noIndexVec)
+axisRange <- append(axisRange,indexVec)
+
+actors <- append(actors,"David Lang",after=0)
+
+# Create the matrix of the values.
+Values <- matrix(c(noIndexVec,indexVec), nrow=4, ncol=2)
+```
+
+```{r}
+# Create the bar chart
+barplot(Values, names.arg = labels, ylab = "Timing", col = colors, ylim=range(pretty(c(axisRange))), beside=TRUE)
+
+# Add the legend to the chart
+legend("top", actors, cex = 0.7, fill = colors, horiz = TRUE)
+```
+
+```{r}
+# Create the bar chart
+barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(0, axisRange))), beside=TRUE, horiz=TRUE)
+
+# Add the legend to the chart
+legend("top", actors, cex = 0.7, fill = colors)
+
+text(0, plt, Values, cex=0.8, pos=4)
+```
+
+```{r}
+# Create the bar chart
+barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=c(0.0010008, 0.0010035), beside=TRUE, horiz=TRUE, xpd=FALSE)
+
+# Add the legend to the chart
+legend("top", actors, cex = 0.7, fill = colors)
+
+text(0, plt, Values, cex=0.8, pos=4)
+```
+
+```{r}
+# Create the bar chart
+barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(0.0010008, 0.0010035))), beside=TRUE, horiz=TRUE, xpd=FALSE)
+
+# Add the legend to the chart
+legend("top", actors, cex = 0.7, fill = colors)
+
+text(0.0010005, plt, Values, cex=0.8, pos=4)
+```
 
 ## AddActor
 
