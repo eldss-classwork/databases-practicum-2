@@ -1274,23 +1274,60 @@ ON people.nconst=actors.nconst LIMIT 5;
 ```
 
 ```{sql connection=conn}
-SELECT Media.tconst, averageRating
-FROM Media 
+SELECT * FROM Crew LIMIT 5;
+```
+
+```{sql connection=conn}
+SELECT crew.tconst, crew.nconst
+FROM Crew
 JOIN
-  (SELECT tconst, averageRating
-  FROM Ratings 
-  WHERE averageRating > ?average) above
-ON above.tconst=Media.tconst
-WHERE format_id = 1;
+  (SELECT Media.tconst, averageRating
+  FROM Media 
+  JOIN
+    (SELECT tconst, averageRating
+    FROM Ratings 
+    WHERE averageRating > ?average) above
+  ON above.tconst=Media.tconst
+  WHERE format_id = 1) rated
+ON rated.tconst=crew.tconst;
 ```
 
 ###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
 
 ```{r}
+timeTest <- function(createIdx){
+  dbExecute(conn, "DROP INDEX IF EXISTS idx_peopleName;")
+  if(create){
+    dbExecute(conn, "CREATE INDEX idx_peopleName
+                      ON People (primaryName);")
+  }
+  start_time <- Sys.time()
+  actor <- dbGetQuery(conn, "SELECT * FROM people WHERE primaryName=\"Natalie Portman\";")
+  end_time <- Sys.time()
+  #print(actor)
+  return(as.double(end_time - start_time))
+}
+no_index <- timeTest(FALSE)
+index <- timeTest(TRUE)
 
+timing <- c(no_index, index)
+timing
+labels <- c("No Index", "Index")
 ```
+```{r}
+barplot(timing, names.arg=labels, ylab="Timing", col = rainbow(20), ylim=range(pretty(c(timing))))
+```
+
+```{r}
+barplot(timing, names.arg=labels, ylab="Timing", col = rainbow(20), ylim=range(pretty(c(0,timing))))
+```
+
+
+## AddActor
+
 
 ```{sql connection=conn}
-SELECT * FROM actors LIMIT 5;
+SELECT max(nconst) FROM people;
 ```
+
 
