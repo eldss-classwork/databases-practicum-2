@@ -1295,20 +1295,25 @@ ON rated.tconst=crew.tconst;
 ###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
 
 ```{r}
-timeTest <- function(createIdx){
+timeTest <- function(actor,createIdx){
   dbExecute(conn, "DROP INDEX IF EXISTS idx_peopleName;")
   if(create){
     dbExecute(conn, "CREATE INDEX idx_peopleName
                       ON People (primaryName);")
   }
+  query <- paste("SELECT * FROM People 
+                 WHERE primaryName=\"",actor,"\";", sep = "")
   start_time <- Sys.time()
-  actor <- dbGetQuery(conn, "SELECT * FROM people WHERE primaryName=\"Natalie Portman\";")
+  res <- dbGetQuery(conn, query)
   end_time <- Sys.time()
-  #print(actor)
   return(as.double(end_time - start_time))
 }
-no_index <- timeTest(FALSE)
-index <- timeTest(TRUE)
+```
+
+```{r}
+actor <- "David Lang"
+no_index <- timeTest(actor,FALSE)
+index <- timeTest(actor,TRUE)
 
 timing <- c(no_index, index)
 timing
