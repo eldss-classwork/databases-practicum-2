@@ -1236,12 +1236,8 @@ SELECT * FROM actors LIMIT 5;
 
 ###Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
 
-```{r}
-
-```
-
-```{sql connection=conn}
-SELECT primaryTitle, parentTconst, MAX(seasonNumber) AS numSeasons
+```{sql connection=conn, output.var="seasons"}
+SELECT primaryTitle, MAX(seasonNumber) AS numSeasons
 FROM Episodes 
 JOIN 
   (SELECT tconst, primaryTitle 
@@ -1251,6 +1247,11 @@ ON series.tconst=Episodes.parentTconst
 GROUP BY parentTconst;
 ```
 
+```{r}
+print(seasons)
+seasonCount <- seasons$numSeasons
+hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", col = "blue", xlim = range(pretty(c(0,seasonCount))))
+```
 
 ###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
