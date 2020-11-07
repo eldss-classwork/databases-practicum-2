@@ -1341,6 +1341,11 @@ for(actor in actors) {
 
 axisRange <- append(timing,noIndexVec)
 axisRange <- append(axisRange,indexVec)
+for(i in length(axisRange):1) {
+  if(axisRange[i] == 0){
+    axisRange <- axisRange[-i]
+  }
+}
 
 actors <- append(actors,"David Lang",after=0)
 
@@ -1371,19 +1376,20 @@ text(0, plt, Values, cex=0.8, pos=4)
 barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=c(0.0010008, 0.0010035), beside=TRUE, horiz=TRUE, xpd=FALSE)
 
 # Add the legend to the chart
-legend("top", actors, cex = 0.7, fill = colors)
+legend("topright", actors, cex = 0.7, fill = colors)
 
-text(0, plt, Values, cex=0.8, pos=4)
+text(0.00100106, plt, Values, cex=0.8, pos=4)
 ```
+
 
 ```{r}
 # Create the bar chart
-barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(0.0010008, 0.0010035))), beside=TRUE, horiz=TRUE, xpd=FALSE)
+barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(min(axisRange), max(axisRange)))), beside=TRUE, horiz=TRUE, xpd=FALSE)
 
 # Add the legend to the chart
-legend("top", actors, cex = 0.7, fill = colors)
+legend("topright", actors, cex = 0.7, fill = colors)
 
-text(0.0010005, plt, Values, cex=0.8, pos=4)
+text(min(axisRange), plt, Values, cex=0.8, pos=4)
 ```
 
 ## AddActor
