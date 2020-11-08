@@ -2,10 +2,10 @@
 title: 'CS5200 Fall 2020: Practicum 2'
 author: "Chandra Davis, Evan Douglass"
 output:
-  word_document: default
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
 ## Overview
@@ -588,15 +588,6 @@ if (load) {
 
 This section will take the data extracted previously, manipulate it as needed, and then add it to our database as needed.
 
-To show our additions worked, we will show the top 5 rows that were just added to the current table. The following function provides the SQL to do this.
-
-```{r}
-headSql <- function(tableName) {
-  paste("SELECT * FROM", tableName, "LIMIT 5;")
-}
-```
-
-
 ### "Formats" table
 
 ```{r}
@@ -615,7 +606,6 @@ loadFormats <- function(){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Formats",df_tt, append=TRUE)
-  dbGetQuery(conn, headSql("Formats"))
   return(df_tt)
 }
 ```
@@ -651,7 +641,6 @@ loadMedia <- function(df_tt){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Media",df_media, append=TRUE)
-  dbGetQuery(conn, headSql("Media"))
 }
 ```
 
@@ -704,8 +693,6 @@ loadGenres <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Genres",df_genres, append=TRUE)
   dbWriteTable(conn,"Media_Genres",df_mg, append=TRUE)
-  dbGetQuery(conn, headSql("Genres"))
-  dbGetQuery(conn, headSql("Media_Genres"))
 }
 ```
 
@@ -716,7 +703,6 @@ loadEpisodes <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Episodes",df.eps, append=TRUE)
-  dbGetQuery(conn, headSql("Episodes"))
 }
 ```
 
@@ -727,7 +713,6 @@ loadRatings <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Ratings",df.ratings, append=TRUE)
-  dbGetQuery(conn, headSql("Ratings"))
 }
 ```
 
@@ -746,7 +731,6 @@ loadPeople <- function(){
   # Add to table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "People", df.namesTable, append=TRUE)
-  dbGetQuery(conn, headSql("People"))
 }
 ```
 
@@ -766,7 +750,6 @@ loadKFT <- function(){
   # Put in database
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
-  dbGetQuery(conn, headSql("Known_For_Titles"))
 }
 ```
 
@@ -809,8 +792,6 @@ loadProfessions <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Professions", df.professions, append=TRUE)
   dbWriteTable(conn, "Primary_Profession", df.primaryProfessions, append=TRUE)
-  dbGetQuery(conn, headSql("Professions"))
-  dbGetQuery(conn, headSql("Primary_Profession"))
 }
 ```
 
@@ -829,7 +810,6 @@ loadCategories <- function(){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Categories",df_cat, append=TRUE)
-  dbGetQuery(conn, headSql("Categories"))
   return(df_cat)
 }
 ```
@@ -865,7 +845,6 @@ loadCrew <- function(df_cat){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Crew",df_crew, append=TRUE)
-  dbGetQuery(conn, headSql("Crew"))
 }
 ```
 
@@ -931,8 +910,6 @@ loadCast <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Characters",df_characters, append=TRUE)
   dbWriteTable(conn,"Cast",df_cast, append=TRUE)
-  dbGetQuery(conn, headSql("Characters"))
-  dbGetQuery(conn, headSql("Cast"))
 }
 ```
 
@@ -947,7 +924,6 @@ loadDirectors <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Media_Directors",df_direct, append=TRUE)
-  dbGetQuery(conn, headSql("Media_Directors"))
 }
 ```
 
@@ -962,7 +938,6 @@ loadWriters <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Media_Writers",df_write, append=TRUE)
-  dbGetQuery(conn, headSql("Media_Writers"))
 }
 ```
 
@@ -983,7 +958,6 @@ loadRegions <- function(){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Regions",df_reg, append=TRUE)
-  dbGetQuery(conn, headSql("Regions"))
   return(df_reg)
 }
 ```
@@ -1004,7 +978,6 @@ loadLangs <- function(){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Languages",df_lang, append=TRUE)
-  dbGetQuery(conn, headSql("Languages"))
   return(df_lang)
 }
 ```
@@ -1060,7 +1033,6 @@ loadAKA <- function(df_reg, df_lang){
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Also_Known_As",df_aka, append=TRUE)
-  dbGetQuery(conn, headSql("Also_Known_As"))
 }
 ```
 
@@ -1106,8 +1078,6 @@ loadTypes <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Types", df.types, append=TRUE)
   dbWriteTable(conn, "Aka_Types", df.akaTypes, append=TRUE)
-  dbGetQuery(conn, headSql("Types"))
-  dbGetQuery(conn, headSql("Aka_Types"))
 }
 ```
 
@@ -1155,13 +1125,22 @@ loadAttributes <- function(){
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Attributes", df.attributes, append=TRUE)
   dbWriteTable(conn, "Aka_Attributes", df.akaAtts, append=TRUE)
-  dbGetQuery(conn, headSql("Attributes"))
-  dbGetQuery(conn, headSql("Aka_Attributes"))
 }
 ```
 
-
 ### Load the data into the tables
+
+To show our additions worked, we will show the top 5 rows that were just added to the current table. The following function provides the SQL to do this.
+
+```{r}
+headSql <- function(tableName) {
+  msg <- paste("Top 5 rows for the", tableName, "table")
+  print(msg)
+  sql <- paste("SELECT * FROM", tableName, "LIMIT 5;")
+  print(dbGetQuery(conn, sql))
+}
+```
+
 ```{r}
 if (load) {
   df_cat1 <- loadFormats()
@@ -1173,7 +1152,7 @@ if (load) {
   loadKFT()
   loadProfessions()
   df_cat1 <- loadCategories()
-  #loadCrew(df_cat1)
+  loadCrew(df_cat1)
   #loadCast()
   loadDirectors()
   loadWriters()
@@ -1185,20 +1164,121 @@ if (load) {
 }
 ```
 
+```{r}
+tableNames <- c(
+  "Aka_Attributes",
+  "Aka_Types",
+  "Also_Known_As",
+  "Attributes",
+  "Cast",
+  "Categories",
+  "Characters",
+  "Crew",
+  "Episodes",
+  "Formats",
+  "Genres",
+  "Known_For_Titles",
+  "Languages",
+  "Media",
+  "Media_Directors",
+  "Media_Genres",
+  "Media_Writers",
+  "People",
+  "Primary_Profession",
+  "Professions",
+  "Ratings",
+  "Regions",
+  "Types"
+  )
 
-## Update Tables
+for (name in tableNames) {
+  headSql(name)
+}
+```
+
+## Update age and numMovies
+
+In this section we issue some update statements that will provide age and numMovies values in the People table. 
+
+### Age
+
+For the age, we assume that a Null value in the deathYear column of People means that this person is still alive. In searching a few of the names like this, it appears to be a valid assumption. To do this we simply take the death year and subtract the birth year. If the death year is Null, we take the current year. We also assume that for people who are deceased, the age will reflect their age at death.
+
+```{sql connection=conn}
+UPDATE People
+SET age = CASE
+          WHEN deathYear is NULL
+            -- Use current year as first term if Null
+            THEN CAST(strftime('%Y') AS INTEGER) - birthYear
+            ELSE deathYear - birthYear
+          END;
+```
+
+Let's see if it worked.
 
 ```{r}
+headSql("People")
+```
 
+### numMovies
+
+Getting the number of movies will be a bit trickier as it will require finding the aggregate sum of movies a person has worked on. For the purposes of this practicum, we assume that movie means any media work that appears in the database; it can be shows, shorts, etc. as well as movies.
+
+We can do this with the Crew table, which pairs each title with the people who worked on it.
+
+```{sql connection=conn}
+
+```
+
+
+```{r}
+headSql("Crew")
 ```
 
 
 ## Triggers
 
+Now that we have data for the age and numMovies columns, we need to make sure that these values are kept up to date. We can use triggers to ensure they do.
+
+### age
+
+Age is something that may not only need to be updated when a person is added to the database. If the person is alive, their age changes over time. Therefore, any time their details change, we should check to see if their age has changed. This is not necessary for deceased people, as their age at death will not change. 
+
+It is worth noting that in a real database using a trigger for this purpose could lead to stale data. If a person's record does not change often, the age could become out of data. A better option might be to create a stored function that updates on the person's birthday every year. This would of course also require their birthday.
+
+```{sql connection=conn}
+CREATE TRIGGER IF NOT EXISTS create_age
+  AFTER INSERT ON People
+  BEGIN
+    UPDATE People
+      SET age = CASE
+          WHEN deathYear is NULL
+            -- Use current year as first term if Null
+            THEN CAST(strftime('%Y') AS INTEGER) - birthYear
+            ELSE deathYear - birthYear
+          END
+      WHERE nconst=new.nconst;
+  END;
+  
+CREATE TRIGGER IF NOT EXISTS update_age
+  AFTER UPDATE ON People
+  -- Ignore for deceased
+  WHEN old.deathYear is NULL
+  BEGIN
+    UPDATE People
+      SET age = CAST(strftime('%Y') AS INTEGER) - birthYear
+      WHERE nconst=new.nconst
+        -- Don't bother if age will not change
+        -- Should also avoid cyclical updates
+        AND age <> CAST(strftime('%Y') AS INTEGER) - birthYear;
+  END;
+```
+
+### numMovies
+
 ```{r}
 
 ```
-
 
 ## View
 
