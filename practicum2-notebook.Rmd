@@ -720,7 +720,7 @@ loadEpisodes <- function(){
 }
 ```
 
-###"Ratings" table
+### "Ratings" table
 
 ```{r}
 loadRatings <- function(){
@@ -1234,7 +1234,7 @@ SELECT * FROM actors LIMIT 5;
 
 ## Queries
 
-###Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
+### Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
 
 ```{sql connection=conn, output.var="seasons"}
 SELECT primaryTitle, MAX(seasonNumber) AS numSeasons
@@ -1253,7 +1253,7 @@ seasonCount <- seasons$numSeasons
 hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", col = "blue", xlim = range(pretty(c(0,seasonCount))))
 ```
 
-###Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
+### Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
 ```{r}
 average <- dbGetQuery(conn, "SELECT AVG(averageRating) AS value FROM Ratings")[["value"]]
@@ -1293,7 +1293,7 @@ JOIN
 ON rated.tconst=crew.tconst;
 ```
 
-###Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
+### Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
 
 ```{r}
 timeTest <- function(actor,createIdx){
