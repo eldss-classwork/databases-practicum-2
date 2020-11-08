@@ -1559,7 +1559,7 @@ The last thing we need before running the tests, is a function that will automat
 ```{r}
 runTest <- function(startId) {
   #' Runs a test and returns the time it took.
-  numInserts <- 1000
+  numInserts <- 1000000
   start <- Sys.time()
   for (i in startId:startId+numInserts) {
     insertMedia(conn, startId)
@@ -1576,63 +1576,74 @@ Now we can start running tests
 ```{r, results='hide'}
 # Using simple numbers for Ids to ensure no overlap with the existing
 # tconst values.
-asIs <- runTest(1)
+id <- 1
+inc <- 1000000
+asIs <- runTest(id)
+id <- id + inc
 ```
 
 ### With `tconst` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "tconst", TRUE)
-oneIndex <- runTest(1000)
+oneIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `format_id` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "format_id")
-twoIndex <- runTest(2000)
+twoIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `primaryTitle` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "primaryTitle")
-threeIndex <- runTest(3000)
+threeIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `originalTitle` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "originalTitle")
-fourIndex <- runTest(4000)
+fourIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `isAdult` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "isAdult")
-fiveIndex <- runTest(5000)
+fiveIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `startYear` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "startYear")
-sixIndex <- runTest(6000)
+sixIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `endYear` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "endYear")
-sevenIndex <- runTest(7000)
+sevenIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### With `runtimeMinutes` Index
 
 ```{r, results='hide'}
 createIndexOn(conn, "runtimeMinutes")
-eightIndex <- runTest(8000)
+eightIndex <- runTest(id)
+id <- id + inc
 ```
 
 ### Results
@@ -1640,6 +1651,7 @@ eightIndex <- runTest(8000)
 Now let's see how the insert performance changed over time.
 
 ```{r}
+dbGetQuery(conn, "PRAGMA index_list(\"Media\");") # Temp: ensure indexes exist
 times <- c(asIs, oneIndex, twoIndex, threeIndex, fourIndex, fiveIndex,
            sixIndex, sevenIndex, eightIndex)
 run <- 1:length(times)
