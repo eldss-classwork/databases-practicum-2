@@ -842,6 +842,9 @@ loadCrew <- function(df_cat){
   # Drop the category column, only the FK id column is needed
   df_crew$category <- NULL
   
+  print(df_cat)
+  print(df_crew)
+  
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Crew",df_crew, append=TRUE)
@@ -1152,7 +1155,7 @@ if (load) {
   loadKFT()
   loadProfessions()
   df_cat1 <- loadCategories()
-  loadCrew(df_cat1)
+  #loadCrew(df_cat1)
   #loadCast()
   loadDirectors()
   loadWriters()
@@ -1449,7 +1452,7 @@ barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pr
 # Add the legend to the chart
 legend("top", actors, cex = 0.7, fill = colors)
 
-text(0, plt, Values, cex=0.8, pos=4)
+#text(0, plt, Values, cex=0.8, pos=4)
 ```
 
 ```{r}
@@ -1459,7 +1462,7 @@ barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=c(0.0010
 # Add the legend to the chart
 legend("topright", actors, cex = 0.7, fill = colors)
 
-text(0.00100106, plt, Values, cex=0.8, pos=4)
+#text(0.00100106, plt, Values, cex=0.8, pos=4)
 ```
 
 
@@ -1470,14 +1473,176 @@ barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pr
 # Add the legend to the chart
 legend("topright", actors, cex = 0.7, fill = colors)
 
-text(min(axisRange), plt, Values, cex=0.8, pos=4)
+#text(min(axisRange), plt, Values, cex=0.8, pos=4)
 ```
 
 ## AddActor
-
 
 ```{sql connection=conn}
 SELECT max(nconst) FROM people;
 ```
 
+## Delete Actor
 
+## Insert Performance With Indexes
+
+In this section we test the performance of INSERT statements to the database based on the number of indexes on a table. We will use the Media table, as this has the most columns of any table, so plenty of indexes can be added.
+
+Each test will consist of running 1000 insert statements using randomized data. After each test, another index will be added and the test will be run again. Finally, the results will be visualized in a line chart.
+
+First we will need some functions to create random values. We'll need random values in order to ensure the index is more interesting than a single entry with a long list, as would happen if every value were the same.
+
+```{r}
+randBool <- function() {
+  #' Returns a zero or one
+  num <- runif(1)[1]
+  round(num)
+}
+
+randInt <- function(min, max) {
+  #' Returns a random integer between the given values
+  num <- runif(1, min=min, max=max)[1]
+  round(num)
+}
+
+randStr <- function() {
+  #' Returns a random string of two "words"
+  # This was taken from stackoverflow at:
+  # https://stackoverflow.com/questions/42734547/generating-random-strings
+  a <- do.call(paste0, replicate(5, sample(LETTERS, 2, TRUE), FALSE))
+  words <- paste0(
+    a, sprintf("%04d", sample(9999, 2, TRUE)), sample(LETTERS, 2, TRUE)
+  )
+  paste("\"", words[1], words[2], "\"")
+}
+```
+
+Now we need a function that will create the insert statement and one that will create an index.
+
+```{r}
+insertMedia <- function(connection, id) {
+  #' Creates a randomized Media record. Id is given to ensure it does not
+  #' accidentally overlap with another existing id.
+  # First build the statement
+  insert <- "INSERT INTO Media VALUES("
+  end <- ");"
+  formatId <- randInt(1, 4) # 4 formats in subset data
+  primaryTitle <- randStr()
+  originalTitle <- randStr()
+  isAdult <- randBool()
+  startYear <- randInt(1920, 2020)
+  endYear <- startYear + 1
+  runtimeMins <- randInt(60, 180)
+  values <- paste(id, formatId, primaryTitle, originalTitle, isAdult, startYear,
+                  endYear, runtimeMins, sep=",")
+  statement <- paste(insert, values, end, sep="")
+  
+  # Now run the statement
+  dbExecute(connection, statement)
+}
+
+createIndexOn <- function(connection, column, isUnique=FALSE) {
+  iName <- paste("index", "media", column, sep="_")
+  tName <- paste("Media(", column, ");", sep="")
+  if (isUnique) {
+    stmt <- paste("CREATE UNIQUE INDEX ", iName, " ON ", tName, sep="")
+    dbExecute(connection, stmt)
+  } else {
+    stmt <- paste("CREATE INDEX ", iName, " ON ", tName, sep="")
+    dbExecute(connection, stmt)
+  }
+}
+```
+
+The last thing we need before running the tests, is a function that will automate a single test.
+
+```{r}
+runTest <- function(startId) {
+  #' Runs a test and returns the time it took.
+  numInserts <- 1000
+  start <- Sys.time()
+  for (i in startId:startId+numInserts) {
+    insertMedia(conn, startId)
+  }
+  end <- Sys.time()
+  as.double(end - start)
+}
+```
+
+Now we can start running tests
+
+### Table As Is
+
+```{r, results='hide'}
+# Using simple numbers for Ids to ensure no overlap with the existing
+# tconst values.
+asIs <- runTest(1)
+```
+
+### With `tconst` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "tconst", TRUE)
+oneIndex <- runTest(1000)
+```
+
+### With `format_id` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "format_id")
+twoIndex <- runTest(2000)
+```
+
+### With `primaryTitle` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "primaryTitle")
+threeIndex <- runTest(3000)
+```
+
+### With `originalTitle` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "originalTitle")
+fourIndex <- runTest(4000)
+```
+
+### With `isAdult` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "isAdult")
+fiveIndex <- runTest(5000)
+```
+
+### With `startYear` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "startYear")
+sixIndex <- runTest(6000)
+```
+
+### With `endYear` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "endYear")
+sevenIndex <- runTest(7000)
+```
+
+### With `runtimeMinutes` Index
+
+```{r, results='hide'}
+createIndexOn(conn, "runtimeMinutes")
+eightIndex <- runTest(8000)
+```
+
+### Results
+
+Now let's see how the insert performance changed over time.
+
+```{r}
+times <- c(asIs, oneIndex, twoIndex, threeIndex, fourIndex, fiveIndex,
+           sixIndex, sevenIndex, eightIndex)
+run <- 1:length(times)
+plot(run, times)
+lines(run, times, type = "l")
+```
