@@ -30,7 +30,7 @@ library(stringr)
 # Caution: This will take a long time and may overwhelm your computer!!! 
 download <- FALSE
 sampleSet <- FALSE
-createFrames <- FALSE
+createFrames <- TRUE
 createDB <- TRUE
 
 # File constants
@@ -162,8 +162,10 @@ flattenAndWriteCrewToDirectors <- function(crewDataframe) {
   df.directors <- drop_na(df.directors)
   
   # Write
-  outfile <- paste(sampleDataDir, "title.directors", sampleTsv, sep="")
-  write_tsv(df.directors, outfile)
+  if(sampleSet){
+    outfile <- paste(sampleDataDir, "title.directors", sampleTsv, sep="")
+    write_tsv(df.directors, outfile)
+  }
   
   df.directors
 }
@@ -180,8 +182,10 @@ flattenAndWriteCrewToWriters <- function(crewDataframe) {
   df.writers <- drop_na(df.writers)
   
   # Write
-  outfile <- paste(sampleDataDir, "title.writers", sampleTsv, sep="")
-  write_tsv(df.writers, outfile)
+  if(sampleSet){
+    outfile <- paste(sampleDataDir, "title.writers", sampleTsv, sep="")
+    write_tsv(df.writers, outfile)
+  }
   
   df.writers
 }
@@ -606,7 +610,7 @@ This section will take the data extracted previously, manipulate it as needed, a
 ### "Formats" table
 
 ```{r}
-loadFormats <- function(){
+loadFormats <- function(overwrite){
   # Grab the needed columns from the current dataframe
   types <- df.titles[,c(0,2)]
   # Since this is a categorical table, grab unique values
@@ -620,7 +624,11 @@ loadFormats <- function(){
   colnames(df_tt) <- c("format_id", "format")
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Formats",df_tt, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Formats",df_tt, append=TRUE)
+  }
   return(df_tt)
 }
 ```
@@ -628,7 +636,7 @@ loadFormats <- function(){
 ### "Media" table
 
 ```{r}
-loadMedia <- function(df_tt){
+loadMedia <- function(df_tt, overwrite){
   # Grab the needed columns from the current dataframe
   df_media <- df.titles[,-c(0,9)]
   # Add a column for the FK id
@@ -655,14 +663,18 @@ loadMedia <- function(df_tt){
   
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Media",df_media, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Media",df_media, append=TRUE)
+  }
 }
 ```
 
 ### "Genres" and "Media_Genres" tables
 
 ```{r}
-loadGenres <- function(){
+loadGenres <- function(overwrite){
   # Grab the needed columns from the current dataframe
   df_mg <- df.titles[,c(1,9)]
   
@@ -707,34 +719,46 @@ loadGenres <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Genres",df_genres, append=TRUE)
-  dbWriteTable(conn,"Media_Genres",df_mg, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Media_Genres",df_mg, append=TRUE)
+  }
 }
 ```
 
 ### "Episodes" table
 
 ```{r}
-loadEpisodes <- function(){
+loadEpisodes <- function(overwrite){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Episodes",df.eps, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Episodes",df.eps, append=TRUE)
+  }
 }
 ```
 
 ### "Ratings" table
 
 ```{r}
-loadRatings <- function(){
+loadRatings <- function(overwrite){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Ratings",df.ratings, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Ratings",df.ratings, append=TRUE)
+  }
 }
 ```
 
 ### "People" table
 
 ```{r}
-loadPeople <- function(){
+loadPeople <- function(overwrite){
   # Grab single valued columns
   df.namesTable <- df.names[, c(1,2,3,4)]
   
@@ -745,75 +769,88 @@ loadPeople <- function(){
   
   # Add to table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn, "People", df.namesTable, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn, "People", df.namesTable, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn, "People", df.namesTable, append=TRUE)
+  }
 }
 ```
 
 ### "Known_For_Titles" table
 
 ```{r}
-loadKFT <- function(){
+loadKFT <- function(overwrite){
   # Extract the titles that people are known for and flatten it out
   # so only one name and one title appear in the same record.
   df.knownForTitles <- drop_na(df.names[c("nconst", "knownForTitles")]) %>%
       mutate(knownForTitles = strsplit(as.character(knownForTitles), ",")) %>%
       unnest(knownForTitles)
   
+  colnames(df.knownForTitles) <- c("nconst", "tconst")
   # Add PK column based on row number
   df.knownForTitles <- tibble::rowid_to_column(df.knownForTitles, "kt_id")
   
   # Put in database
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
+  if(overwrite){
+    dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, append=TRUE)
+  }
 }
 ```
 
 ### "Professions" and "Primary_Profession" table
 
 ```{r}
-loadProfessions <- function(){
+loadProfessions <- function(overwrite){
   # Extract the titles that people are known for and flatten it out
   # so only one name and one title appear in the same record.
-  df.primaryProfessions <- drop_na(df.names[c("nconst", "primaryProfession")]) %>%
+  df.pp <- drop_na(df.names[c("nconst", "primaryProfession")]) %>%
       mutate(primaryProfession = strsplit(as.character(primaryProfession), ",")) %>%
       unnest(primaryProfession)
   
   # Extract unique professions
-  professions <- unique(df.primaryProfessions$primaryProfession)
+  professions <- unique(df.pp$primaryProfession)
   df.professions <- data.frame(professions)
   
   # Add PK columns
   df.professions <- tibble::rowid_to_column(df.professions, "prof_id")
-  df.primaryProfessions <- tibble::rowid_to_column(df.primaryProfessions, "pp_id")
+  df.pp <- tibble::rowid_to_column(df.pp, "pp_id")
   
   # Rename columns as needed
   df.professions <- df.professions %>%
     rename(prof_title = professions)
-  df.primaryProfessions <- df.primaryProfessions %>%
+  df.pp <- df.pp %>%
     rename(prof_id = primaryProfession)
   
   # Replace profession strings with an id
   profList <- df.professions$prof_title
   for (i in 1:length(profList)) {
     prof <- profList[i]
-    df.primaryProfessions$prof_id[which(
-      df.primaryProfessions$prof_id == prof
+    df.pp$prof_id[which(
+      df.pp$prof_id == prof
     )] <- i
   }
-  df.primaryProfessions <- transform(
-    df.primaryProfessions, prof_id = as.integer(prof_id))
+  df.pp <- transform(
+    df.pp, prof_id = as.integer(prof_id))
   
   # Add to database
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Professions", df.professions, append=TRUE)
-  dbWriteTable(conn, "Primary_Profession", df.primaryProfessions, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn, "Primary_Profession", df.pp, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn, "Primary_Profession", df.pp, append=TRUE)
+  }
 }
 ```
 
 ### "Categories" table
 
 ```{r}
-loadCategories <- function(){
+loadCategories <- function(overwrite){
   # Grab the needed columns from the current dataframe
   types <- df.princ[,c(0,4)]
   # Since this is a categorical table, grab unique values
@@ -824,7 +861,11 @@ loadCategories <- function(){
   df_cat <- tibble::rowid_to_column(df_cat, "category_id")
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Categories",df_cat, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Categories",df_cat, append=TRUE)
+  }
   return(df_cat)
 }
 ```
@@ -832,7 +873,7 @@ loadCategories <- function(){
 ### "Crew" table
 
 ```{r}
-loadCrew <- function(df_cat){
+loadCrew <- function(df_cat, overwrite){
   # Grab the needed columns from the current dataframe
   df_crew <- df.princ[,-c(0,6)]
   # Add a column for the FK id
@@ -862,14 +903,18 @@ loadCrew <- function(df_cat){
   
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Crew",df_crew, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Crew",df_crew, append=TRUE)
+  }
 }
 ```
 
 ### "Cast" and "Characters" tables
 
 ```{r}
-loadCast <- function(){
+loadCast <- function(overwrite){
   # Grab the needed columns from the current dataframe
   df_cast <- df.princ[,-c(3,4,5)]
   # Remove titles with no genre listed
@@ -927,42 +972,54 @@ loadCast <- function(){
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn,"Characters",df_characters, append=TRUE)
-  dbWriteTable(conn,"Cast",df_cast, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Cast",df_cast, append=TRUE)
+  }
 }
 ```
 
 ### "Media_Directors" table
 
 ```{r}
-loadDirectors <- function(){
+loadDirectors <- function(overwrite){
   # Assign unique ids to the unique values - only works on initial loading of data
   df_direct <- tibble::rowid_to_column(df.dirs, "md_id")
   # Rename the columns to match the database table
   colnames(df_direct) <- c("md_id", "tconst", "nconst")
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Media_Directors",df_direct, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Media_Directors",df_direct, append=TRUE)
+  }
 }
 ```
 
 ### "Media_Writers" table
 
 ```{r}
-loadWriters <- function(){
+loadWriters <- function(overwrite){
   # Assign unique ids to the unique values - only works on initial loading of data
   df_write <- tibble::rowid_to_column(df.writers, "mw_id")
   # Rename the columns to match the database table
   colnames(df_write) <- c("mw_id", "tconst", "nconst")
   # Transfer the new dataframes into the database tables
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Media_Writers",df_write, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Media_Writers",df_write, append=TRUE)
+  }
 }
 ```
 
 ### "Regions" table
 
 ```{r}
-loadRegions <- function(){
+loadRegions <- function(overwrite){
   # Grab the needed columns from the current dataframe
   types <- df.akas[,c(0,4)]
   # Since this is a categorical table, grab unique values
@@ -975,14 +1032,18 @@ loadRegions <- function(){
   df_reg <- tibble::rowid_to_column(df_reg, "region_id")
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Regions",df_reg, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Regions",df_reg, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Regions",df_reg, append=TRUE)
+  }
   return(df_reg)
 }
 ```
 
 ### "Languages" table
 ```{r}
-loadLangs <- function(){
+loadLangs <- function(overwrite){
   # Grab the needed columns from the current dataframe
   types <- df.akas[,c(0,5)]
   # Since this is a categorical table, grab unique values
@@ -995,7 +1056,11 @@ loadLangs <- function(){
   df_lang <- tibble::rowid_to_column(df_lang, "lang_id")
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Languages",df_lang, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Languages",df_lang, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Languages",df_lang, append=TRUE)
+  }
   return(df_lang)
 }
 ```
@@ -1003,7 +1068,7 @@ loadLangs <- function(){
 ### "Also_Known_As" table
 
 ```{r}
-loadAKA <- function(df_reg, df_lang){
+loadAKA <- function(df_reg, df_lang, overwrite){
   # Grab the needed columns from the current dataframe
   df_aka <- df.akas[,-c(6,7)]
   # Rename the columns to match the database table
@@ -1050,14 +1115,18 @@ loadAKA <- function(df_reg, df_lang){
   
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  dbWriteTable(conn,"Also_Known_As",df_aka, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn,"Also_Known_As",df_aka, append=TRUE)
+  }
 }
 ```
 
 ### "Types" and "Aka_Types" tables
 
 ```{r, message=FALSE}
-loadTypes <- function(){
+loadTypes <- function(overwrite){
   # Get aka types
   df.akaTypes <- drop_na(df.akas[c("titleId", "ordering", "types")])
   
@@ -1095,14 +1164,18 @@ loadTypes <- function(){
   # Add to database
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Types", df.types, append=TRUE)
-  dbWriteTable(conn, "Aka_Types", df.akaTypes, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn, "Aka_Types", df.akaTypes, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn, "Aka_Types", df.akaTypes, append=TRUE)
+  }
 }
 ```
 
 ### "Attributes" and "Aka_Attributes" tables
 
 ```{r, message=FALSE}
-loadAttributes <- function(){
+loadAttributes <- function(overwrite){
   # Get aka attributes
   df.akaAtts <- drop_na(df.akas[c("titleId", "ordering", "attributes")])
   
@@ -1142,7 +1215,11 @@ loadAttributes <- function(){
   # Add to database
   # Append is true because we want to maintain the relationships during table creation
   dbWriteTable(conn, "Attributes", df.attributes, append=TRUE)
-  dbWriteTable(conn, "Aka_Attributes", df.akaAtts, append=TRUE)
+  if(overwrite){
+    dbWriteTable(conn, "Aka_Attributes", df.akaAtts, overwrite=TRUE)
+  } else {
+    dbWriteTable(conn, "Aka_Attributes", df.akaAtts, append=TRUE)
+  }
 }
 ```
 
@@ -1161,32 +1238,32 @@ headSql <- function(tableName) {
 
 ```{r}
 if (createDB) {
-  df_cat1 <- loadFormats()
-  loadMedia(df_cat1)
+  df_cat1 <- loadFormats(FALSE)
+  loadMedia(df_cat1,FALSE)
   # Includes both Genres and Media Genres
-  loadGenres()
-  loadRatings()
-  loadPeople()
-  loadKFT()
+  loadGenres(FALSE)
+  loadRatings(FALSE)
+  loadPeople(FALSE)
   # Includes both Professions and Primary Professions
-  loadProfessions()
+  loadProfessions(FALSE)
 }
 
 if (createDB) {
-  loadEpisodes()
-  loadDirectors()
-  loadWriters()
-  df_cat1 <- loadCategories()
-  loadCrew(df_cat1)
+  loadEpisodes(FALSE)
+  loadDirectors(FALSE)
+  loadWriters(FALSE)
+  loadKFT(FALSE)
+  df_cat1 <- loadCategories(FALSE)
+  loadCrew(df_cat1,FALSE)
   # Includes both Characters and Cast
-  loadCast()
-  df_cat1 <- loadRegions()
-  df_cat2 <- loadLangs()
-  loadAKA(df_cat1, df_cat2)
+  loadCast(FALSE)
+  df_cat1 <- loadRegions(FALSE)
+  df_cat2 <- loadLangs(FALSE)
+  loadAKA(df_cat1, df_cat2,FALSE)
   # Includes both Types and Aka Types
-  loadTypes()
+  loadTypes(FALSE)
   # Includes both Attributes and Aka Attributes
-  loadAttributes()
+  loadAttributes(FALSE)
 }
 ```
 
