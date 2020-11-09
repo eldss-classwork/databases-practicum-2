@@ -30,8 +30,8 @@ library(stringr)
 # Caution: This will take a long time and may overwhelm your computer!!! 
 download <- FALSE
 sampleSet <- FALSE
-createFrames <- TRUE
-createDB <- TRUE
+createFrames <- FALSE
+createDB <- FALSE
 
 # File constants
 dataDir <- "./data/"
