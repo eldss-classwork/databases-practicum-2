@@ -898,16 +898,14 @@ loadCrew <- function(df_cat, overwrite){
   # Drop the category column, only the FK id column is needed
   df_crew$category <- NULL
   
-  print(df_cat)
-  print(df_crew)
-  
   # Transfer the new dataframe into the database table
   # Append is true because we want to maintain the relationships during table creation
-  if(overwrite){
-    dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
-  } else {
-    dbWriteTable(conn,"Crew",df_crew, append=TRUE)
-  }
+  # if(overwrite){
+  #   dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
+  # } else {
+  #   dbWriteTable(conn,"Crew",df_crew, append=TRUE)
+  # }
+  return(df_crew)
 }
 ```
 
@@ -1246,19 +1244,19 @@ if (createDB) {
   loadPeople(FALSE)
   # Includes both Professions and Primary Professions
   loadProfessions(FALSE)
+  loadEpisodes(TRUE)
+  loadKFT(TRUE)
+  df_cat1 <- loadCategories(FALSE)
+  df_crew <- loadCrew(df_cat1,TRUE)
+  df_cat1 <- loadRegions(FALSE)
+  df_cat2 <- loadLangs(FALSE)
 }
 
 if (createDB) {
-  loadEpisodes(FALSE)
-  loadDirectors(FALSE)
-  loadWriters(FALSE)
-  loadKFT(FALSE)
-  df_cat1 <- loadCategories(FALSE)
-  loadCrew(df_cat1,FALSE)
   # Includes both Characters and Cast
   loadCast(FALSE)
-  df_cat1 <- loadRegions(FALSE)
-  df_cat2 <- loadLangs(FALSE)
+  loadDirectors(TRUE)
+  loadWriters(TRUE)
   loadAKA(df_cat1, df_cat2,FALSE)
   # Includes both Types and Aka Types
   loadTypes(FALSE)
@@ -1266,6 +1264,36 @@ if (createDB) {
   loadAttributes(FALSE)
 }
 ```
+
+
+```{r}
+if (createDB) {
+  chunk <- 5000000
+  n <- nrow(df_crew)
+  r  <- rep(1:ceiling(n/chunk),each=chunk)[1:n]
+  df_group <- split(df_crew,r)
+  
+  frame <- data.frame(df_group[1])
+  colnames(frame) <- c("tconst", "ordering", "nconst", "category_id", "job")
+  
+  dbWriteTable(conn,"Crew",frame, overwrite=TRUE)
+  
+  # Transfer the new dataframe into the database table
+  # Append is true because we want to maintain the relationships during table creation
+  for(i in 2:length(df_group)){
+    print(paste("Starting processing: Group",i))
+    frame <- data.frame(df_group[i])
+    colnames(frame) <- c("tconst", "ordering", "nconst", "category_id", "job")
+    dbWriteTable(conn,"Crew",frame, append=TRUE)
+    print(paste("Processing complete: Group",i))
+  }
+  
+  frame2 <- data.frame(df_group[9])
+  colnames(frame2) <- c("tconst", "ordering", "nconst", "category_id", "job")
+  dbWriteTable(conn,"Crew",frame2, append=TRUE)
+}
+```
+
 
 ```{r}
 tableNames <- c(
