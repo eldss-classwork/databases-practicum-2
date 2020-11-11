@@ -2,10 +2,10 @@
 title: 'CS5200 Fall 2020: Practicum 2'
 author: "Chandra Davis, Evan Douglass"
 output:
-  html_document:
-    df_print: paged
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 ---
 
 ## Overview
@@ -1402,6 +1402,7 @@ SET age = CASE
 Let's see if it worked.
 
 ```{r, message='hide'}
+dbExecute(conn, "UPDATE People SET numMovies=NULL")
 headSql("People")
 ```
 
@@ -1412,14 +1413,17 @@ Getting the number of movies will be a bit trickier as it will require finding t
 We can do this with the Crew table, which pairs each title with the people who worked on it.
 
 ```{sql connection=conn}
-
+UPDATE People
+SET numMovies = numMov.cnt
+FROM (SELECT nconst, COUNT(tconst) AS cnt FROM Crew GROUP BY nconst) AS numMov
+WHERE People.nconst = numMov.nconst;
 ```
 
+Let's see if it worked.
 
 ```{r}
-headSql("Crew")
+headSql("People")
 ```
-
 
 ## Triggers
 
@@ -1430,6 +1434,10 @@ Now that we have data for the age and numMovies columns, we need to make sure th
 Age is something that may not only need to be updated when a person is added to the database. If the person is alive, their age changes over time. Therefore, any time their details change, we should check to see if their age has changed. This is not necessary for deceased people, as their age at death will not change. 
 
 It is worth noting that in a real database using a trigger for this purpose could lead to stale data. If a person's record does not change often, the age could become out of data. A better option might be to create a stored function that updates on the person's birthday every year. This would of course also require their birthday.
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS create_age;
+```
 
 ```{sql connection=conn}
 CREATE TRIGGER IF NOT EXISTS create_age
@@ -1444,7 +1452,13 @@ CREATE TRIGGER IF NOT EXISTS create_age
           END
       WHERE nconst=new.nconst;
   END;
-  
+```
+
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS update_age;
+```
+
+```{sql connection=conn}
 CREATE TRIGGER IF NOT EXISTS update_age
   AFTER UPDATE ON People
   -- Ignore for deceased
@@ -1461,8 +1475,25 @@ CREATE TRIGGER IF NOT EXISTS update_age
 
 ### numMovies
 
-```{r}
+Interestingly, while updating `numMovies` was trickier than `age`, the trigger should be simpler. Instead of getting a grouped count of movies every time, we can simply increment the value in `numMovies` every time an entry is added to the Crew table. See below.
 
+```{sql connection=conn}
+DROP TRIGGER IF EXISTS increment_numMovies;
+```
+
+```{sql connection=conn}
+CREATE TRIGGER IF NOT EXISTS increment_numMovies
+  AFTER INSERT ON Crew
+  BEGIN
+    UPDATE People
+    SET numMovies = CASE
+                    WHEN numMovies is NULL
+                      THEN 1
+                    ELSE
+                      numMovies + 1
+                    END
+    WHERE People.nconst = Crew.nconst;
+  END;
 ```
 
 ## View
@@ -1500,8 +1531,9 @@ SELECT * FROM actors LIMIT 5;
 ## Queries
 
 ### Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
+
 ```{sql connection=conn}
-SELECT * FROM Formats;
+SELECT * FROM Formats LIMIT 10;
 ```
 
 ```{sql connection=conn, output.var="seasons"}
@@ -1533,7 +1565,15 @@ GROUP BY numSeasons;
 # print(seasons)
 seasons <- drop_na(seasons)
 seasonCount <- seasons$numSeasons
-hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", breaks=87, col = "blue", xlim = range(pretty(c(0,300))), ylim = range(pretty(c(0,68000))))
+hist(
+  seasonCount, 
+  main = "Season Frequency", 
+  xlab = "Number of Seasons", 
+  breaks=87, 
+  col = "blue", 
+  xlim = range(pretty(c(0,300))), 
+  ylim = range(pretty(c(0,68000)))
+)
 ```
 
 ```{sql connection=conn, output.var="distinctCount"}
@@ -1570,18 +1610,149 @@ GROUP BY numSeasons;
 ```{r, message='hide'}
 # print(distinctCount)
 seasonCount <- distinctCount$numSeasons
-hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", col = "blue", ylim = range(pretty(c(0,69000))), breaks = 65)
+hist(
+  seasonCount, 
+  main = "Season Frequency", 
+  xlab = "Number of Seasons", 
+  col = "blue", 
+  ylim = range(pretty(c(0,69000))), 
+  breaks = 65
+)
 ```
 
 ```{r}
-hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", col = "blue", ylim = range(pretty(c(0,69000))), breaks = c(seq(1,300,5)))
+hist(
+  seasonCount, 
+  main = "Season Frequency", 
+  xlab = "Number of Seasons", 
+  col = "blue", 
+  ylim = range(pretty(c(0,69000))), 
+  breaks = c(seq(1,300,5))
+)
 ```
 
 ```{r, message='hide'}
-hist(seasonCount, main = "Season Frequency", xlab = "Number of Seasons", col = "blue", ylim = range(pretty(c(0,69000))), breaks = c(seq(1,50,1), seq(50,300,50)), prob = FALSE)
+hist(
+  seasonCount, 
+  main = "Season Frequency", 
+  xlab = "Number of Seasons", 
+  col = "blue", 
+  ylim = range(pretty(c(0,69000))), 
+  breaks = c(seq(1,50,1), seq(50,300,50)), 
+  prob = FALSE
+)
+```
+
+## Task 9: Create a function `addActor` to add an actor to the database
+
+For this task we create an R function to manage some of the details. There needs to be room for several parameters including a variable number of `knownForTitles`. Because of the schema of our database, we slightly modify the function as `addPerson`. This allows a user to add a person of any profession to the `People` table where they are all stored. As noted in the write up, this will require a transaction that adds several pieces of information to a number of tables.
+We have chosen these values as parameters because they were the same ones given in the original data. Note that we do not see the `numMovies` field updated because that is based on the `Crew` table and that is not added here. The `Crew` table requires significanly more data and should be added separately.
+
+```{r}
+addPerson <- function(id, fullName, birthYear, 
+                      deathYear, professionsVector, titlesVector) {
+  #' This function adds a person to the database, including a list of their
+  #' primary professions and a list of titles they are known for.
+  #' If inserting null values, use "null".
+  
+  # Statements will have to be added all at once, so we get the commands first
+  dbExecute(conn, "BEGIN TRANSACTION;")
+
+  # First add the person
+  insertPers <- paste(
+    "INSERT INTO People(nconst, primaryName, birthYear, deathYear, age, numMovies) ",
+    "VALUES (",
+    "'", id, "','", fullName, "',", birthYear, ",", deathYear, ",", "null", ",", "null",
+    ");",
+    sep=""
+  )
+  dbExecute(conn, insertPers)
+  
+  # Now add the primary professions
+  # We'll need the profession ids
+  profs <- dbGetQuery(conn, "SELECT * FROM Professions")
+  for (prof in professionsVector) {
+    profId <- profs$prof_id[which(profs$prof_title == prof)]
+    insertProfs <- paste(
+      "INSERT INTO Primary_Profession(nconst, prof_id) ",
+      "VALUES (",
+      "'", id, "','", profId, "'",
+      ");",
+      sep=""
+    )
+    dbExecute(conn, insertProfs)
+  }
+  
+  # Now we'll add the known for titles
+  for (title in titlesVector) {
+    insertTitles <- paste(
+      "INSERT INTO Known_For_Titles(nconst, tconst) ",
+      "VALUES (",
+      "'", id, "','", title, "'",
+      ");",
+      sep=""
+    )
+    dbExecute(conn, insertTitles)
+  }
+  
+  # Finish the transaction
+  dbExecute(conn, "COMMIT TRANSACTION;")
+}
+
+# Test it out
+addPerson("1", "Evan Douglass", 1990, "null", 
+          c("actor", "producer"), c("tt0072308", "tt0031983"))
+dbGetQuery(conn, "SELECT * FROM People WHERE nconst='1'")
+dbGetQuery(conn, "SELECT nconst, tconst FROM Known_For_Titles WHERE nconst='1';")
+dbGetQuery(conn, "SELECT nconst, prof_id FROM Primary_Profession WHERE nconst='1';")
 ```
 
 
+
+## Task 10: Delete Actor
+
+Now that we've added a person, we need to be able to delete them too. This time all we need is their name id.
+
+```{r}
+deletePerson <- function(id) {
+  #' This function removes a person from the database, including from the
+  #' primary professions table and the titles they are known for.
+  
+  # Statements will have to be added all at once, so we get the commands first
+  dbExecute(conn, "BEGIN TRANSACTION;")
+  
+  # Remove the primary professions
+  removeProfs <- paste(
+    "DELETE FROM Primary_Profession WHERE nconst='", id, "';",
+    sep=""
+  )
+  dbExecute(conn, removeProfs)
+
+  
+  # Now we'll remove the known for titles
+  removeTitles <- paste(
+    "DELETE FROM Known_For_Titles WHERE nconst='", id, "';",
+    sep=""
+  )
+  dbExecute(conn, removeTitles)
+  
+  # Finally remove the person
+  removePers <- paste(
+    "DELETE FROM People WHERE nconst='", id, "';",
+    sep=""
+  )
+  dbExecute(conn, removePers)
+  
+  # Finish the transaction
+  dbExecute(conn, "COMMIT TRANSACTION;")
+}
+
+# Test it out
+deletePerson("1")
+dbGetQuery(conn, "SELECT * FROM People WHERE nconst='1'")
+dbGetQuery(conn, "SELECT nconst, tconst FROM Known_For_Titles WHERE nconst='1';")
+dbGetQuery(conn, "SELECT nconst, prof_id FROM Primary_Profession WHERE nconst='1';")
+```
 
 ### Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
 
@@ -1591,11 +1762,11 @@ average
 ```
 
 ```{sql connection=conn}
-SELECT * FROM Professions;
+SELECT * FROM Professions LIMIT 10;
 ```
 
 ```{sql connection=conn}
-SELECT * FROM Formats;
+SELECT * FROM Formats LIMIT 10;
 ```
 
 
@@ -1622,7 +1793,8 @@ JOIN
   WHERE format_id = 2) rated
 ON rated.tconst=Crew.tconst
 GROUP BY Crew.nconst
-HAVING COUNT(DISTINCT(Crew.tconst))>2;
+HAVING COUNT(DISTINCT(Crew.tconst))>2
+LIMIT 10;
 ```
 
 
@@ -1678,7 +1850,8 @@ Values <- matrix(c(noIndexVec,indexVec), nrow=4, ncol=2)
 
 ```{r}
 # Create the bar chart
-plt <- barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(0, axisRange))), beside=TRUE, horiz=TRUE)
+plt <- barplot(Values, names.arg = labels, xlab = "Timing", col = colors, 
+               xlim=range(pretty(c(0, axisRange))), beside=TRUE, horiz=TRUE)
 
 # Add the legend to the chart
 legend("top", actors, cex = 0.7, fill = colors)
@@ -1690,7 +1863,9 @@ text(0, plt, Values, cex=0.8, pos=4)
 
 ```{r}
 # Create the bar chart
-plt <- barplot(Values, names.arg = labels, xlab = "Timing", col = colors, xlim=range(pretty(c(min(axisRange), max(axisRange)))), beside=TRUE, horiz=TRUE, xpd=FALSE)
+plt <- barplot(Values, names.arg = labels, xlab = "Timing", col = colors, 
+               xlim=range(pretty(c(min(axisRange), max(axisRange)))), 
+               beside=TRUE, horiz=TRUE, xpd=FALSE)
 
 # Add the legend to the chart
 legend("topright", actors, cex = 0.7, fill = colors)
@@ -1698,14 +1873,6 @@ legend("topright", actors, cex = 0.7, fill = colors)
 # Add the values to the bars for readability
 text(min(axisRange), plt, Values, cex=0.8, pos=4)
 ```
-
-## AddActor
-
-```{sql connection=conn}
-SELECT max(nconst) FROM people;
-```
-
-## Delete Actor
 
 ## Insert Performance With Indexes
 
@@ -1804,23 +1971,11 @@ Now the tests can begin. This section may take a minute or two to run.
 
 Through testing this section we noticed that there was significant variation in the final numbers. Initially, a single test with a large number of inserts was run for each added index. Every time this was run the results looked different. Because of this we decided it made more sense to do a small number of inserts many times and average the results.
 
-We didn't want this to take too long, so we had to find a balance between the number of inserts and the number of times a test was run. In the current configuration 100 inserts are run 45 times for each test. Note however that the results can still vary significantly. The general trend is upward, but each time this section is run, the graph can still look different. Keep this in mind when viewing the final knit of the plot.
+We didn't want this to take too long, so we had to find a balance between the number of inserts and the number of times a test was run. In the current configuration 100 inserts are run 9 times for each test. Note however that the results can still vary significantly. The general trend is upward, but each time this section is run, the graph can still look different. Keep this in mind when viewing the final knit of the plot.
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 numInserts <- 100
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 asIs <- mean(tests)
@@ -1832,18 +1987,6 @@ asIs <- mean(tests)
 createIndexOn(conn, "tconst", TRUE)
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 oneIndex <- mean(tests)
 ```
@@ -1853,18 +1996,6 @@ oneIndex <- mean(tests)
 ```{r, results='hide'}
 createIndexOn(conn, "format_id")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 twoIndex <- mean(tests)
@@ -1876,18 +2007,6 @@ twoIndex <- mean(tests)
 createIndexOn(conn, "primaryTitle")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 threeIndex <- mean(tests)
 ```
@@ -1897,18 +2016,6 @@ threeIndex <- mean(tests)
 ```{r, results='hide'}
 createIndexOn(conn, "originalTitle")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 fourIndex <- mean(tests)
@@ -1920,18 +2027,6 @@ fourIndex <- mean(tests)
 createIndexOn(conn, "isAdult")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 fiveIndex <- mean(tests)
 ```
@@ -1941,18 +2036,6 @@ fiveIndex <- mean(tests)
 ```{r, results='hide'}
 createIndexOn(conn, "startYear")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 sixIndex <- mean(tests)
@@ -1964,18 +2047,6 @@ sixIndex <- mean(tests)
 createIndexOn(conn, "endYear")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 sevenIndex <- mean(tests)
 ```
@@ -1985,18 +2056,6 @@ sevenIndex <- mean(tests)
 ```{r, results='hide'}
 createIndexOn(conn, "runtimeMinutes")
 tests <- c(runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
-           runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts), 
            runTest(numInserts), runTest(numInserts), runTest(numInserts))
 eightIndex <- mean(tests)
