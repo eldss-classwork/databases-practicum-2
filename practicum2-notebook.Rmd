@@ -12,9 +12,40 @@ output:
 
 We've decided to work with SQLite for this practicum. As such, to work with these files you will need SQLite installed on your machine. The data we are using is provided by IMDB at https://datasets.imdbws.com/
 
+## Task 2
+Read the data description and inspect the files
+### Task 2A
+Create a data model in the form of an ERD in Crow's Foot notation using a tool of your choice (e.g., LucidChart, TOAD, MySQL Workbench, etc.) and embed an image of the model in your notebook. Your ERD should be a normalized model and not a direct representation of the data in the files.Later, when you load the data you will map the data from the files to the columns in the tables.
+
+Although task 2A states normalization, per the teams channel, the first diagram should not be normalized and just a representation of the tables in ERD format.
+
+Lucidchart link: https://app.lucidchart.com/invitations/accept/f758a126-c1a0-48b8-b425-11db4b9ac894
+
+![Task2A](imgs/OriginalTables.png)
+
+### Task 2B
+Add junction/association tables to normalize many-to-many relationships, normalize multi-valued attributes, and create lookup tables for categorical attribute values. Embed an updated image of the model in your notebook.
+
+Lucidchart link: https://app.lucidchart.com/invitations/accept/f758a126-c1a0-48b8-b425-11db4b9ac894
+
+![Task2B](imgs/NormalizedTables.png)
+### Task 2C
+Add two new attributes (columns) to the appropriate tables: one for the age of a person and one for the number of movies a person has appeared in. Embed an updated image of the model in your notebook. Leave those columns empty for now. They will be filled in later.
+
+Lucidchart link: https://app.lucidchart.com/invitations/accept/f758a126-c1a0-48b8-b425-11db4b9ac894
+
+![Task2C](imgs/FinalizedERD.png)
+### Task 2D
+Ensure that the relational model is in at least BCNF; if a table should not be or cannot be in BCNF, then justify why not and provide a reason. Remember: no multi-valued attributes.
+
+Please see the assumptions on each ERD image as to the normalization process followed.
+
 ## Setup
 
-The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. In normal circumstances we would do this with a faster language that is better suited for file manipulation in a separate script. For the purposes of this assignment we have included the entire script below as a single chunk. If you are running this yourself and want to either download fresh copies of the data from IMDB, or create a sample set of existing copies, then you should change the `download` and/or `sampleSet` variables to `TRUE` below. But be warned this will take a VERY long time depending on your computer. We have included the processed files with our submission so that you do not have to wait for this unless you want to.
+The first thing we need to do is download and process the data files we need for the practicum. These will be downloaded from IMDB and processed into smaller sample files for ease of working with in the rest of the notebook. In normal circumstances we would do this with a faster language that is better suited for file manipulation in a separate script. For the purposes of this assignment we have included the entire script below as a single chunk. If you are running this yourself and want to either download fresh copies of the data from IMDB, or create and/or use a sample set of existing copies, then you should change the `download` and/or `sampleSet` variables to `TRUE` below. But be warned this will take a VERY long time depending on your computer. We have included the created sample set files with our submission so that you do not have to wait for this unless you want to.
+
+Additionally, since the loading of the full datasets and creation of the database is also a long process (with limitation depending on hardware or OS), the variables `createFrames` and `createDB` should be used if you wish to rebuild the database. Our current database file is over 4GB and therefore could not be provided via CANVAS. If you wish to access it, please download from the following link.
+Zipped .db file: https://drive.google.com/file/d/1f4cILKLngWHY4np12zEzWMVx2MDACCAl/view?usp=sharing
 
 ```{r, results='hide', message=FALSE}
 library(data.table)
@@ -33,6 +64,8 @@ createSampleSet <- FALSE
 useSampleSet <- FALSE
 createFrames <- FALSE
 createDB <- FALSE
+# Print head should be set to true if you wish to print the top 5 rows of each table
+# Due to the size of the database and the R connection, this may take several minutes
 printHead <- FALSE
 
 # File constants
@@ -258,9 +291,14 @@ if (useSampleSet) {
 conn <- dbConnect(RSQLite::SQLite(), DB_NAME)
 ```
 
-## Database Schema
+## Task 3
+Create and then run CREATE TABLE statements to build the schema. These statements must run from within your notebook and not from a separate script. Ensure proper referential integrity.
+
+### Database Schema
 
 The following chunk creates all the necessary tables in our database based on the schema presented earlier.
+
+Please note: We have created the full schema but not all of the tables will have data due to hardware/OS limitations.
 
 ```{r, results='hide'}
 if (createDB) {
@@ -506,9 +544,14 @@ if (createDB) {
 }
 ```
 
-## Reading Data Locally
+## Task 4
+Load the data from the downloaded data files into the tables. Properly parse the foreign keys and attributes and ensure that the data is in the right tables in the right form and that referential integrity is ensured. This will require parsing code in your chosen programming language; pay attention to parsing empty fields and fields containing various delimiters or codes to indicate missing values, e.g., \N. 
 
-Next we need to gather. Because of the size of the data set, we will take a small sample of it for the purposes of this practicum.
+You should create a subset of each dataset for testing (as the data sets are very large and take significant time to load). 
+
+### Reading Data Locally
+
+Next we need to convert the datasets into dataframes for manipulation and loading to the database. 
 
 We'll set up some constants first. These will determine whether we are using the full data files or the subset.
 
@@ -531,7 +574,7 @@ directors <- paste(dir, "title.directors", ext, sep="")
 writers <- paste(dir, "title.writers", ext, sep="")
 ```
 
-### Titles
+#### Titles
 
 The number of titles we choose to include will determine the amount of data read in from other files. Therefore we will get this data first.
 
@@ -542,7 +585,7 @@ if (createFrames) {
 }
 ```
 
-### AKAs
+#### AKAs
 
 ```{r, message=FALSE}
 if (createFrames) {
@@ -551,7 +594,7 @@ if (createFrames) {
 }
 ```
 
-### Episodes
+#### Episodes
 
 ```{r, message=FALSE}
 if (createFrames) {
@@ -560,7 +603,7 @@ if (createFrames) {
 }
 ```
 
-### Ratings
+#### Ratings
 
 ```{r, message=FALSE}
 if (createFrames) {
@@ -569,7 +612,7 @@ if (createFrames) {
 }
 ```
 
-### Principles
+#### Principles
 
 ```{r, message=FALSE}
 if (createFrames) {
@@ -578,7 +621,7 @@ if (createFrames) {
 }
 ```
 
-### Crew
+#### Crew
 
 In creating the sample set the crew data was split into separate sets for directors and writers.
 If the sample set is not being used, the table needs to be split
@@ -600,7 +643,7 @@ if (createFrames) {
 ```
 
 
-### Names/People
+#### Names/People
 
 ```{r, message=FALSE}
 if (createFrames) {
@@ -609,7 +652,7 @@ if (createFrames) {
 }
 ```
 
-## Loading Data to Database
+### Loading Data to Database
 
 This section will take the data extracted previously, manipulate it as needed, and then add it to our database as needed.
 
@@ -630,7 +673,7 @@ if(createDB){
     df_tt <- tibble::rowid_to_column(df_tt, "format_id")
     colnames(df_tt) <- c("format_id", "format")
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Formats",df_tt, overwrite=TRUE)
     } else {
@@ -671,7 +714,7 @@ if(createDB){
     df_media$titleType <- NULL
     
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Media",df_media, overwrite=TRUE)
     } else {
@@ -728,7 +771,7 @@ if(createDB){
     df_mg$genres <- NULL
     
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     dbWriteTable(conn,"Genres",df_genres, append=TRUE)
     if(overwrite){
       dbWriteTable(conn,"Media_Genres",df_mg, overwrite=TRUE)
@@ -745,7 +788,7 @@ if(createDB){
 if(createDB){
   loadEpisodes <- function(overwrite){
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Episodes",df.eps, overwrite=TRUE)
     } else {
@@ -761,7 +804,7 @@ if(createDB){
 if(createDB){
   loadRatings <- function(overwrite){
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Ratings",df.ratings, overwrite=TRUE)
     } else {
@@ -785,7 +828,7 @@ if(createDB){
     df.namesTable$numMovies <- as.integer(NA)
     
     # Add to table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn, "People", df.namesTable, overwrite=TRUE)
     } else {
@@ -811,7 +854,7 @@ if(createDB){
     df.knownForTitles <- tibble::rowid_to_column(df.knownForTitles, "kt_id")
     
     # Put in database
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn, "Known_For_Titles", df.knownForTitles, overwrite=TRUE)
     } else {
@@ -858,7 +901,7 @@ if(createDB){
       df.pp, prof_id = as.integer(prof_id))
     
     # Add to database
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     dbWriteTable(conn, "Professions", df.professions, append=TRUE)
     if(overwrite){
       dbWriteTable(conn, "Primary_Profession", df.pp, overwrite=TRUE)
@@ -883,7 +926,7 @@ if(createDB){
     # Assign unique ids to the unique values - only works on initial loading of data
     df_cat <- tibble::rowid_to_column(df_cat, "category_id")
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Categories",df_cat, overwrite=TRUE)
     } else {
@@ -924,12 +967,17 @@ if(createDB){
     df_crew$category <- NULL
     
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
-    # if(overwrite){
-    #   dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
-    # } else {
-    #   dbWriteTable(conn,"Crew",df_crew, append=TRUE)
-    # }
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
+    
+    # The size of the principals table prevents it being loaded in one group
+    # Not an issue if the sampleSet is being used
+    if(useSampleSet){
+      if(overwrite){
+        dbWriteTable(conn,"Crew",df_crew, overwrite=TRUE)
+      } else {
+        dbWriteTable(conn,"Crew",df_crew, append=TRUE)
+      }
+    }
     return(df_crew)
   }
 }
@@ -995,7 +1043,7 @@ if(createDB){
     df_cast$characters <- NULL
     
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     dbWriteTable(conn,"Characters",df_characters, append=TRUE)
     if(overwrite){
       dbWriteTable(conn,"Cast",df_cast, overwrite=TRUE)
@@ -1016,7 +1064,7 @@ if(createDB){
     # Rename the columns to match the database table
     colnames(df_direct) <- c("md_id", "tconst", "nconst")
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Media_Directors",df_direct, overwrite=TRUE)
     } else {
@@ -1036,7 +1084,7 @@ if(createDB){
     # Rename the columns to match the database table
     colnames(df_write) <- c("mw_id", "tconst", "nconst")
     # Transfer the new dataframes into the database tables
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Media_Writers",df_write, overwrite=TRUE)
     } else {
@@ -1062,7 +1110,7 @@ if(createDB){
     # Assign unique ids to the unique values - only works on initial loading of data
     df_reg <- tibble::rowid_to_column(df_reg, "region_id")
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Regions",df_reg, overwrite=TRUE)
     } else {
@@ -1089,7 +1137,7 @@ if(createDB){
     # Assign unique ids to the unique values - only works on initial loading of data
     df_lang <- tibble::rowid_to_column(df_lang, "lang_id")
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Languages",df_lang, overwrite=TRUE)
     } else {
@@ -1150,7 +1198,7 @@ if(createDB){
     df_aka$language <- NULL
     
     # Transfer the new dataframe into the database table
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     if(overwrite){
       dbWriteTable(conn,"Also_Known_As",df_aka, overwrite=TRUE)
     } else {
@@ -1200,7 +1248,7 @@ if(createDB){
     )
     
     # Add to database
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     dbWriteTable(conn, "Types", df.types, append=TRUE)
     if(overwrite){
       dbWriteTable(conn, "Aka_Types", df.akaTypes, overwrite=TRUE)
@@ -1253,7 +1301,7 @@ if(createDB){
     )
     
     # Add to database
-    # Append is true because we want to maintain the relationships during table creation
+    # While append is the preferred method because we want to maintain the referential integrity relationships during table creation, we allowed for an overwrite option in case there were issues that needed to be addressed after loading
     dbWriteTable(conn, "Attributes", df.attributes, append=TRUE)
     if(overwrite){
       dbWriteTable(conn, "Aka_Attributes", df.akaAtts, overwrite=TRUE)
@@ -1264,9 +1312,14 @@ if(createDB){
 }
 ```
 
-### Load the data into the tables
+#### Load the data into the tables
 
 Now we can load data into the database tables.
+
+Due to the size of the database, we were unable to load all of the full datasets into the database. The functionality for all of the loading is there and can be run should your hardware/OS not have the same limitations.
+
+There were a few tables that had FK constraints during the loading process. These have been updated to overwrite the original tables and the FK constraints will be re-added after the referential integrity has been resolved. 
+  Note: The tables with issues pass in the TRUE value.
 
 ```{r}
 if(createDB){
@@ -1294,9 +1347,9 @@ if(createDB){
   
   #loadDirectors(TRUE)
   #loadWriters(TRUE)
-  #loadAKA(df_cat1, df_cat2,FALSE)
+  #loadAKA(df_cat1, df_cat2,TRUE)
   # Includes both Characters and Cast
-  #loadCast(TRUE)
+  #loadCast(FALSE)
   # Includes both Types and Aka Types
   #loadTypes(FALSE)
   # Includes both Attributes and Aka Attributes
@@ -1304,38 +1357,88 @@ if(createDB){
 }
 ```
 
-<!-- Need an explanation of what is going on here. -->
+If the sample set is not being used, the principals table (formatted to be called df_crew) needs to be added in groups to the database.
 
 ```{r}
-if(createDB){
+if(createDB && !useSampleSet){
+  # Determine the split size and split the table into groups
   chunk <- 5000000
   n <- nrow(df_crew)
   r  <- rep(1:ceiling(n/chunk),each=chunk)[1:n]
   df_group <- split(df_crew,r)
   
+  # Since the principals table has referential integrity constraints, the first group should overwrite the existing table
+  # However, we do want to maintain the column names from the original ERD
   frame <- data.frame(df_group[1])
   colnames(frame) <- c("tconst", "ordering", "nconst", "category_id", "job")
   dbWriteTable(conn,"Crew",frame, overwrite=TRUE)
   
-  # Transfer the new dataframe into the database table
-  # Append is true because we want to maintain the relationships during table creation
-  if (!useSampleSet) {
-    for(i in 2:length(df_group)){
-      print(paste("Starting processing: Group",i))
-      frame <- data.frame(df_group[i])
-      colnames(frame) <- c("tconst", "ordering", "nconst", "category_id", "job")
-      dbWriteTable(conn,"Crew",frame, append=TRUE)
-      print(paste("Processing complete: Group",i))
-    }
-  
-    frame2 <- data.frame(df_group[9])
-    colnames(frame2) <- c("tconst", "ordering", "nconst", "category_id", "job")
-    dbWriteTable(conn,"Crew",frame2, append=TRUE)
+  # Since the first group is already processed, we start from group 2
+  # We want to append to the table so we do not overwrite the previous groups
+  # The print statements will let us know which is the last group processed
+  for(i in 2:length(df_group)){
+    print(paste("Starting processing: Group",i))
+    frame <- data.frame(df_group[i])
+    colnames(frame) <- c("tconst", "ordering", "nconst", "category_id", "job")
+    dbWriteTable(conn,"Crew",frame, append=TRUE)
+    print(paste("Processing complete: Group",i))
   }
 }
 ```
 
+
+#### Referential Integrity Checking
+What is the effect of the referential integrity checking while you load? Can you do something about that? Describe and implement any improvement strategies.
+
+When adding data to existing tables, referential integrity is automatically confirmed by SQL. If there are concerns, the data is not loaded and an error is thrown. As we were happy with our schema, we relied on this referential integrity checking while loading.
+
+When using the sample set, the referential integrity issues were limited due to the way the sample set was created. When processing the full dataset, we determined there were actually issues within the original data itself.
+
+While processing and cleaning the data in R is possible, the time to search and manipulate the data was not practical. Therefore, we overrode the tables with referential integrity issues and cleaned the data within the database itself then re-added the referential integrity constraints.
+
+Please note: We did not create statements to process the referential integrity constraints of the tables we were unable to load. However, they will follow the same processes as the below three tables.
+
+##### Episodes Table
+During the review, we determined the only constraint issues were within the parentTconst attribute.
+```{sql connection=conn}
+DELETE FROM Episodes
+WHERE Episodes.parentTconst NOT IN
+    (SELECT Media.tconst 
+     FROM Media);
+```
+
+##### Known For Titles Table
+During the review, we determined the only constraint issues were within the tconst attribute.
+```{sql connection=conn}
+DELETE FROM Known_For_Titles
+WHERE Known_For_Titles.tconst NOT IN
+    (SELECT Media.tconst 
+     FROM Media);
+```
+
+##### Crew Table (originally the prinicipals dataset)
+During the review, we determined there were constraint issues not only on tconst but on the nconst attribute as well
+```{sql connection=conn}
+DELETE FROM Crew
+WHERE Crew.tconst NOT IN
+    (SELECT Media.tconst 
+     FROM Media);
+```
+
+```{sql connection=conn}
+DELETE FROM Crew
+WHERE Crew.nconst NOT IN
+    (SELECT People.nconst 
+     FROM People);
+```
+
+<--- CHUNKS NEEDED TO RE-ADD CONSTRAINTS --->
+
+
+#### Confirm loading of the data
 The next chunk simply gets the head of each table to show that data was indeed added.
+
+Reminder: Not all of the tables were able to be loaded. We have commented out the tables that have no data
 
 ```{r}
 headSql <- function(tableName) {
@@ -1348,14 +1451,14 @@ headSql <- function(tableName) {
 
 
 ```{r}
-tableNames <- c(
-  "Aka_Attributes",
-  "Aka_Types",
-  "Also_Known_As",
-  "Attributes",
-  "Cast",
+tableNamesLoaded <- c(
+  #"Aka_Attributes",
+  #"Aka_Types",
+  #"Also_Known_As",
+  #"Attributes",
+  #"Cast",
   "Categories",
-  "Characters",
+  #"Characters",
   "Crew",
   "Episodes",
   "Formats",
@@ -1363,15 +1466,15 @@ tableNames <- c(
   "Known_For_Titles",
   "Languages",
   "Media",
-  "Media_Directors",
+  #"Media_Directors",
   "Media_Genres",
-  "Media_Writers",
+  #"Media_Writers",
   "People",
   "Primary_Profession",
   "Professions",
   "Ratings",
   "Regions",
-  "Types"
+  #"Types"
   )
 
 if(printHead){
@@ -1381,9 +1484,11 @@ if(printHead){
 }
 ```
 
-## Update age and numMovies
+## Task 5
 
-In this section we issue some update statements that will provide age and numMovies values in the People table. 
+After loading the data, execute UPDATE statements for the two newly created columns in 2C. You may interpret what appearing in movies means and what you classify as movies -- just make it clear in your notebook. 
+
+In 2C we added age and numMovies to the People table.
 
 ### Age
 
@@ -1425,7 +1530,8 @@ Let's see if it worked.
 headSql("People")
 ```
 
-## Triggers
+## Task 6: Triggers
+Add triggers to the appropriate tables so that the newly created columns in 2C are automatically updated when new data in inserted.
 
 Now that we have data for the age and numMovies columns, we need to make sure that these values are kept up to date. We can use triggers to ensure they do.
 
@@ -1496,7 +1602,12 @@ CREATE TRIGGER IF NOT EXISTS increment_numMovies
   END;
 ```
 
-## View
+## Task 7: View
+Create a view that lists the name of each actor or actress, their age, whether they are dead or not, and how many movies they are known for based on what is stored for each actor or actress. If you work with a data sample it does not matter if the movie is actually in the database.
+
+As this view task was very specific to actors/actresses and known for titles, we focused solely on those professions and did not account for movies they might have appeared in. This is why we refer to the Known For Titles table instead of the created attribute numMovies.
+
+Since age is a stored attribute, the view just referenced this previously calculated column. In a real database, the view would call the stored procedure to update the ages before actually displaying the results.
 
 ```{sql connection=conn}
 DROP VIEW IF EXISTS actors;
@@ -1528,53 +1639,12 @@ ON people.nconst=limited.nconst;
 SELECT * FROM actors LIMIT 5;
 ```
 
-## Queries
+## Task 8: Season Histogram
+Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
 
-### Task 8: Write a query that finds the number of seasons for each TV series. Using the results of the query create a histogram (frequency plot) with proper axis labels and title.
+The data within the Episodes table was incorrect in the original dataset. In some instances the season number was listed as the year instead of the actual season. Rather than removing this bad data, we determined the number of seasons can be found by determining the number of distinct values within the season number attribute. While still subject to bad data (if there is not at least one episode represented from each season), this will provide a more accurate representation of the number of seasons for each show.
 
-```{sql connection=conn}
-SELECT * FROM Formats LIMIT 10;
-```
-
-```{sql connection=conn, output.var="seasons"}
-SELECT parentTconst, primaryTitle, MAX(seasonNumber) AS numSeasons
-FROM Episodes 
-JOIN 
-  (SELECT tconst, primaryTitle 
-  FROM Media 
-  WHERE format_id=5) series 
-ON series.tconst=Episodes.parentTconst
-GROUP BY parentTconst;
-```
-
-```{sql connection=conn, output.var="frequency"}
-SELECT numSeasons, COUNT(parentTconst)
-FROM
-  (SELECT parentTconst, primaryTitle, MAX(seasonNumber) AS numSeasons
-  FROM Episodes 
-  JOIN 
-    (SELECT tconst, primaryTitle 
-    FROM Media 
-    WHERE format_id=5) series 
-  ON series.tconst=Episodes.parentTconst
-  GROUP BY parentTconst) seasonCts
-GROUP BY numSeasons;
-```
-
-```{r, message='hide'}
-# print(seasons)
-seasons <- drop_na(seasons)
-seasonCount <- seasons$numSeasons
-hist(
-  seasonCount, 
-  main = "Season Frequency", 
-  xlab = "Number of Seasons", 
-  breaks=87, 
-  col = "blue", 
-  xlim = range(pretty(c(0,300))), 
-  ylim = range(pretty(c(0,68000)))
-)
-```
+We focused on TV series and ensured that they had at least one season. We grabbed the season counts for the histogram and also grabbed the frequency counts to verify the histogram results/help with histogram formatting.
 
 ```{sql connection=conn, output.var="distinctCount"}
 SELECT parentTconst, primaryTitle, 
@@ -1754,21 +1824,17 @@ dbGetQuery(conn, "SELECT nconst, tconst FROM Known_For_Titles WHERE nconst='1';"
 dbGetQuery(conn, "SELECT nconst, prof_id FROM Primary_Profession WHERE nconst='1';")
 ```
 
-### Task 11: Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
+## Task 11: Actors in "Good" Movies
+Write a query to retrieve the names and ages of all actors who appeared in more than two movies (but not TV Movies) which an above average rating. Show the results of the query in your notebook. Do not hard code the average rating.
+
+Grabbing the average rating and storing into a variable is considered hard coding the average. However, we wanted to display the average that is (more than likely) being used in the query.
+
+The first section will show the average while the 2nd will display the actual results from the query not hard coded.
 
 ```{r}
 average <- dbGetQuery(conn, "SELECT AVG(averageRating) AS value FROM Ratings")[["value"]]
 average
 ```
-
-```{sql connection=conn}
-SELECT * FROM Professions LIMIT 10;
-```
-
-```{sql connection=conn}
-SELECT * FROM Formats LIMIT 10;
-```
-
 
 ```{sql connection=conn}
 SELECT primaryName, age
@@ -1788,7 +1854,7 @@ JOIN
   JOIN
     (SELECT tconst, averageRating
     FROM Ratings 
-    WHERE averageRating > ?average) above
+    WHERE averageRating > (SELECT AVG(averageRating) FROM Ratings)) above
   ON above.tconst=Media.tconst
   WHERE format_id = 2) rated
 ON rated.tconst=Crew.tconst
@@ -1798,7 +1864,12 @@ LIMIT 10;
 ```
 
 
-### Task 12: Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
+### Task 12: Index by Name
+Write a query that finds an actor by name (pick a name). Measure the execution time of the query. Then create an index that would improve the performance of the query and then run and measure it again. Show the difference in a bar chart and comment on why that's the case.
+
+Searching for only one actor I found did not give a proper representation of the working of the index. Therefore, we searched for mutliple actors to complete a comparison of the values.
+
+While adding and removing indexes is inefficient in a real database, we wanted to ensure the results were not tainted for the bar chart comparison.
 
 ```{r}
 # Function to find the time taken to search for an actor by name
@@ -1874,7 +1945,11 @@ legend("topright", actors, cex = 0.7, fill = colors)
 text(min(axisRange), plt, Values, cex=0.8, pos=4)
 ```
 
-## Insert Performance With Indexes
+<--- EXPLANATION OF BAR CHARTS NEEDED --->
+
+
+## Task 13: Insert Performance With Indexes
+Add several indexes to a table of your choice (one containing lots of rows) and then insert additional rows into the table. Provide measurements of insert performance with no additional index, one, two, three, etc. Plot the performance change in a line graph and comment on the difference.
 
 In this section we test the performance of INSERT statements to the database based on the number of indexes on a table. We will use the Media table, as this has the most columns of any table, so plenty of indexes can be added.
 
